@@ -1,13 +1,18 @@
 {
-  "name": "bchat",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.14.0"
+    "name": "bchat",
+    "private": true,
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev:client": "pnpm --filter @bchat/client dev",
+        "dev:server": "pnpm --filter @bchat/server dev",
+        "dev": "pnpm --parallel --filter @bchat/client --filter @bchat/server dev",
+        "build": "pnpm --filter @bchat/client build",
+        "start": "pnpm --parallel --filter @bchat/server --filter @bchat/client start"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "packageManager": "pnpm@10.14.0"
 }
