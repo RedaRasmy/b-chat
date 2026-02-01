@@ -16,7 +16,10 @@
         "@bchat/shared": "workspace:*",
         "cookie-parser": "^1.4.7",
         "cors": "^2.8.6",
+        "dotenv": "^17.2.3",
+        "drizzle-orm": "^0.45.1",
         "express": "^5.2.1",
+        "pg": "^8.18.0",
         "socket.io": "^4.8.3"
     },
     "devDependencies": {
@@ -24,6 +27,8 @@
         "@types/cors": "^2.8.19",
         "@types/express": "^5.0.6",
         "@types/node": "^24.10.9",
+        "@types/pg": "^8.16.0",
+        "drizzle-kit": "^0.31.8",
         "tsx": "^4.21.0",
         "typescript": "~5.9.3"
     }
