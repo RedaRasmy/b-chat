@@ -3,6 +3,8 @@ import express from "express"
 import cors from "cors"
 import { router } from "./router"
 import cookieParser from "cookie-parser"
+import { notFound } from "@/middlewares/not-found"
+import { errorHandler } from "@/middlewares/error-handler"
 
 const app = express()
 
@@ -21,6 +23,8 @@ app.use(
 
 // Routes
 app.use("/api", router)
+app.use(notFound)
+app.use(errorHandler)
 
 const server = http.createServer(app)
 
