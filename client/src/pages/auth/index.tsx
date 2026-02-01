@@ -1,7 +1,5 @@
 import { Outlet } from "react-router-dom"
 
-export function App() {
+export default function AuthLayout() {
     return <Outlet />
 }
-
-export default App
