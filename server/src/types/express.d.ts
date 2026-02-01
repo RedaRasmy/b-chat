@@ -1,9 +1,9 @@
 import "express"
-import type { User } from "@bchat/shared/types"
+import type { AccessTokenPayload } from "@/lib/jwt"
 
 declare module "express" {
     interface Request {
-        user?: User
+        user?: AccessTokenPayload
         validatedQuery?: any
     }
 }
