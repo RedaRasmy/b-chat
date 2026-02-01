@@ -299,7 +299,7 @@ export default function RegisterPage() {
                             <Button
                                 type="submit"
                                 size="lg"
-                                className="cursor-pointer w-full"
+                                className="cursor-pointer w-full mt-3"
                                 disabled={form.formState.isSubmitting}
                             >
                                 Create Account
@@ -347,7 +347,7 @@ export default function RegisterPage() {
                             <span className="text-muted-foreground">
                                 Already have an account?
                             </span>
-                            <Link to="/login">
+                            <Link to="/auth/login">
                                 <Button variant={"link"}>Sign in</Button>
                             </Link>
                         </div>
