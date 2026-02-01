@@ -9,7 +9,7 @@ export default function ChatPage() {
     return (
         <div className="w-full h-screen flex flex-col ">
             <header className="bg-accent h-12 flex items-center px-3 gap-3">
-                <SidebarTrigger size={"default"} />
+                <SidebarTrigger size={"lg"} />
                 <div className="flex justify-between w-full">
                     <h1>Chat:{id}</h1>
                     <Button>btn</Button>
