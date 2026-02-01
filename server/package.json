@@ -19,6 +19,7 @@
     "packageManager": "pnpm@10.28.2",
     "dependencies": {
         "@bchat/shared": "workspace:*",
+        "bcryptjs": "^3.0.3",
         "cookie-parser": "^1.4.7",
         "cors": "^2.8.6",
         "dotenv": "^17.2.3",
