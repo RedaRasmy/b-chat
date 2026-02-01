@@ -13,6 +13,7 @@
     "license": "ISC",
     "packageManager": "pnpm@10.28.2",
     "dependencies": {
+        "@bchat/shared": "workspace:*",
         "cookie-parser": "^1.4.7",
         "cors": "^2.8.6",
         "express": "^5.2.1",

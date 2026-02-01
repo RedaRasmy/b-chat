@@ -10,6 +10,9 @@ importers:
 
   client:
     dependencies:
+      '@bchat/shared':
+        specifier: workspace:*
+        version: link:../shared
       react:
         specifier: ^19.2.0
         version: 19.2.4
@@ -59,6 +62,9 @@ importers:
 
   server:
     dependencies:
+      '@bchat/shared':
+        specifier: workspace:*
+        version: link:../shared
       cookie-parser:
         specifier: ^1.4.7
         version: 1.4.7
@@ -90,6 +96,12 @@ importers:
       typescript:
         specifier: ~5.9.3
         version: 5.9.3
+
+  shared:
+    dependencies:
+      zod:
+        specifier: ^4.3.6
+        version: 4.3.6
 
 packages:
 
