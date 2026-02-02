@@ -1,0 +1,33 @@
+{
+    "name": "@bchat/database",
+    "private": true,
+    "version": "1.0.0",
+    "description": "",
+    "type": "module",
+    "exports": {
+        ".": "./src/index.ts",
+        "./tables": "./src/schemas/index.ts"
+    },
+    "scripts": {
+        "push": "npx drizzle-kit push",
+        "generate": "npx drizzle-kit generate",
+        "migrate": "npx drizzle-kit migrate",
+        "studio": "npx drizzle-kit studio"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "packageManager": "pnpm@10.28.2",
+    "dependencies": {
+        "dotenv": "^17.2.3",
+        "drizzle-orm": "^0.45.1",
+        "pg": "^8.18.0"
+    },
+    "devDependencies": {
+        "@types/node": "^25.2.0",
+        "@types/pg": "^8.16.0",
+        "drizzle-kit": "^0.31.8",
+        "tsx": "^4.21.0",
+        "typescript": "~5.9.3"
+    }
+}

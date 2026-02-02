@@ -19,6 +19,3 @@ export const fullTimestamps = {
     updatedAt,
     deletedAt,
 }
-
-export const DAY = 1000 * 60 * 60 * 24
-export const MONTH = 30 * DAY

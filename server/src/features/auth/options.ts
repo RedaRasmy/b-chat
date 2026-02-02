@@ -1,5 +1,5 @@
+import { MONTH } from "@/utils/periods"
 import { CookieOptions } from "express"
-import { MONTH } from "@/db/timestamps"
 
 export const accessTokenOptions: CookieOptions = {
     httpOnly: true,

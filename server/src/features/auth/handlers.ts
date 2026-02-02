@@ -1,13 +1,13 @@
-import db from "@/db"
+import db from "@bchat/database"
 import { LoginSchema, RegisterSchema } from "@bchat/validation"
 import { makeBodyEndpoint, makeSimpleEndpoint } from "@/utils/wrappers"
 import { compare, hash } from "bcryptjs"
-import { refreshTokens, users } from "@/db/schemas"
+import { refreshTokens, users } from "@bchat/database/tables"
 import { generateAccessToken } from "@/lib/jwt"
 import { generateToken } from "@/utils/generate-token"
-import { MONTH } from "@/db/timestamps"
 import { eq } from "drizzle-orm"
 import { accessTokenOptions, refreshTokenOptions } from "./options"
+import { MONTH } from "@/utils/periods"
 
 export const register = makeBodyEndpoint(
     RegisterSchema,

@@ -9,7 +9,11 @@
         "dev:server": "pnpm --filter @bchat/server dev",
         "dev": "pnpm --parallel --filter @bchat/client --filter @bchat/server dev",
         "build": "pnpm --filter @bchat/client build",
-        "start": "pnpm --parallel --filter @bchat/server --filter @bchat/client start"
+        "start": "pnpm --parallel --filter @bchat/server --filter @bchat/client start",
+        "db:push": "pnpm push --workspace=@bchat/database",
+        "db:generate": "nnpm generate --workspace=@bchat/database",
+        "db:migrate": "pnpm migrate --workspace=@bchat/database",
+        "db:studio": "pnpm studio --workspace=@bchat/database"
     },
     "keywords": [],
     "author": "",
