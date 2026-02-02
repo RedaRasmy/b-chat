@@ -1,5 +1,5 @@
 import { useState, useEffect, type ReactNode, useCallback } from "react"
-import type { User } from "@bchat/shared/types"
+import type { User } from "@bchat/types"
 import { fetchMe, logoutRequest } from "./requests"
 import { AuthContext } from "./context"
 

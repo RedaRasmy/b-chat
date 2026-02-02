@@ -3,7 +3,7 @@ import type {
     LoginCredentials,
     RegisterCredentials,
     User,
-} from "@bchat/shared/types"
+} from "@bchat/types"
 
 export async function registerRequest(data: RegisterCredentials) {
     const res = await api.post("/auth/register", data)

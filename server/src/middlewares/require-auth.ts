@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express"
 import { verifyAccessToken } from "../lib/jwt"
-import { User } from "@bchat/shared/types"
+import { User } from "@bchat/types"
 
 export const requireAuth = (requiredRole?: User["role"]) => {
     return (req: Request, res: Response, next: NextFunction) => {

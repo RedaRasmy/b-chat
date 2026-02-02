@@ -1,4 +1,4 @@
-import type { User } from "@bchat/shared/types"
+import type { User } from "@bchat/types"
 import { createContext } from "react"
 
 interface AuthContextType {

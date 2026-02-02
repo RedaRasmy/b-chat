@@ -1,14 +1,10 @@
 {
-    "name": "@bchat/shared",
+    "name": "@bchat/validation",
     "private": true,
     "version": "1.0.0",
     "description": "",
     "type": "module",
-    "exports": {
-        ".": "./src/index.ts",
-        "./types": "./src/types/index.ts",
-        "./validation": "./src/validation/index.ts"
-    },
+    "main": "src/index.ts",
     "keywords": [],
     "author": "",
     "license": "ISC",

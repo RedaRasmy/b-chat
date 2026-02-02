@@ -1,0 +1,15 @@
+{
+    "name": "@bchat/types",
+    "private": true,
+    "version": "1.0.0",
+    "description": "",
+    "type": "module",
+    "main": "src/index.ts",
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "packageManager": "pnpm@10.28.2",
+    "devDependencies": {
+        "typescript": "~5.9.3"
+    }
+}

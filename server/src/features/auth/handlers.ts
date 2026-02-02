@@ -1,5 +1,5 @@
 import db from "@/db"
-import { LoginSchema, RegisterSchema } from "@bchat/shared/validation"
+import { LoginSchema, RegisterSchema } from "@bchat/validation"
 import { makeBodyEndpoint, makeSimpleEndpoint } from "@/utils/wrappers"
 import { compare, hash } from "bcryptjs"
 import { refreshTokens, users } from "@/db/schemas"
