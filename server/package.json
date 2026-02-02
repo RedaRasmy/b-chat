@@ -7,7 +7,9 @@
     "type": "module",
     "scripts": {
         "dev": "tsx watch src/server.ts",
-        "start": "tsx src/server.ts"
+        "start": "tsx src/server.ts",
+        "cloc": "cloc . --exclude-dir=node_modules",
+        "cloc:ts": "cloc . --exclude-dir=node_modules --include-lang=TypeScript"
     },
     "keywords": [],
     "author": "",

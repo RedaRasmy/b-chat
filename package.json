@@ -13,7 +13,9 @@
         "db:push": "pnpm push --workspace=@bchat/database",
         "db:generate": "nnpm generate --workspace=@bchat/database",
         "db:migrate": "pnpm migrate --workspace=@bchat/database",
-        "db:studio": "pnpm studio --workspace=@bchat/database"
+        "db:studio": "pnpm studio --workspace=@bchat/database",
+        "cloc": "cloc . --exclude-dir=node_modules,ui",
+        "cloc:ts": "cloc . --exclude-dir=node_modules,ui --include-lang=TypeScript"
     },
     "keywords": [],
     "author": "",

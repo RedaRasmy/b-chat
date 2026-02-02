@@ -7,7 +7,9 @@
         "dev": "vite",
         "build": "tsc -b && vite build",
         "lint": "eslint .",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "cloc": "cloc . --exclude-dir=node_modules,ui",
+        "cloc:ts": "cloc . --exclude-dir=node_modules,ui --include-lang=TypeScript"
     },
     "dependencies": {
         "@base-ui/react": "^1.1.0",
