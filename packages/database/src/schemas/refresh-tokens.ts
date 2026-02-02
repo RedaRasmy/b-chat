@@ -6,7 +6,7 @@ import {
     index,
     uuid,
 } from "drizzle-orm/pg-core"
-import { users } from "."
+import { users } from "./users"
 import { createdAt } from "../timestamps"
 import { relations } from "drizzle-orm"
 
