@@ -5,9 +5,11 @@ import { compare, hash } from "bcryptjs"
 import { refreshTokens, users } from "@bchat/database/tables"
 import { generateAccessToken } from "@/lib/jwt"
 import { generateToken } from "@/utils/generate-token"
-import { eq } from "drizzle-orm"
+import { count, eq } from "drizzle-orm"
 import { accessTokenOptions, refreshTokenOptions } from "./options"
 import { MONTH } from "@/utils/periods"
+
+let hasAdmin: boolean | null = null
 
 export const register = makeBodyEndpoint(
     RegisterSchema,
@@ -17,12 +19,20 @@ export const register = makeBodyEndpoint(
         try {
             const hashedPassword = await hash(password, 12)
 
+            if (hasAdmin === null) {
+                const [userCount] = await db
+                    .select({ count: count() })
+                    .from(users)
+                hasAdmin = userCount.count > 0
+            }
+
             const [user] = await db
                 .insert(users)
                 .values({
                     name,
                     email,
                     hashedPassword,
+                    role: hasAdmin ? "user" : "admin",
                 })
                 .returning()
 
