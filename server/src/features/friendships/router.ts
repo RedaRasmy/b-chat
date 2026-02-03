@@ -3,6 +3,10 @@ import {
     getSent,
     getBlocked,
     getFriends,
+    accept,
+    block,
+    request,
+    remove,
 } from "@/features/friendships/handlers"
 import { Router } from "express"
 
@@ -13,9 +17,9 @@ router.get("/pending/sent", getSent)
 router.get("/friends", getFriends)
 router.get("/blocked", getBlocked)
 
-router.post("/:userId")
-router.patch("/:id/accept")
-router.patch("/:id/block")
-router.delete("/:id") // reject or unfriend or unblock
+router.post("/:userId", request)
+router.patch("/:id/accept", accept)
+router.patch("/:id/block", block)
+router.delete("/:id", remove) // reject or unfriend or unblock
 
 export const friendshipsRouter = router

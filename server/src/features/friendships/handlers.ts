@@ -1,5 +1,7 @@
-import { makeSimpleEndpoint } from "@/utils/wrappers"
+import { makeParamsEndpoint, makeSimpleEndpoint } from "@/utils/wrappers"
 import db from "@bchat/database"
+import { friendships } from "@bchat/database/tables"
+import { and, eq, isNull, ne, or } from "drizzle-orm"
 
 export const getReceived = makeSimpleEndpoint(async (req, res, next) => {
     const user = req.user!
@@ -59,6 +61,133 @@ export const getBlocked = makeSimpleEndpoint(async (req, res, next) => {
                 ),
         })
         res.send(200).json(data)
+    } catch (err) {
+        next(err)
+    }
+})
+
+export const request = makeParamsEndpoint(
+    ["userId"],
+    async (req, res, next) => {
+        const user = req.user!
+        const targetId = req.params.userId
+
+        try {
+            const [friendship] = await db
+                .insert(friendships)
+                .values({
+                    requesterId: user.id,
+                    receiverId: targetId,
+                })
+                .returning()
+
+            res.status(201).json(friendship)
+        } catch (err) {
+            next(err)
+        }
+    },
+)
+
+export const accept = makeParamsEndpoint(["id"], async (req, res, next) => {
+    const user = req.user!
+    const id = req.params.id
+
+    try {
+        const friendship = await db.query.friendships.findFirst({
+            where: (fr, { eq, and }) =>
+                and(eq(fr.id, id), eq(fr.receiverId, user.id)),
+        })
+
+        if (!friendship) {
+            return res.status(404).json({
+                message: "Friendship not found",
+            })
+        }
+        if (friendship.status !== "pending") {
+            return res.status(403).json({
+                message: "You can't accept while the friendship is not pending",
+            })
+        }
+        const [newFriendship] = await db
+            .update(friendships)
+            .set({
+                status: "friend",
+                acceptedAt: new Date(Date.now()),
+            })
+            .returning()
+
+        res.status(200).json(newFriendship)
+    } catch (err) {
+        next(err)
+    }
+})
+
+export const block = makeParamsEndpoint(["id"], async (req, res, next) => {
+    const user = req.user!
+    const id = req.params.id
+
+    try {
+        const friendship = await db.query.friendships.findFirst({
+            where: (fr, { eq, and, or }) =>
+                and(
+                    eq(fr.id, id),
+                    or(eq(fr.receiverId, user.id), eq(fr.requesterId, user.id)),
+                ),
+        })
+
+        if (!friendship) {
+            return res.status(404).json({
+                message: "Friendship not found",
+            })
+        }
+        if (friendship.status === "blocked") {
+            return res.status(403).json({
+                message:
+                    "You can't block while the friendship is already blocked",
+            })
+        }
+        const [newFriendship] = await db
+            .update(friendships)
+            .set({
+                status: "blocked",
+                blockedBy: user.id,
+                blockedAt: new Date(Date.now()),
+            })
+            .returning()
+
+        res.status(200).json(newFriendship)
+    } catch (err) {
+        next(err)
+    }
+})
+
+export const remove = makeParamsEndpoint(["id"], async (req, res, next) => {
+    const user = req.user!
+    const id = req.params.id
+
+    try {
+        const result = await db.delete(friendships).where(
+            and(
+                eq(friendships.id, id), // id matching
+                or(
+                    // user must be in the friendship
+                    eq(friendships.receiverId, user.id),
+                    eq(friendships.requesterId, user.id),
+                ),
+                or(
+                    // user must not be the blocked one
+                    isNull(friendships.blockedBy),
+                    eq(friendships.blockedBy, user.id),
+                ),
+            ),
+        )
+        if (result.rowCount === 0) {
+            return res.status(403).json({
+                message: "Unable to perform this action",
+            })
+        }
+
+        res.sendStatus(204)
     } catch (err) {
         next(err)
     }
