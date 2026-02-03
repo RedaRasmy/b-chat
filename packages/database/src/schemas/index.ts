@@ -1,3 +1,5 @@
 export * from "./users"
 export * from "./refresh-tokens"
 export * from "./friendships"
+export * from "./posts"
+export * from "./comments"
