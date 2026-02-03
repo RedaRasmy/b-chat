@@ -1,6 +1,6 @@
 import App from "@/App"
 import ChatPage from "@/pages/chat"
-import HomePage from "@/pages/home"
+import ProfilePage from "@/pages/profile"
 import LoginPage from "@/pages/auth/login"
 import PostsPage from "@/pages/posts"
 import RegisterPage from "@/pages/auth/register"
@@ -14,7 +14,7 @@ export const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <HomePage />,
+                element: <ProfilePage />,
             },
             {
                 path: "/chat/:id",
