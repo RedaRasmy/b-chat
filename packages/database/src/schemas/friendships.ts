@@ -22,10 +22,10 @@ export const friendships = pgTable(
         id: uuid().primaryKey().defaultRandom(),
         requesterId: uuid("requester_id")
             .notNull()
-            .references(() => users.id),
+            .references(() => users.id, { onDelete: "cascade" }),
         receiverId: uuid("receiver_id")
             .notNull()
-            .references(() => users.id),
+            .references(() => users.id, { onDelete: "cascade" }),
         status: friendshipStatus().default("pending").notNull(),
         blockedBy: uuid("blocked_by").references(() => users.id),
         blockedAt: timestamp("blocked_at"),
