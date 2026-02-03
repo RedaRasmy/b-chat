@@ -1,9 +1,20 @@
 import { relations } from "drizzle-orm"
-import { pgTable, uuid, pgEnum, index, unique } from "drizzle-orm/pg-core"
+import {
+    pgTable,
+    uuid,
+    pgEnum,
+    index,
+    unique,
+    timestamp,
+} from "drizzle-orm/pg-core"
 import { users } from "@/schemas/users"
 import { createdAt, updatedAt } from "@/timestamps"
 
-export const friendshipStatus = pgEnum("friendship_status", ["pending", "friend", "blocked"])
+export const friendshipStatus = pgEnum("friendship_status", [
+    "pending",
+    "friend",
+    "blocked",
+])
 
 export const friendships = pgTable(
     "friendships",
@@ -16,6 +27,9 @@ export const friendships = pgTable(
             .notNull()
             .references(() => users.id),
         status: friendshipStatus().default("pending").notNull(),
+        blockedBy: uuid("blocked_by").references(() => users.id),
+        blockedAt: timestamp("blocked_at"),
+        acceptedAt: timestamp("accepted_at"),
         createdAt,
         updatedAt,
     },
