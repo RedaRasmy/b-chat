@@ -1,18 +1,37 @@
 import { Button } from "@/components/ui/button"
 import { SidebarTrigger } from "@/components/ui/sidebar"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useSearchParams } from "react-router-dom"
 
 export default function ProfilePage() {
+    const [params, setParams] = useSearchParams()
+    const tab = params.get("tab") ?? "friends"
+
     return (
         <div className="w-full h-screen flex flex-col ">
             <header className="bg-accent h-12 flex items-center px-3 gap-3">
                 <SidebarTrigger size={"lg"} />
                 <div className="flex justify-between w-full">
-                    <h1>Home</h1>
-                    <Button>New Chat</Button>
+                    <h1>Profile</h1>
                 </div>
             </header>
-            <main className="flex-1"></main>
-            <footer className="bg-accent h-12"></footer>
+            <main className="h-full p-2">
+                <Tabs
+                    defaultValue={tab}
+                    onValueChange={(tab) =>
+                        setParams({
+                            tab,
+                        })
+                    }
+                >
+                    <TabsList className={"w-full"}>
+                        <TabsTrigger value="friends">Friends</TabsTrigger>
+                        <TabsTrigger value="my-posts">My Posts</TabsTrigger>
+                        <TabsTrigger value="requests">Requests</TabsTrigger>
+                        <TabsTrigger value="settings">Settings</TabsTrigger>
+                    </TabsList>
+                </Tabs>
+            </main>
         </div>
     )
 }
