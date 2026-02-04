@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm"
 import { pgTable, varchar, uuid, pgEnum } from "drizzle-orm/pg-core"
 import { refreshTokens } from "./refresh-tokens"
-import { friendships } from "@/schemas/friendships"
+import { friendships } from "./friendships"
 
 export const role = pgEnum("role", ["admin", "user"])
 

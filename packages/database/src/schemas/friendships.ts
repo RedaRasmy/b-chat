@@ -7,8 +7,8 @@ import {
     unique,
     timestamp,
 } from "drizzle-orm/pg-core"
-import { users } from "@/schemas/users"
-import { createdAt, updatedAt } from "@/timestamps"
+import { users } from "./users"
+import { createdAt, updatedAt } from "../timestamps"
 
 export const friendshipStatus = pgEnum("friendship_status", [
     "pending",

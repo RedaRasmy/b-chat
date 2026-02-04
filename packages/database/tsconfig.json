@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "composite": true, 
+        "composite": true,
         "declaration": true,
         "target": "ES2022",
         "module": "ESNext",
@@ -11,10 +11,7 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true,
-        "types": ["node"],
-        "paths": {
-            "@/*": ["./src/*"]
-        }
+        "types": ["node"]
     },
     "include": ["src/**/*", "drizzle.config.ts"],
     "exclude": ["node_modules"]
