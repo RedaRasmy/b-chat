@@ -116,7 +116,7 @@ export const updatePost = makeIdBodyEndpoint(
         try {
             const [newPost] = await db
                 .update(posts)
-                .set({ content })
+                .set({ content, isEdited: true })
                 .where(and(eq(posts.id, id), eq(posts.authorId, user.id)))
                 .returning()
 
