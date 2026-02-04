@@ -8,7 +8,5 @@
         "skipLibCheck": true
     },
     "include": ["src"],
-    "references": [
-        { "path": "../database" } 
-    ]
+    "references": [{ "path": "../database" }]
 }

@@ -14,7 +14,7 @@ import {
     PaginationSchema,
     PostsQuerySchema,
     UpdatePostSchema,
-} from "@bchat/validation"
+} from "@bchat/shared/validation"
 import { and, count, desc, eq, ilike } from "drizzle-orm"
 
 export const getPosts = makeQueryEndpoint(

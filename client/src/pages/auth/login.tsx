@@ -17,7 +17,7 @@ import z from "zod"
 import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/features/auth/use-auth"
 import { loginRequest } from "@/features/auth/requests"
-import { LoginSchema } from "@bchat/validation"
+import { LoginSchema } from "@bchat/shared/validation"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
     ArrowLeft01Icon,

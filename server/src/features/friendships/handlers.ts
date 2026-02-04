@@ -1,7 +1,7 @@
 import { makeParamsEndpoint, makeSimpleEndpoint } from "@/utils/wrappers"
 import db from "@bchat/database"
 import { friendships } from "@bchat/database/tables"
-import { and, eq, isNull, ne, or } from "drizzle-orm"
+import { and, eq, isNull, or } from "drizzle-orm"
 
 export const getReceived = makeSimpleEndpoint(async (req, res, next) => {
     const user = req.user!

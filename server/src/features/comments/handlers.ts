@@ -1,7 +1,7 @@
 import { makeByIdEndpoint, makeIdBodyEndpoint } from "@/utils/wrappers"
 import db from "@bchat/database"
 import { comments } from "@bchat/database/tables"
-import { UpdateCommentSchema } from "@bchat/validation"
+import { UpdateCommentSchema } from "@bchat/shared/validation"
 import { and, eq } from "drizzle-orm"
 
 export const updateComment = makeIdBodyEndpoint(
