@@ -9,12 +9,14 @@ export const LoginSchema = z.object({
         .max(50, "Password must be between 8 and 50 characters"),
 })
 
+export const NameSchema = z
+    .string()
+    .min(1, "Name is required")
+    .min(3, "Name must be between 3 and 30 characters")
+    .max(30, "Name must be between 3 and 30 characters")
+
 export const RegisterSchema = z.object({
-    name: z
-        .string()
-        .min(1, "Name is required")
-        .min(3, "Name must be between 3 and 30 characters")
-        .max(30, "Name must be between 3 and 30 characters"),
+    name: NameSchema,
     email: z.email(),
     password: z
         .string()
