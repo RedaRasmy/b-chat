@@ -2,14 +2,7 @@ import { posts } from "@/schemas/posts"
 import { users } from "@/schemas/users"
 import { createdAt, updatedAt } from "@/timestamps"
 import { relations } from "drizzle-orm"
-import {
-    boolean,
-    index,
-    integer,
-    pgTable,
-    text,
-    uuid,
-} from "drizzle-orm/pg-core"
+import { boolean, index, pgTable, text, uuid } from "drizzle-orm/pg-core"
 
 export const comments = pgTable(
     "comments",
@@ -34,6 +27,12 @@ export const comments = pgTable(
 )
 
 export const commentsRelations = relations(comments, ({ one }) => ({
-    post: one(posts),
-    author: one(users),
+    post: one(posts, {
+        fields: [comments.postId],
+        references: [posts.id],
+    }),
+    author: one(users, {
+        fields: [comments.authorId],
+        references: [users.id],
+    }),
 }))
