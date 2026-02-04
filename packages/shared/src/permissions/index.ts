@@ -1,16 +1,11 @@
 import type { User } from "@bchat/types"
 
-export const PERMISSIONS = [
-    "post:delete:any",
-    "post:delete:own",
-    "comment:delete:any",
-    "comment:delete:own",
-] as const
+export const PERMISSIONS = ["post:delete:any", "comment:delete:any"] as const
 
 export type Permission = (typeof PERMISSIONS)[number]
 
 export const rolePermissions: Record<User["role"], Permission[]> = {
-    user: ["post:delete:own", "comment:delete:own"],
+    user: [],
     admin: [...PERMISSIONS],
 }
 

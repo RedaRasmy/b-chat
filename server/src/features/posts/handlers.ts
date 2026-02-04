@@ -16,6 +16,7 @@ import {
     UpdatePostSchema,
 } from "@bchat/shared/validation"
 import { and, count, desc, eq, ilike } from "drizzle-orm"
+import { hasPermission } from "@bchat/shared/permissions"
 
 export const getPosts = makeQueryEndpoint(
     PostsQuerySchema,
@@ -137,14 +138,16 @@ export const deletePost = makeParamsEndpoint(["id"], async (req, res, next) => {
     const id = req.params.id
     const user = req.user!
 
+    const condition = hasPermission(user.role, "post:delete:any")
+        ? eq(posts.id, id)
+        : and(eq(posts.id, id), eq(posts.authorId, user.id))
+
     try {
-        const result = await db
-            .delete(posts)
-            .where(and(eq(posts.authorId, user.id), eq(posts.id, id)))
+        const result = await db.delete(posts).where(condition)
 
         if (result.rowCount === 0) {
             return res.status(403).json({
-                message: "Unable to perform this action",
+                message: "Action not allowed",
             })
         }
 
