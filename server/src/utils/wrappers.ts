@@ -147,7 +147,7 @@ export function makeByIdEndpoint(
 
 /// UPDATE BY ID
 
-export function makeUpdateEndpoint<Body>(
+export function makeIdBodyEndpoint<Body>(
     schema: z.ZodType<Body>,
     callback: (
         req: Request<{ id: string }, any, Body>,
