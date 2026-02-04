@@ -12,9 +12,11 @@ export const InsertPostSchema = createInsertSchema(posts).pick({
 
 export const SelectPostSchema = createSelectSchema(posts)
 
-export const UpdatePostSchema = createUpdateSchema(posts).pick({
-    content: true,
-})
+export const UpdatePostSchema = createUpdateSchema(posts)
+    .pick({
+        content: true,
+    })
+    .required()
 
 export type IPost = z.infer<typeof InsertPostSchema>
 export type SPost = z.infer<typeof SelectPostSchema>

@@ -12,9 +12,11 @@ export const InsertCommentSchema = createInsertSchema(comments).pick({
 
 export const SelectCommentSchema = createSelectSchema(comments)
 
-export const UpdateCommentSchema = createUpdateSchema(comments).pick({
-    content: true,
-})
+export const UpdateCommentSchema = createUpdateSchema(comments)
+    .pick({
+        content: true,
+    })
+    .required()
 
 export type IComment = z.infer<typeof InsertCommentSchema>
 export type SComment = z.infer<typeof SelectCommentSchema>
