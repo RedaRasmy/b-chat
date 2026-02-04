@@ -29,5 +29,8 @@ export const posts = pgTable(
 
 export const postsRelations = relations(posts, ({ many, one }) => ({
     comments: many(comments),
-    author: one(users),
+    author: one(users, {
+        fields: [posts.authorId],
+        references: [users.id],
+    }),
 }))
