@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button"
 import {
     Card,
     CardContent,
+    CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,
@@ -14,7 +15,12 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { TabsContent } from "@/components/ui/tabs"
-import { fetchProfile, updateProfile } from "@/features/profile/requests"
+import { useAuth } from "@/features/auth/use-auth"
+import {
+    deleteAccount,
+    fetchProfile,
+    updateProfile,
+} from "@/features/profile/requests"
 import {
     UpdateProfileSchema,
     type UpdateProfileData,
@@ -25,6 +31,7 @@ import { useEffect } from "react"
 import { Controller, useForm } from "react-hook-form"
 
 export default function Settings() {
+    const { logout } = useAuth()
     const form = useForm<UpdateProfileData>({
         resolver: zodResolver(UpdateProfileSchema),
         defaultValues: {
@@ -59,6 +66,15 @@ export default function Settings() {
             })
         },
     })
+    const deleteMutation = useMutation({
+        mutationFn: deleteAccount,
+        onError: (err) => {
+            console.error(err)
+        },
+        onSuccess: async () => {
+            await logout()
+        },
+    })
 
     function onSubmit({ name }: UpdateProfileData) {
         if (name === "" || name === data?.name) {
@@ -68,12 +84,12 @@ export default function Settings() {
     }
 
     return (
-        <TabsContent value="settings">
-            <Card className="max-w-150">
+        <TabsContent value="settings" className={"grid md:grid-cols-2 gap-2"}>
+            <Card className="">
                 <CardHeader>
                     <CardTitle>Update Your Profile</CardTitle>
                 </CardHeader>
-                <CardContent className="text-muted-foreground text-sm">
+                <CardContent>
                     <form
                         id="update-profile"
                         onSubmit={form.handleSubmit(onSubmit)}
@@ -94,6 +110,7 @@ export default function Settings() {
                                             placeholder="Enter your new name"
                                             autoComplete="off"
                                             type="text"
+                                            className="max-w-100"
                                         />
                                         {fieldState.invalid && (
                                             <FieldError
@@ -116,6 +133,29 @@ export default function Settings() {
                             Submit
                         </Button>
                     </Field>
+                </CardFooter>
+            </Card>
+            <Card className="">
+                <CardHeader>
+                    <CardTitle className="text-de">
+                        Delete Your Account
+                    </CardTitle>
+                    <CardDescription>
+                        This will permanently delete your account and all
+                        associated data. This action cannot be undone.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Button
+                        disabled={deleteMutation.isPending}
+                        variant={"destructive"}
+                        onClick={() => deleteMutation.mutate()}
+                    >
+                        Delete
+                    </Button>
+                </CardContent>
+                <CardFooter>
+                    <Field orientation="horizontal"></Field>
                 </CardFooter>
             </Card>
         </TabsContent>

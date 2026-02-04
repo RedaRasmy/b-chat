@@ -11,3 +11,7 @@ export async function updateProfile(data: UpdateProfileData) {
     const res = await api.patch("/profile", data)
     return res.data as User
 }
+
+export async function deleteAccount() {
+    return await api.delete("/profile")
+}
