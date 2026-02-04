@@ -164,22 +164,6 @@ importers:
         specifier: ~5.9.3
         version: 5.9.3
 
-  packages/validation:
-    dependencies:
-      '@bchat/database':
-        specifier: workspace:*
-        version: link:../database
-      drizzle-zod:
-        specifier: ^0.8.3
-        version: 0.8.3(drizzle-orm@0.45.1(@types/pg@8.16.0)(pg@8.18.0))(zod@4.3.6)
-      zod:
-        specifier: ^4.3.6
-        version: 4.3.6
-    devDependencies:
-      typescript:
-        specifier: ~5.9.3
-        version: 5.9.3
-
   server:
     dependencies:
       '@bchat/database':

@@ -5,7 +5,8 @@
     "description": "",
     "type": "module",
     "exports": {
-        "./validation": "./src/validation/index.ts"
+        "./validation": "./src/validation/index.ts",
+        "./permissions": "./src/permissions/index.ts"
     },
     "license": "ISC",
     "packageManager": "pnpm@10.28.2",
