@@ -133,8 +133,6 @@ export function makeQueryEndpoint<Query>(
 //     }
 // }
 
-/// BY ID
-
 export function makeByIdEndpoint(
     callback: (
         req: Request<{ id: string }>,
@@ -145,8 +143,6 @@ export function makeByIdEndpoint(
     return makeParamsEndpoint(["id"], callback)
 }
 
-/// UPDATE BY ID
-
 export function makeIdBodyEndpoint<Body>(
     schema: z.ZodType<Body>,
     callback: (
@@ -156,4 +152,15 @@ export function makeIdBodyEndpoint<Body>(
     ) => void,
 ) {
     return makeParamsEndpoint(["id"], makeBodyEndpoint(schema, callback))
+}
+
+export function makeIdQueryEndpoint<Query>(
+    schema: z.ZodType<Query>,
+    callback: (
+        req: Request<{ id: string }, any, any, Query>,
+        res: Response,
+        next: NextFunction,
+    ) => void,
+) {
+    return makeParamsEndpoint(["id"], makeQueryEndpoint(schema, callback))
 }
