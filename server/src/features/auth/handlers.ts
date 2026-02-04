@@ -8,6 +8,7 @@ import { generateToken } from "@/utils/generate-token"
 import { count, eq } from "drizzle-orm"
 import { accessTokenOptions, refreshTokenOptions } from "./options"
 import { MONTH } from "@/utils/periods"
+import { User } from "@bchat/types"
 
 let hasAdmin: boolean | null = null
 
@@ -207,14 +208,22 @@ export const fetchMe = makeSimpleEndpoint(async (req, res, next) => {
     const session = req.user!
 
     try {
-        const user = await db.query.users.findFirst({
+        const data = await db.query.users.findFirst({
             where: (users, { eq }) => eq(users.id, session.id),
         })
 
-        if (!user) {
+        if (!data) {
             return res.status(404).json({
                 message: "User not found",
             })
+        }
+
+        const user: User = {
+            id: data.id,
+            name: data.name,
+            email: data.email,
+            role: data.role,
+            avatar: data.avatar,
         }
 
         res.status(200).json(user)

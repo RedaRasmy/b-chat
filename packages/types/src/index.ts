@@ -3,6 +3,7 @@ export type User = {
     name: string
     role: "admin" | "user"
     email: string
+    avatar: string | null
 }
 
 export type LoginCredentials = {

@@ -13,4 +13,3 @@ export const UpdateProfileSchema = z.object({
 })
 
 export type UpdateProfileData = z.infer<typeof UpdateProfileSchema>
-export type Profile = z.infer<typeof SelectProfileSchema>
