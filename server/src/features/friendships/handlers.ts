@@ -20,7 +20,7 @@ export const getPending = makeSimpleEndpoint(async (req, res, next) => {
                 },
             },
         })
-        res.send(200).json(data)
+        res.json(data)
     } catch (err) {
         next(err)
     }
@@ -37,7 +37,7 @@ export const getFriends = makeSimpleEndpoint(async (req, res, next) => {
                     or(eq(fr.receiverId, user.id), eq(fr.requesterId, user.id)),
                 ),
         })
-        res.send(200).json(data)
+        res.json(data)
     } catch (err) {
         next(err)
     }
@@ -55,7 +55,7 @@ export const getBlocked = makeSimpleEndpoint(async (req, res, next) => {
                     eq(fr.blockedBy, user.id),
                 ),
         })
-        res.send(200).json(data)
+        res.json(data)
     } catch (err) {
         next(err)
     }
@@ -111,7 +111,7 @@ export const accept = makeParamsEndpoint(["id"], async (req, res, next) => {
             })
             .returning()
 
-        res.status(200).json(newFriendship)
+        res.json(newFriendship)
     } catch (err) {
         next(err)
     }
@@ -150,7 +150,7 @@ export const block = makeParamsEndpoint(["id"], async (req, res, next) => {
             })
             .returning()
 
-        res.status(200).json(newFriendship)
+        res.json(newFriendship)
     } catch (err) {
         next(err)
     }
