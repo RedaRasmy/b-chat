@@ -4,14 +4,13 @@ import {
     CardDescription,
     CardTitle,
     CardContent,
-    CardFooter,
 } from "@/components/ui/card"
 import type { PostWithAuthor } from "@bchat/types"
 
 export default function Post({ post }: { post: PostWithAuthor }) {
-    const date = new Date(post.createdAt).toTimeString()
+    const date = new Date(post.createdAt).toLocaleDateString()
     return (
-        <Card size="sm" className="mx-auto w-full max-w-sm">
+        <Card className="w-[95vw] md:w-120 lg:w-180 xl:w-200 ">
             <CardHeader>
                 <CardTitle>{post.author.name}</CardTitle>
                 <CardDescription>
@@ -19,11 +18,13 @@ export default function Post({ post }: { post: PostWithAuthor }) {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <p>{post.content}</p>
+                <p className="text-wrap text-ellipsi overflow-auto">
+                    {post.content}
+                </p>
             </CardContent>
-            <CardFooter>
+            {/* <CardFooter className="">
                 comments : <span>{post.commentsCount}</span>
-            </CardFooter>
+            </CardFooter> */}
         </Card>
     )
 }

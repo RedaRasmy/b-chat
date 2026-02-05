@@ -1,26 +1,21 @@
 import { posts } from "@bchat/database/tables"
-import {
-    createInsertSchema,
-    createSelectSchema,
-    createUpdateSchema,
-} from "drizzle-zod"
+import { createSelectSchema } from "drizzle-zod"
 import { PaginationSchema, SearchSchema } from "./query"
 import z from "zod"
 
-export const InsertPostSchema = createInsertSchema(posts).pick({
-    content: true,
+export const InsertPostSchema = z.object({
+    content: z
+        .string()
+        .min(1, "Post content is required")
+        .max(500, "Post content must not exceed 500 characters"),
 })
 
 export const SelectPostSchema = createSelectSchema(posts)
 
-export const UpdatePostSchema = createUpdateSchema(posts)
-    .pick({
-        content: true,
-    })
-    .required()
+export const UpdatePostSchema = InsertPostSchema
 
 export type PostFormData = {
-    conent: string
+    content: string
 }
 
 // Query

@@ -17,7 +17,7 @@ export async function getPosts(query: PostsQuery) {
     const res = await api.get("/posts", {
         params: query,
     })
-    return res.data as PostWithAuthor[]
+    return res.data as PaginatedResult<PostWithAuthor[]>
 }
 
 export async function addPost(data: PostFormData) {
@@ -52,7 +52,7 @@ export async function getPostComments({
         params: query,
     })
 
-    return res.data as PaginatedResult<CommentWithAuthor>
+    return res.data as PaginatedResult<CommentWithAuthor[]>
 }
 
 export async function addComment({
