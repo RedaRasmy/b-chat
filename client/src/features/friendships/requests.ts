@@ -1,5 +1,11 @@
 import { api } from "@/lib/api"
-import type { Friend, FriendshipRequest, OtherUser, User } from "@bchat/types"
+import type {
+    Friend,
+    Friendship,
+    FriendshipRequest,
+    OtherUser,
+    User,
+} from "@bchat/types"
 
 // Queries
 
@@ -34,27 +40,27 @@ export async function requestFriendship(id: User["id"]) {
     return res.data
 }
 
-export async function acceptFriendship(id: User["id"]) {
+export async function acceptFriendship(id: Friendship["id"]) {
     const res = await api.patch("/friendships/" + id + "/accept")
     return res.data
 }
 
-export async function block(id: User["id"]) {
+export async function block(id: Friendship["id"]) {
     const res = await api.patch("/friendships/" + id + "/block")
     return res.data
 }
 
-export async function rejectFriendship(id: User["id"]) {
+export async function rejectFriendship(id: Friendship["id"]) {
     const res = await api.delete("/friendships/" + id)
     return res
 }
 
-export async function unfriend(id: User["id"]) {
+export async function unfriend(id: Friendship["id"]) {
     const res = await api.delete("/friendships/" + id)
     return res
 }
 
-export async function unblock(id: User["id"]) {
+export async function unblock(id: Friendship["id"]) {
     const res = await api.delete("/friendships/" + id)
     return res
 }
