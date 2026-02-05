@@ -10,6 +10,15 @@ export const getReceived = makeSimpleEndpoint(async (req, res, next) => {
         const data = await db.query.friendships.findMany({
             where: (fr, { eq, and }) =>
                 and(eq(fr.status, "pending"), eq(fr.receiverId, user.id)),
+            with: {
+                requester: {
+                    columns: {
+                        name: true,
+                        avatar: true,
+                        role: true,
+                    },
+                },
+            },
         })
         res.send(200).json(data)
     } catch (err) {
