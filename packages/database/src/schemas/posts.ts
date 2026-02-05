@@ -1,7 +1,7 @@
 import { comments } from "./comments"
 import { users } from "./users"
 import { createdAt, updatedAt } from "../timestamps"
-import { relations } from "drizzle-orm"
+import { InferSelectModel, relations } from "drizzle-orm"
 import {
     boolean,
     index,
@@ -34,3 +34,5 @@ export const postsRelations = relations(posts, ({ many, one }) => ({
         references: [users.id],
     }),
 }))
+
+export type Post = InferSelectModel<typeof posts>

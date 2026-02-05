@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm"
+import { relations, InferSelectModel } from "drizzle-orm"
 import {
     pgTable,
     uuid,
@@ -52,3 +52,5 @@ export const friendshipsRelations = relations(friendships, ({ one }) => ({
         relationName: "receiver",
     }),
 }))
+
+export type Friendship = InferSelectModel<typeof friendships>

@@ -1,7 +1,7 @@
 import { posts } from "./posts"
 import { users } from "./users"
 import { createdAt, updatedAt } from "../timestamps"
-import { relations } from "drizzle-orm"
+import { relations, InferSelectModel } from "drizzle-orm"
 import { boolean, index, pgTable, text, uuid } from "drizzle-orm/pg-core"
 
 export const comments = pgTable(
@@ -36,3 +36,5 @@ export const commentsRelations = relations(comments, ({ one }) => ({
         references: [users.id],
     }),
 }))
+
+export type Comment = InferSelectModel<typeof comments>

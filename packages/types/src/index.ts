@@ -1,11 +1,3 @@
-export type User = {
-    id: string
-    name: string
-    role: "admin" | "user"
-    email: string
-    avatar: string | null
-}
-
 export type LoginCredentials = {
     email: string
     password: string
@@ -16,3 +8,5 @@ export type RegisterCredentials = {
     email: string
     password: string
 }
+
+export type { User, Post, Friendship, Comment } from "@bchat/database/tables"

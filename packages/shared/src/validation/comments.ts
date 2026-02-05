@@ -4,7 +4,6 @@ import {
     createSelectSchema,
     createUpdateSchema,
 } from "drizzle-zod"
-import z from "zod"
 
 export const InsertCommentSchema = createInsertSchema(comments).pick({
     content: true,
@@ -17,7 +16,3 @@ export const UpdateCommentSchema = createUpdateSchema(comments)
         content: true,
     })
     .required()
-
-export type IComment = z.infer<typeof InsertCommentSchema>
-export type SComment = z.infer<typeof SelectCommentSchema>
-export type UComment = z.infer<typeof UpdateCommentSchema>

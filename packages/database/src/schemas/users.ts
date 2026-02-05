@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm"
+import { InferSelectModel, relations } from "drizzle-orm"
 import { pgTable, varchar, uuid, pgEnum } from "drizzle-orm/pg-core"
 import { refreshTokens } from "./refresh-tokens"
 import { friendships } from "./friendships"
@@ -25,3 +25,8 @@ export const usersRelations = relations(users, ({ many }) => ({
     posts: many(posts),
     comments: many(comments),
 }))
+
+export type User = Omit<
+    InferSelectModel<typeof users>,
+    "hashedPassword" | "githubId" | "googleId"
+>
