@@ -1,4 +1,4 @@
-import { ToRecord } from "@/types"
+import { ToRecord } from "@bchat/types"
 import type { NextFunction, Request, Response } from "express"
 import { z } from "zod"
 

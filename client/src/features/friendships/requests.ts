@@ -1,11 +1,11 @@
 import { api } from "@/lib/api"
-import type { User } from "@bchat/types"
+import type { FriendshipRequest, User } from "@bchat/types"
 
 // Queries
 
 export async function getPendingReceived() {
     const res = await api.get("/friendships/pending/received")
-    return res.data
+    return res.data as FriendshipRequest[]
 }
 
 export async function getPendingSent() {
