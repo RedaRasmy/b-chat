@@ -7,7 +7,7 @@ export default function UserCard({
     user,
     children,
 }: {
-    user: OtherUser
+    user: Omit<OtherUser, "id">
     children: ReactNode
 }) {
     return (

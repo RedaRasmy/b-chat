@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useAuth } from "@/features/auth/use-auth"
+import Requests from "@/features/profile/components/requests"
 import Settings from "@/features/profile/components/settings"
 import { useSearchParams } from "react-router-dom"
 
@@ -27,6 +28,7 @@ export default function ProfilePage() {
                             tab,
                         })
                     }
+                    className={'h-full'}
                 >
                     <TabsList className={"w-full mb-2"}>
                         <TabsTrigger value="friends">Friends</TabsTrigger>
@@ -35,6 +37,7 @@ export default function ProfilePage() {
                         <TabsTrigger value="settings">Settings</TabsTrigger>
                     </TabsList>
                     <Settings />
+                    <Requests />
                 </Tabs>
             </main>
         </div>
