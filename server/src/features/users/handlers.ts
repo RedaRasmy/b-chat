@@ -14,7 +14,7 @@ export const getUsers = makeQueryEndpoint(
                     if (search)
                         return and(
                             ne(users.id, user.id),
-                            ilike(users.name, search),
+                            ilike(users.name, `%${search}%`),
                         )
 
                     return ne(users.id, user.id)

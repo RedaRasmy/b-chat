@@ -29,7 +29,7 @@ export const getPosts = makeQueryEndpoint(
         try {
             const data = await db.query.posts.findMany({
                 where: (posts, { ilike }) => {
-                    if (search) return ilike(posts.content, search)
+                    if (search) return ilike(posts.content, `%${search}%`)
                 },
                 orderBy: desc(posts.createdAt),
                 offset,
