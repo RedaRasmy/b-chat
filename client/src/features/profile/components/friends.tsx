@@ -3,9 +3,10 @@ import UserCard from "@/components/user-card"
 import { getFriends, unfriend } from "@/features/friendships/requests"
 import { UserMinus01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
 export default function Friends() {
+    const queryClient = useQueryClient()
     const { data, isLoading } = useQuery({
         queryKey: ["friends"],
         queryFn: getFriends,
@@ -13,6 +14,11 @@ export default function Friends() {
 
     const unfriendMutation = useMutation({
         mutationFn: unfriend,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["friends"],
+            })
+        },
     })
 
     if (isLoading || !data) return null

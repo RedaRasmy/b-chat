@@ -7,9 +7,10 @@ import {
 } from "@/features/friendships/requests"
 import { UserCheck01Icon, UserRemove01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
 export default function Requests() {
+    const queryClient = useQueryClient()
     const { data, isLoading } = useQuery({
         queryKey: ["requests"],
         queryFn: getPendingRequests,
@@ -17,10 +18,23 @@ export default function Requests() {
 
     const acceptMutation = useMutation({
         mutationFn: acceptFriendship,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["requests"],
+            })
+            queryClient.invalidateQueries({
+                queryKey: ["friends"],
+            })
+        },
     })
 
     const rejectMutation = useMutation({
         mutationFn: rejectFriendship,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["requests"],
+            })
+        },
     })
 
     if (isLoading || !data) return null
