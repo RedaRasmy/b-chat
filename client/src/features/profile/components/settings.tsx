@@ -1,3 +1,4 @@
+import { ActionButton } from "@/components/action-button"
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -146,13 +147,13 @@ export default function Settings() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Button
-                        disabled={deleteMutation.isPending}
+                    <ActionButton
+                        action={deleteMutation.mutate}
+                        requireAreYouSure
                         variant={"destructive"}
-                        onClick={() => deleteMutation.mutate()}
                     >
                         Delete
-                    </Button>
+                    </ActionButton>
                 </CardContent>
                 <CardFooter>
                     <Field orientation="horizontal"></Field>

@@ -1,4 +1,4 @@
-import { type ComponentProps, type ReactNode } from "react"
+import { type ComponentProps, type ReactNode, useTransition } from "react"
 import { Button } from "@/components/ui/button"
 import {
     AlertDialog,
@@ -12,7 +12,6 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { LoadingSwap } from "@/components/loading-swap"
-import { useMutation } from "@tanstack/react-query"
 
 export function ActionButton({
     action,
@@ -20,23 +19,21 @@ export function ActionButton({
     areYouSureDescription = "This action cannot be undone.",
     ...props
 }: ComponentProps<typeof Button> & {
-    action: () => Promise<unknown>
+    action: () => unknown
     requireAreYouSure?: boolean
     areYouSureDescription?: ReactNode
 }) {
-    const mutation = useMutation({
-        mutationFn: action,
-    })
+    const [isLoading, startTransition] = useTransition()
 
-    function submit() {
-        mutation.mutate()
+    function performAction() {
+        startTransition(() => {
+            action()
+        })
     }
 
     if (requireAreYouSure) {
         return (
-            <AlertDialog
-                open={mutation.isIdle || mutation.isPending ? true : undefined}
-            >
+            <AlertDialog open={isLoading ? true : undefined}>
                 <AlertDialogTrigger
                     render={<Button {...props} />}
                 ></AlertDialogTrigger>
@@ -50,12 +47,11 @@ export function ActionButton({
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction
-                            disabled={mutation.isPending}
-                            onClick={submit}
+                            disabled={isLoading}
+                            onClick={performAction}
+                            variant={"destructive"}
                         >
-                            <LoadingSwap isLoading={mutation.isPending}>
-                                Yes
-                            </LoadingSwap>
+                            <LoadingSwap isLoading={isLoading}>Yes</LoadingSwap>
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
@@ -66,14 +62,14 @@ export function ActionButton({
     return (
         <Button
             {...props}
-            disabled={props.disabled ?? mutation.isPending}
+            disabled={props.disabled ?? isLoading}
             onClick={(e) => {
-                submit()
+                performAction()
                 props.onClick?.(e)
             }}
         >
             <LoadingSwap
-                isLoading={mutation.isPending}
+                isLoading={isLoading}
                 className="inline-flex items-center gap-2"
             >
                 {props.children}
