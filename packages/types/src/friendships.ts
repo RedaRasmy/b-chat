@@ -1,5 +1,6 @@
 import { Friendship } from "@bchat/database/tables"
 import { Prettify } from "./global"
+import { OtherUser } from "./users"
 
 export type FriendshipRequest = Prettify<
     Friendship & {
@@ -10,3 +11,9 @@ export type FriendshipRequest = Prettify<
         }
     }
 >
+
+export type Friend = {
+    id: string
+    createdAt: Date
+    friend: OtherUser
+}

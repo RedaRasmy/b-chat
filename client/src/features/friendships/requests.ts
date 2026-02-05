@@ -1,5 +1,5 @@
 import { api } from "@/lib/api"
-import type { FriendshipRequest, OtherUser, User } from "@bchat/types"
+import type { Friend, FriendshipRequest, OtherUser, User } from "@bchat/types"
 
 // Queries
 
@@ -19,7 +19,7 @@ export async function getPendingRequests() {
 
 export async function getFriends() {
     const res = await api.get("/friendships/friends")
-    return res.data
+    return res.data as Friend[]
 }
 
 export async function getBlocked() {

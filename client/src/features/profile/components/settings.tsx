@@ -15,7 +15,6 @@ import {
     FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { TabsContent } from "@/components/ui/tabs"
 import { useAuth } from "@/features/auth/use-auth"
 import {
     deleteAccount,
@@ -85,7 +84,7 @@ export default function Settings() {
     }
 
     return (
-        <TabsContent value="settings" className={"grid md:grid-cols-2 gap-2"}>
+        <div className={"grid md:grid-cols-2 gap-2"}>
             <Card className="">
                 <CardHeader>
                     <CardTitle>Update Your Profile</CardTitle>
@@ -159,6 +158,6 @@ export default function Settings() {
                     <Field orientation="horizontal"></Field>
                 </CardFooter>
             </Card>
-        </TabsContent>
+        </div>
     )
 }

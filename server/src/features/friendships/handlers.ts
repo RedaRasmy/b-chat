@@ -36,8 +36,36 @@ export const getFriends = makeSimpleEndpoint(async (req, res, next) => {
                     eq(fr.status, "friend"),
                     or(eq(fr.receiverId, user.id), eq(fr.requesterId, user.id)),
                 ),
+            with: {
+                receiver: {
+                    columns: {
+                        id: true,
+                        name: true,
+                        avatar: true,
+                        role: true,
+                    },
+                },
+                requester: {
+                    columns: {
+                        id: true,
+                        name: true,
+                        avatar: true,
+                        role: true,
+                    },
+                },
+            },
         })
-        res.json(data)
+
+        const friends = data.map((rec) => {
+            const friend =
+                user.id === rec.requesterId ? rec.receiver : rec.requester
+            return {
+                id: rec.id,
+                createdAt: rec.createdAt,
+                friend,
+            }
+        })
+        res.json(friends)
     } catch (err) {
         next(err)
     }

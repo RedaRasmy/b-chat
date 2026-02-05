@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button"
-import { TabsContent } from "@/components/ui/tabs"
 import UserCard from "@/components/user-card"
 import {
     acceptFriendship,
@@ -35,10 +34,7 @@ export default function Requests() {
         )
 
     return (
-        <TabsContent
-            value="requests"
-            className={"flex-1 flex flex-col p-3 xl:p-5 items-center"}
-        >
+        <div className={"flex-1 flex flex-col p-3 xl:p-5 items-center h-full"}>
             <div className="max-w-200 w-full flex flex-col gap-4">
                 {data.map((request) => (
                     <UserCard user={request.requester} key={request.id}>
@@ -65,6 +61,6 @@ export default function Requests() {
                     </UserCard>
                 ))}
             </div>
-        </TabsContent>
+        </div>
     )
 }
