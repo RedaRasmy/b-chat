@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { SidebarTrigger } from "@/components/ui/sidebar"
+import UserCard from "@/components/user-card"
 import { getUsers, requestFriendship } from "@/features/friendships/requests"
 import { cn } from "@/lib/utils"
 import LoadingPage from "@/pages/loading"
@@ -15,7 +15,7 @@ export default function UsersPage() {
     const { data, isPlaceholderData } = useQuery({
         queryKey: ["users", name],
         queryFn: () => {
-            return getUsers(name === "" ? undefined : name)
+            return getUsers(name || undefined)
         },
         placeholderData: keepPreviousData,
     })
@@ -36,7 +36,14 @@ export default function UsersPage() {
                 </div>
             </header>
             <main className="flex-1 flex flex-col p-3 xl:p-5 items-center">
-                <div className="max-w-200 mx-auto w-full flex flex-col gap-4">
+                <div
+                    className={cn(
+                        "max-w-200 mx-auto w-full flex flex-col gap-4",
+                        {
+                            "opacity-50": isPlaceholderData,
+                        },
+                    )}
+                >
                     <Input
                         value={name}
                         onChange={(e) => setName(e.target.value)}
@@ -45,36 +52,17 @@ export default function UsersPage() {
                     />
                     {data ? (
                         data.map((user) => (
-                            <Card
-                                key={user.id}
-                                className={cn({
-                                    "opacity-50": isPlaceholderData,
-                                })}
-                            >
-                                <CardContent className="flex justify-between items-center">
-                                    <div className="flex items-center gap-3">
-                                        <div className="size-10 rounded-full bg-primary text-xl text-foreground/70 uppercase flex items-center justify-center">
-                                            {user.name.charAt(0)}
-                                        </div>
-                                        <h1 className="text-lg ">
-                                            {user.name}
-                                        </h1>
-                                    </div>
-                                    <div className="flex gap-1">
-                                        <Button
-                                            title="send friend request"
-                                            disabled={mutation.isPending}
-                                            onClick={() => {
-                                                mutation.mutate(user.id)
-                                            }}
-                                        >
-                                            <HugeiconsIcon
-                                                icon={UserAdd01Icon}
-                                            />
-                                        </Button>
-                                    </div>
-                                </CardContent>
-                            </Card>
+                            <UserCard key={user.id} user={user}>
+                                <Button
+                                    title="send friend request"
+                                    disabled={mutation.isPending}
+                                    onClick={() => {
+                                        mutation.mutate(user.id)
+                                    }}
+                                >
+                                    <HugeiconsIcon icon={UserAdd01Icon} />
+                                </Button>
+                            </UserCard>
                         ))
                     ) : (
                         <LoadingPage />
