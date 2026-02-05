@@ -45,16 +45,16 @@ export async function block(id: User["id"]) {
 }
 
 export async function rejectFriendship(id: User["id"]) {
-    const res = await api.delete("/friendships/" + id + "/remove")
+    const res = await api.delete("/friendships/" + id)
     return res
 }
 
 export async function unfriend(id: User["id"]) {
-    const res = await api.delete("/friendships/" + id + "/remove")
+    const res = await api.delete("/friendships/" + id)
     return res
 }
 
 export async function unblock(id: User["id"]) {
-    const res = await api.delete("/friendships/" + id + "/remove")
+    const res = await api.delete("/friendships/" + id)
     return res
 }
