@@ -33,3 +33,13 @@ export const PaginationSchema = z.object({
         .max(100, "Per page must be at most 100")
         .default(20),
 })
+
+export type PaginatedResult<T> = {
+    data: T
+    page: number
+    perPage: number
+    total: number
+    totalPages: number
+    prevPage: number | null
+    nextPage: number | null
+}

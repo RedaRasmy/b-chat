@@ -16,3 +16,7 @@ export const UpdateCommentSchema = createUpdateSchema(comments)
         content: true,
     })
     .required()
+
+export type CommentFormData = {
+    content: string
+}

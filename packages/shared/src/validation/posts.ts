@@ -5,6 +5,7 @@ import {
     createUpdateSchema,
 } from "drizzle-zod"
 import { PaginationSchema, SearchSchema } from "./query"
+import z from "zod"
 
 export const InsertPostSchema = createInsertSchema(posts).pick({
     content: true,
@@ -18,8 +19,16 @@ export const UpdatePostSchema = createUpdateSchema(posts)
     })
     .required()
 
+export type PostFormData = {
+    conent: string
+}
+
 // Query
 
 export const PostsQuerySchema = PaginationSchema.extend({
     search: SearchSchema,
 })
+
+export type PostsQuery = z.infer<typeof PostsQuerySchema>
+
+export type PostCommentsQuery = z.infer<typeof PaginationSchema>
