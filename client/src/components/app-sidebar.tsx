@@ -8,7 +8,11 @@ import {
     SidebarGroupContent,
     SidebarSeparator,
 } from "@/components/ui/sidebar"
-import { Files01Icon, User02Icon } from "@hugeicons/core-free-icons"
+import {
+    Files01Icon,
+    User02Icon,
+    UserMultiple03Icon,
+} from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Link } from "react-router-dom"
 
@@ -29,6 +33,13 @@ export function AppSidebar() {
                 >
                     <HugeiconsIcon icon={Files01Icon} />
                     <span>Posts</span>
+                </Link>
+                <Link
+                    to={"/users"}
+                    className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-primary"
+                >
+                    <HugeiconsIcon icon={UserMultiple03Icon} />
+                    <span>Users</span>
                 </Link>
             </SidebarHeader>
             <SidebarSeparator />

@@ -6,7 +6,7 @@ import type { FriendshipRequest, OtherUser, User } from "@bchat/types"
 export async function getUsers(name: string | undefined) {
     const res = await api.get("/users", {
         params: {
-            name,
+            search: name,
         },
     })
     return res.data as OtherUser[]

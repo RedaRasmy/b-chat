@@ -6,6 +6,7 @@ import PostsPage from "@/pages/posts"
 import RegisterPage from "@/pages/auth/register"
 import { createBrowserRouter } from "react-router-dom"
 import AuthLayout from "@/pages/auth"
+import UsersPage from "@/pages/users"
 
 export const router = createBrowserRouter([
     {
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
             {
                 path: "/posts",
                 element: <PostsPage />,
+            },
+            {
+                path: "/users",
+                element: <UsersPage />,
             },
         ],
     },
