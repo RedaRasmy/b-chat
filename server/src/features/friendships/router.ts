@@ -1,6 +1,5 @@
 import {
-    getReceived,
-    getSent,
+    getPending,
     getBlocked,
     getFriends,
     accept,
@@ -12,8 +11,7 @@ import { Router } from "express"
 
 const router = Router()
 
-router.get("/pending/received", getReceived)
-router.get("/pending/sent", getSent)
+router.get("/pending", getPending)
 router.get("/friends", getFriends)
 router.get("/blocked", getBlocked)
 

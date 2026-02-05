@@ -3,14 +3,9 @@ import type { FriendshipRequest, User } from "@bchat/types"
 
 // Queries
 
-export async function getPendingReceived() {
-    const res = await api.get("/friendships/pending/received")
+export async function getPendingRequests() {
+    const res = await api.get("/friendships/pending")
     return res.data as FriendshipRequest[]
-}
-
-export async function getPendingSent() {
-    const res = await api.get("/friendships/pending/sent")
-    return res.data
 }
 
 export async function getFriends() {

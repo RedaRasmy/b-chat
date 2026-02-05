@@ -3,7 +3,7 @@ import db from "@bchat/database"
 import { friendships } from "@bchat/database/tables"
 import { and, eq, isNull, or } from "drizzle-orm"
 
-export const getReceived = makeSimpleEndpoint(async (req, res, next) => {
+export const getPending = makeSimpleEndpoint(async (req, res, next) => {
     const user = req.user!
 
     try {
@@ -19,20 +19,6 @@ export const getReceived = makeSimpleEndpoint(async (req, res, next) => {
                     },
                 },
             },
-        })
-        res.send(200).json(data)
-    } catch (err) {
-        next(err)
-    }
-})
-
-export const getSent = makeSimpleEndpoint(async (req, res, next) => {
-    const user = req.user!
-
-    try {
-        const data = await db.query.friendships.findMany({
-            where: (fr, { eq, and }) =>
-                and(eq(fr.status, "pending"), eq(fr.requesterId, user.id)),
         })
         res.send(200).json(data)
     } catch (err) {
