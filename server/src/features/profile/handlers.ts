@@ -30,6 +30,20 @@ export const getProfile = makeSimpleEndpoint(async (req, res, next) => {
     }
 })
 
+export const getMyPosts = makeSimpleEndpoint(async (req, res, next) => {
+    const user = req.user!
+
+    try {
+        const posts = await db.query.posts.findMany({
+            where: (posts, { eq }) => eq(posts.authorId, user.id),
+        })
+
+        res.json(posts)
+    } catch (err) {
+        next(err)
+    }
+})
+
 export const updateProfile = makeBodyEndpoint(
     UpdateProfileSchema,
     async (req, res, next) => {

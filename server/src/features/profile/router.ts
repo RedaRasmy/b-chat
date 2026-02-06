@@ -1,9 +1,15 @@
 import { Router } from "express"
-import { deleteProfile, getProfile, updateProfile } from "./handlers"
+import {
+    deleteProfile,
+    getMyPosts,
+    getProfile,
+    updateProfile,
+} from "./handlers"
 
 const router = Router()
 
 router.get("/", getProfile)
+router.get("/posts", getMyPosts)
 router.patch("/", updateProfile)
 router.delete("/", deleteProfile)
 
