@@ -6,7 +6,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
 export default function PostsPage() {
     const queryClient = useQueryClient()
-    // const [isAddOpen, setIsAddOpen] = useState(false)
     const { data } = useQuery({
         queryKey: ["posts"],
         queryFn: () =>
@@ -27,7 +26,7 @@ export default function PostsPage() {
     if (!data) return null
     return (
         <div className="w-full h-screen flex flex-col ">
-            <header className="bg-accent h-12 flex items-center px-3 gap-3 border-b">
+            <header className="bg-accent h-12 shrink-0 flex items-center px-3 gap-3 border-b">
                 <SidebarTrigger size={"lg"} />
                 <div className="flex justify-between w-full">
                     <h1>Posts</h1>
