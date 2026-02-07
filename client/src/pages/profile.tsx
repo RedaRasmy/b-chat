@@ -21,7 +21,7 @@ export default function ProfilePage() {
             </PageHeader>
             <main className="p-3 space-y-2 overflow-y-auto">
                 <Tabs
-                    defaultValue={tab}
+                    value={tab}
                     onValueChange={(tab) =>
                         setParams({
                             tab,
