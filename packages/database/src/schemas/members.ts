@@ -7,6 +7,7 @@ import {
 } from "drizzle-orm/pg-core"
 import { channels } from "./channels"
 import { users } from "./users"
+import { relations } from "drizzle-orm"
 
 export const members = pgTable(
     "members",
@@ -25,3 +26,10 @@ export const members = pgTable(
         index().on(table.channelId),
     ],
 )
+
+export const membersRelations = relations(members, ({ one }) => ({
+    channel: one(channels, {
+        fields: [members.channelId],
+        references: [channels.id],
+    }),
+}))
