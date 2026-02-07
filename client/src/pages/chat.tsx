@@ -1,5 +1,5 @@
+import PageHeader from "@/components/page-header"
 import { Button } from "@/components/ui/button"
-import { SidebarTrigger } from "@/components/ui/sidebar"
 import { useParams } from "react-router-dom"
 
 export default function ChatPage() {
@@ -7,15 +7,12 @@ export default function ChatPage() {
     const id = params.id!
 
     return (
-        <div className="w-full h-screen flex flex-col ">
-            <header className="bg-accent h-12 shrink-0 flex items-center px-3 gap-3">
-                <SidebarTrigger size={"lg"} />
-                <div className="flex justify-between w-full">
-                    <h1>Chat:{id}</h1>
-                    <Button>btn</Button>
-                </div>
-            </header>
-            <main className="flex-1"></main>
+        <div className="w-full h-screen grid">
+            <PageHeader>
+                <h1>Chat:{id}</h1>
+                <Button>btn</Button>
+            </PageHeader>
+            <main className="p-3 space-y-2 overflow-y-auto"></main>
             <footer className="bg-accent h-12"></footer>
         </div>
     )

@@ -1,4 +1,4 @@
-import { SidebarTrigger } from "@/components/ui/sidebar"
+import PageHeader from "@/components/page-header"
 import Post from "@/features/posts/components/post"
 import { PostForm } from "@/features/posts/components/post-form"
 import { addPost, getPosts } from "@/features/posts/requests"
@@ -25,20 +25,17 @@ export default function PostsPage() {
     })
     if (!data) return null
     return (
-        <div className="w-full h-screen grid ">
-            <header className="bg-accent h-12 shrink-0 flex items-center px-3 gap-3 border-b">
-                <SidebarTrigger size={"lg"} />
-                <div className="flex justify-between w-full">
-                    <h1>Posts</h1>
-                    <PostForm
-                        title="Add New Post"
-                        onSubmit={addMutation.mutateAsync}
-                        isSubmitting={addMutation.isPending}
-                        triggerText="New Post"
-                    />
-                </div>
-            </header>
-            <main className="p-3 space-y-2 overflow-y-auto">
+        <div className="w-full h-screen grid">
+            <PageHeader>
+                <h1>Posts</h1>
+                <PostForm
+                    title="Add New Post"
+                    onSubmit={addMutation.mutateAsync}
+                    isSubmitting={addMutation.isPending}
+                    triggerText="New Post"
+                />
+            </PageHeader>
+            <main className="p-3 space-y-2 overflow-y-auto justify-items-center">
                 {data.data.map((post) => (
                     <Post key={post.id} post={post} />
                 ))}

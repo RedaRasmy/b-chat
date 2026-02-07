@@ -1,6 +1,6 @@
+import PageHeader from "@/components/page-header"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { SidebarTrigger } from "@/components/ui/sidebar"
 import UserCard from "@/components/user-card"
 import { getUsers, requestFriendship } from "@/features/friendships/requests"
 import { cn } from "@/lib/utils"
@@ -25,49 +25,45 @@ export default function UsersPage() {
     })
 
     return (
-        <div className="w-full h-screen flex flex-col ">
-            <header className="bg-accent h-12 shrink-0 flex items-center px-3 gap-3 border-b">
-                <SidebarTrigger size={"lg"} />
-                <div className="flex justify-between w-full items-center">
-                    <h1>Users</h1>
-                    <p className="text-muted-foreground text-sm">
-                        Find new friends here!
-                    </p>
-                </div>
-            </header>
-            <main className="flex-1 flex flex-col p-3 xl:p-5 items-center">
-                <div
-                    className={cn(
-                        "max-w-200 mx-auto w-full flex flex-col gap-4",
-                        {
-                            "opacity-50": isPlaceholderData,
-                        },
-                    )}
-                >
-                    <Input
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="py-5 px-5 rounded-2xl"
-                        placeholder="Find users by name"
-                    />
-                    {data ? (
-                        data.map((user) => (
-                            <UserCard key={user.id} user={user}>
-                                <Button
-                                    title="send friend request"
-                                    disabled={mutation.isPending}
-                                    onClick={() => {
-                                        mutation.mutate(user.id)
-                                    }}
-                                >
-                                    <HugeiconsIcon icon={UserAdd01Icon} />
-                                </Button>
-                            </UserCard>
-                        ))
-                    ) : (
-                        <LoadingPage />
-                    )}
-                </div>
+        <div className="w-full h-screen grid grid-rows-[auto_1fr]">
+            <PageHeader>
+                <h1>Users</h1>
+                <p className="text-muted-foreground text-sm">
+                    Find new friends here!
+                </p>
+            </PageHeader>
+            <main
+                className={cn(
+                    "p-3 space-y-2 overflow-y-auto",
+                    "max-w-200 mx-auto w-full space-y-3",
+                    {
+                        "opacity-50": isPlaceholderData,
+                    },
+                )}
+            >
+                <Input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="py-5 px-5 rounded-2xl"
+                    placeholder="Find users by name"
+                />
+                {data ? (
+                    data.map((user) => (
+                        <UserCard key={user.id} user={user}>
+                            <Button
+                                title="send friend request"
+                                disabled={mutation.isPending}
+                                onClick={() => {
+                                    mutation.mutate(user.id)
+                                }}
+                            >
+                                <HugeiconsIcon icon={UserAdd01Icon} />
+                            </Button>
+                        </UserCard>
+                    ))
+                ) : (
+                    <LoadingPage />
+                )}
             </main>
         </div>
     )
