@@ -2,7 +2,6 @@ import { pgTable, unique, uuid } from "drizzle-orm/pg-core"
 import { channels } from "./channels"
 import { users } from "./users"
 import { relations } from "drizzle-orm"
-import { messages } from "./messages"
 
 export const dms = pgTable(
     "dms",
