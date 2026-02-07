@@ -1,4 +1,8 @@
 export * from "./global"
+export * from "./friendships"
+export * from "./users"
+export * from "./posts"
+
 export type LoginCredentials = {
     email: string
     password: string
@@ -10,8 +14,10 @@ export type RegisterCredentials = {
     password: string
 }
 
-export type { User, Post, Friendship, Comment } from "@bchat/database/tables"
-
-export * from "./friendships"
-export * from "./users"
-export * from "./posts"
+export type {
+    User,
+    Post,
+    Friendship,
+    Comment,
+    ChatMessage,
+} from "@bchat/database/tables"
