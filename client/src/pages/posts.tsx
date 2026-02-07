@@ -3,8 +3,10 @@ import Post from "@/features/posts/components/post"
 import { PostForm } from "@/features/posts/components/post-form"
 import { addPost, getPosts } from "@/features/posts/requests"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useState } from "react"
 
 export default function PostsPage() {
+    const [open, setOpen] = useState(false)
     const queryClient = useQueryClient()
     const { data } = useQuery({
         queryKey: ["posts"],
@@ -21,6 +23,7 @@ export default function PostsPage() {
             queryClient.invalidateQueries({
                 queryKey: ["posts"],
             })
+            setOpen(false)
         },
     })
     if (!data) return null
@@ -29,6 +32,8 @@ export default function PostsPage() {
             <PageHeader>
                 <h1>Posts</h1>
                 <PostForm
+                    open={open}
+                    onOpenChange={setOpen}
                     title="Add New Post"
                     onSubmit={addMutation.mutateAsync}
                     isSubmitting={addMutation.isPending}
