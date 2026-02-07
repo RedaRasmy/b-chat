@@ -149,10 +149,10 @@ export default function Settings() {
                     <ActionButton
                         action={deleteMutation.mutate}
                         requireAreYouSure
-                        variant={"destructive"}
-                    >
-                        Delete
-                    </ActionButton>
+                        triggerElement={
+                            <Button variant={"destructive"}>Delete</Button>
+                        }
+                    />
                 </CardContent>
                 <CardFooter>
                     <Field orientation="horizontal"></Field>
