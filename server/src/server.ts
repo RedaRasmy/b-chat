@@ -30,7 +30,12 @@ app.use(notFound)
 app.use(errorHandler)
 
 const server = http.createServer(app)
-const io = new Server(server)
+const io = new Server(server, {
+    cors: {
+        origin: allowedOrigins,
+        credentials: true,
+    },
+})
 
 io.use(async (socket, next) => {
     const cookieHeader = socket.handshake.headers.cookie
