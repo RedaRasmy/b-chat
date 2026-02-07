@@ -2,7 +2,7 @@ import { index, pgTable, text, uuid } from "drizzle-orm/pg-core"
 import { channels } from "./channels"
 import { users } from "./users"
 import { createdAt, updatedAt } from "../timestamps"
-import { InferSelectModel } from "drizzle-orm"
+import { InferSelectModel, relations } from "drizzle-orm"
 
 export const messages = pgTable(
     "messages",
@@ -22,3 +22,10 @@ export const messages = pgTable(
 )
 
 export type ChatMessage = InferSelectModel<typeof messages>
+
+export const messagesRelations = relations(messages, ({ one }) => ({
+    channel: one(channels, {
+        fields: [messages.channelId],
+        references: [channels.id],
+    }),
+}))
