@@ -1,4 +1,5 @@
 import { authRouter } from "@/features/auth/router"
+import { channelsRouter } from "@/features/channels/router"
 import { commentsRouter } from "@/features/comments/router"
 import { friendshipsRouter } from "@/features/friendships/router"
 import { postsRouter } from "@/features/posts/router"
@@ -15,3 +16,4 @@ router.use("/posts", requireAuth(), postsRouter)
 router.use("/comments", requireAuth(), commentsRouter)
 router.use("/profile", requireAuth(), profileRouter)
 router.use("/users", requireAuth(), usersRouter)
+router.use("/channels", requireAuth(), channelsRouter)
