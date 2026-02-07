@@ -53,8 +53,6 @@ export default function Settings() {
         }
     }, [data, form])
 
-    console.log(data)
-
     const mutation = useMutation({
         mutationFn: updateProfile,
         onError: (err) => {

@@ -3,6 +3,7 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 import { useAuth } from "@/features/auth/use-auth"
 import LoadingPage from "@/pages/loading"
 import { Navigate, Outlet } from "react-router-dom"
+import { Toaster } from "sonner"
 
 export function App() {
     const { isAuthenticated, isLoading } = useAuth()
@@ -14,6 +15,12 @@ export function App() {
 
     return (
         <SidebarProvider>
+            <Toaster
+                position="top-right"
+                richColors
+                closeButton
+                duration={4000}
+            />
             <AppSidebar />
             <Outlet />
         </SidebarProvider>
