@@ -28,4 +28,8 @@ export const dmsRelations = relations(dms, ({ one }) => ({
         fields: [dms.user2Id],
         references: [users.id],
     }),
+    channel: one(channels, {
+        fields: [dms.channelId],
+        references: [channels.id],
+    }),
 }))
