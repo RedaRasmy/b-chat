@@ -84,7 +84,7 @@ export default function Settings() {
     }
 
     return (
-        <div className={"grid md:grid-cols-2 gap-2"}>
+        <div className={"grid md:grid-cols-2 gap-2 p-1"}>
             <Card className="">
                 <CardHeader>
                     <CardTitle>Update Your Profile</CardTitle>
