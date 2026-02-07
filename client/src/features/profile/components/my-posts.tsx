@@ -1,7 +1,12 @@
+import { ActionButton } from "@/components/action-button"
+import { Button } from "@/components/ui/button"
 import { useAuth } from "@/features/auth/use-auth"
 import Post from "@/features/posts/components/post"
-import { updatePost } from "@/features/posts/requests"
+import { PostForm } from "@/features/posts/components/post-form"
+import { deletePost, updatePost } from "@/features/posts/requests"
 import { fetchMyPosts } from "@/features/profile/requests"
+import { Delete03Icon, Edit04Icon } from "@hugeicons/core-free-icons"
+import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
 export default function MyPosts() {
@@ -22,7 +27,7 @@ export default function MyPosts() {
     })
 
     const deleteMutation = useMutation({
-        mutationFn: updatePost,
+        mutationFn: deletePost,
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ["posts"],
@@ -41,7 +46,7 @@ export default function MyPosts() {
         )
 
     return (
-        <div className={"p-3 xl:p-5 max-w-200 mx-auto w-full space-y-3"}>
+        <div className={"p-1 grid justify-items-center w-full space-y-3"}>
             {data.map((post) => (
                 <Post
                     key={post.id}
@@ -53,7 +58,35 @@ export default function MyPosts() {
                             avatar: user.avatar,
                         },
                     }}
-                />
+                >
+                    <PostForm
+                        key={post.id + post.content}
+                        isSubmitting={updateMutation.isPending}
+                        onSubmit={(data) =>
+                            updateMutation.mutateAsync({
+                                id: post.id,
+                                data,
+                            })
+                        }
+                        initialData={post}
+                        title="Update Your Post"
+                        triggerElement={
+                            <Button size={"icon-sm"}>
+                                <HugeiconsIcon icon={Edit04Icon} />
+                            </Button>
+                        }
+                    />
+
+                    <ActionButton
+                        action={() => deleteMutation.mutateAsync(post.id)}
+                        requireAreYouSure
+                        triggerElement={
+                            <Button variant="destructive" size={"icon-sm"}>
+                                <HugeiconsIcon icon={Delete03Icon} />
+                            </Button>
+                        }
+                    />
+                </Post>
             ))}
         </div>
     )

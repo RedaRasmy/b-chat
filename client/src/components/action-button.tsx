@@ -2,6 +2,7 @@ import {
     type ComponentProps,
     type ReactElement,
     type ReactNode,
+    useState,
     useTransition,
 } from "react"
 import { Button } from "@/components/ui/button"
@@ -30,17 +31,19 @@ export function ActionButton({
     areYouSureDescription?: ReactNode
     triggerElement?: ReactElement
 }) {
+    const [open, setOpen] = useState(false)
     const [isLoading, startTransition] = useTransition()
 
     function performAction() {
         startTransition(() => {
             action()
         })
+        setOpen(false)
     }
 
     if (requireAreYouSure) {
         return (
-            <AlertDialog open={isLoading ? true : undefined}>
+            <AlertDialog open={open || isLoading} onOpenChange={setOpen}>
                 <AlertDialogTrigger
                     render={triggerElement}
                 ></AlertDialogTrigger>

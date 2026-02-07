@@ -1,4 +1,5 @@
 import PageHeader from "@/components/page-header"
+import { Button } from "@/components/ui/button"
 import Post from "@/features/posts/components/post"
 import { PostForm } from "@/features/posts/components/post-form"
 import { addPost, getPosts } from "@/features/posts/requests"
@@ -37,7 +38,7 @@ export default function PostsPage() {
                     title="Add New Post"
                     onSubmit={addMutation.mutateAsync}
                     isSubmitting={addMutation.isPending}
-                    triggerText="New Post"
+                    triggerElement={<Button>New Post</Button>}
                 />
             </PageHeader>
             <main className="p-3 space-y-2 overflow-y-auto justify-items-center">

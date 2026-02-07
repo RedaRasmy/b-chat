@@ -1,8 +1,8 @@
 import { makeBodyEndpoint, makeSimpleEndpoint } from "@/utils/wrappers"
 import db from "@bchat/database"
-import { users } from "@bchat/database/tables"
+import { posts, users } from "@bchat/database/tables"
 import { UpdateProfileSchema } from "@bchat/shared/validation"
-import { eq } from "drizzle-orm"
+import { desc, eq } from "drizzle-orm"
 
 export const getProfile = makeSimpleEndpoint(async (req, res, next) => {
     const user = req.user!
@@ -34,11 +34,12 @@ export const getMyPosts = makeSimpleEndpoint(async (req, res, next) => {
     const user = req.user!
 
     try {
-        const posts = await db.query.posts.findMany({
+        const data = await db.query.posts.findMany({
             where: (posts, { eq }) => eq(posts.authorId, user.id),
+            orderBy: desc(posts.createdAt),
         })
 
-        res.json(posts)
+        res.json(data)
     } catch (err) {
         next(err)
     }

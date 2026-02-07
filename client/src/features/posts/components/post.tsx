@@ -18,7 +18,7 @@ export default function Post({
 }) {
     const date = new Date(post.createdAt).toLocaleDateString()
     return (
-        <Card className="w-full md:w-120 lg:w-180 xl:w-200 ">
+        <Card className="w-full max-w-200">
             <CardHeader>
                 <CardTitle>{post.author.name}</CardTitle>
                 <CardDescription>
