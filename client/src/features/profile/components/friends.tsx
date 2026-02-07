@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import UserCard from "@/components/user-card"
 import { getFriends, unfriend } from "@/features/friendships/requests"
-import { UserMinus01Icon } from "@hugeicons/core-free-icons"
+import { Message01Icon, UserMinus01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
@@ -45,6 +45,10 @@ export default function Friends() {
                         >
                             <HugeiconsIcon icon={UserMinus01Icon} />
                             unfriend
+                        </Button>
+                        <Button disabled={false} onClick={() => {}}>
+                            <HugeiconsIcon icon={Message01Icon} />
+                            chat
                         </Button>
                     </UserCard>
                 ))}
