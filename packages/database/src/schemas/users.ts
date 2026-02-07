@@ -4,7 +4,6 @@ import { refreshTokens } from "./refresh-tokens"
 import { friendships } from "./friendships"
 import { posts } from "./posts"
 import { comments } from "./comments"
-import { dms } from "./dms"
 import { messages } from "./messages"
 
 export const role = pgEnum("role", ["admin", "user"])
@@ -26,7 +25,6 @@ export const usersRelations = relations(users, ({ many }) => ({
     receivedFriendships: many(friendships, { relationName: "receiver" }),
     posts: many(posts),
     comments: many(comments),
-    dms: many(dms),
     messages: many(messages),
 }))
 
