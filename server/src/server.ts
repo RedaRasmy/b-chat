@@ -6,6 +6,8 @@ import cookieParser from "cookie-parser"
 import { notFound } from "@/middlewares/not-found"
 import { errorHandler } from "@/middlewares/error-handler"
 import { Server } from "socket.io"
+import { parseCookie } from "cookie"
+import { verifyAccessToken } from "@/lib/jwt"
 
 const app = express()
 
@@ -30,8 +32,31 @@ app.use(errorHandler)
 const server = http.createServer(app)
 const io = new Server(server)
 
+io.use(async (socket, next) => {
+    const cookieHeader = socket.handshake.headers.cookie
+
+    if (!cookieHeader) {
+        return next(new Error("Authentication required"))
+    }
+
+    const { accessToken } = parseCookie(cookieHeader)
+
+    if (!accessToken) {
+        return next(new Error("Authentication required"))
+    }
+
+    try {
+        const user = verifyAccessToken(accessToken)
+        socket.user = user
+        next()
+    } catch (err) {
+        return next(new Error("Invalid token"))
+    }
+})
+
 io.on("connection", (socket) => {
-    console.log("a user connected")
+    const user = socket.user
+    console.log("a user connected : ", user)
 })
 
 server.listen(3000, () => {
