@@ -1,4 +1,9 @@
-import { type ComponentProps, type ReactNode, useTransition } from "react"
+import {
+    type ComponentProps,
+    type ReactElement,
+    type ReactNode,
+    useTransition,
+} from "react"
 import { Button } from "@/components/ui/button"
 import {
     AlertDialog,
@@ -17,11 +22,13 @@ export function ActionButton({
     action,
     requireAreYouSure = false,
     areYouSureDescription = "This action cannot be undone.",
+    triggerElement,
     ...props
 }: ComponentProps<typeof Button> & {
     action: () => unknown
     requireAreYouSure?: boolean
     areYouSureDescription?: ReactNode
+    triggerElement?: ReactElement
 }) {
     const [isLoading, startTransition] = useTransition()
 
@@ -35,7 +42,7 @@ export function ActionButton({
         return (
             <AlertDialog open={isLoading ? true : undefined}>
                 <AlertDialogTrigger
-                    render={<Button {...props} />}
+                    render={triggerElement}
                 ></AlertDialogTrigger>
                 <AlertDialogContent>
                     <AlertDialogHeader>

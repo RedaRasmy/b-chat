@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import axios from "axios"
 import { InsertPostSchema, type PostFormData } from "@bchat/shared/validation"
+import type { ReactElement } from "react"
 
 type Props = {
     title: string
@@ -22,7 +23,7 @@ type Props = {
     isSubmitting: boolean
     onOpenChange?: (open: boolean) => void
     open?: boolean
-    triggerText: string
+    triggerElement?: ReactElement
 }
 
 export function PostForm({
@@ -30,7 +31,7 @@ export function PostForm({
     title,
     initialData,
     isSubmitting,
-    triggerText,
+    triggerElement,
     onOpenChange,
     open,
 }: Props) {
@@ -64,7 +65,7 @@ export function PostForm({
 
     return (
         <Dialog onOpenChange={onOpenChange} open={open}>
-            <DialogTrigger render={<Button>{triggerText}</Button>} />
+            <DialogTrigger render={triggerElement} />
             <DialogContent className="sm:max-w-106.25 ">
                 <DialogHeader>
                     <DialogTitle>{title}</DialogTitle>

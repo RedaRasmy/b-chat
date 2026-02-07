@@ -4,10 +4,18 @@ import {
     CardDescription,
     CardTitle,
     CardContent,
+    CardAction,
 } from "@/components/ui/card"
 import type { PostWithAuthor } from "@bchat/types"
+import type { ReactNode } from "react"
 
-export default function Post({ post }: { post: PostWithAuthor }) {
+export default function Post({
+    post,
+    children,
+}: {
+    post: PostWithAuthor
+    children?: ReactNode
+}) {
     const date = new Date(post.createdAt).toLocaleDateString()
     return (
         <Card className="w-full md:w-120 lg:w-180 xl:w-200 ">
@@ -16,6 +24,7 @@ export default function Post({ post }: { post: PostWithAuthor }) {
                 <CardDescription>
                     posted at <span>{date}</span>
                 </CardDescription>
+                <CardAction className="space-x-0.5">{children}</CardAction>
             </CardHeader>
             <CardContent>
                 <p className="wrap-break-word whitespace-pre-wrap">
