@@ -10,7 +10,7 @@ import type { PostWithAuthor } from "@bchat/types"
 export default function Post({ post }: { post: PostWithAuthor }) {
     const date = new Date(post.createdAt).toLocaleDateString()
     return (
-        <Card className="w-[95vw] md:w-120 lg:w-180 xl:w-200 ">
+        <Card className="w-full md:w-120 lg:w-180 xl:w-200 ">
             <CardHeader>
                 <CardTitle>{post.author.name}</CardTitle>
                 <CardDescription>
@@ -18,7 +18,7 @@ export default function Post({ post }: { post: PostWithAuthor }) {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <p className="text-wrap text-ellipsi overflow-auto">
+                <p className="wrap-break-word whitespace-pre-wrap">
                     {post.content}
                 </p>
             </CardContent>

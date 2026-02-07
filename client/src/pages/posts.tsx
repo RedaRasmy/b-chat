@@ -1,5 +1,5 @@
 import { SidebarTrigger } from "@/components/ui/sidebar"
-import Post from "@/features/posts/components/Post"
+import Post from "@/features/posts/components/post"
 import { PostForm } from "@/features/posts/components/post-form"
 import { addPost, getPosts } from "@/features/posts/requests"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
@@ -25,7 +25,7 @@ export default function PostsPage() {
     })
     if (!data) return null
     return (
-        <div className="w-full h-screen flex flex-col ">
+        <div className="w-full h-screen grid ">
             <header className="bg-accent h-12 shrink-0 flex items-center px-3 gap-3 border-b">
                 <SidebarTrigger size={"lg"} />
                 <div className="flex justify-between w-full">
@@ -38,7 +38,7 @@ export default function PostsPage() {
                     />
                 </div>
             </header>
-            <main className="flex-1 p-3 flex flex-col items-center gap-2">
+            <main className="p-3 space-y-2 overflow-y-auto">
                 {data.data.map((post) => (
                     <Post key={post.id} post={post} />
                 ))}
