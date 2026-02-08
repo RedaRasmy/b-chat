@@ -6,8 +6,7 @@ import Message from "@/features/chats/components/message"
 import { fetchChats, fetchMessages } from "@/features/chats/requests"
 import { useSocket } from "@/features/chats/use-socket"
 import LoadingPage from "@/pages/loading"
-import type { ChatMessage } from "@bchat/types"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import { useEffect, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
 
@@ -18,7 +17,6 @@ export default function ChatPage() {
     const { user } = useAuth()
     const [message, setMessage] = useState("")
     const socket = useSocket()
-    const queryClient = useQueryClient()
 
     const { data, isLoading } = useQuery({
         queryKey: ["chats"],
@@ -36,23 +34,8 @@ export default function ChatPage() {
     }, [messages])
 
     useEffect(() => {
-        function handleNewMessage(msg: ChatMessage) {
-            console.log("received : ", msg)
-            queryClient.setQueryData(
-                ["messages", msg.channelId],
-                (old: ChatMessage[] = []) => [...old, msg],
-            )
-        }
-
-        socket.emit("join_channel", id)
-
-        socket.on("new_message", handleNewMessage)
-
-        return () => {
-            socket.emit("leave_channel", id)
-            socket.off("new_message", handleNewMessage)
-        }
-    }, [socket, queryClient, id])
+        socket.emit("mark_read", { channelId: id })
+    }, [socket, id])
 
     function handleSend() {
         if (message.length > 0) {

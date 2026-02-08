@@ -2,6 +2,9 @@ import { SocketContext } from "@/features/chats/socket-context"
 import { useAuth } from "@/features/auth/use-auth"
 import { useEffect, useState, type ReactNode } from "react"
 import { io, Socket } from "socket.io-client"
+import { useQueryClient } from "@tanstack/react-query"
+import { useParams } from "react-router-dom"
+import type { ChatMessage } from "@bchat/types"
 
 export default function SocketProvider({ children }: { children: ReactNode }) {
     const [socket] = useState<Socket>(() => {
@@ -26,6 +29,8 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
     })
 
     const { isAuthenticated } = useAuth()
+    const queryClient = useQueryClient()
+    const currentChannelId = useParams().id
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -38,6 +43,49 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
             socket.disconnect()
         }
     }, [socket, isAuthenticated])
+
+    useEffect(() => {
+        function handleNewMessage(msg: ChatMessage) {
+            console.log("New message received", msg)
+
+            // queryClient.setQueryData(["chats"], (old: Channels) => {
+            //     return {
+            //         ...old,
+            //         dms: old.dms.map((dm) =>
+            //             dm.id === msg.channelId
+            //                 ? {
+            //                       ...dm,
+            //                       //   lastMessage: msg.content,
+            //                       //   unreadCount:
+            //                       //       dm.id !== currentChannelId
+            //                       //           ? (dm.unreadCount || 0) + 1
+            //                       //           : 0,
+            //                   }
+            //                 : dm,
+            //         ),
+            //     }
+            // })
+
+            // if (msg.channelId !== currentChannelId) {
+            //     showNotification({
+            //         title: msg.senderName,
+            //         body: msg.content,
+            //         channelId: msg.channelId,
+            //     })
+            // }
+
+            queryClient.setQueryData(
+                ["messages", msg.channelId],
+                (old: ChatMessage[] = []) => [...old, msg],
+            )
+        }
+
+        socket.on("new_message", handleNewMessage)
+
+        return () => {
+            socket.off("new_message", handleNewMessage)
+        }
+    }, [socket, queryClient, currentChannelId])
 
     return (
         <SocketContext.Provider

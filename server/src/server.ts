@@ -11,6 +11,7 @@ import { verifyAccessToken } from "@/lib/jwt"
 import db from "@bchat/database"
 import { messages } from "@bchat/database/tables"
 import { ClientMessage } from "@bchat/types"
+import { InsertMessageSchema } from "@bchat/shared/validation"
 
 const app = express()
 
@@ -62,29 +63,30 @@ io.use(async (socket, next) => {
     }
 })
 
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
     const user = socket.user
     console.log("a user connected : ", user)
 
-    socket.on("join_channel", (channelId) => {
-        socket.join(`channel:${channelId}`)
-        console.log('user joined channel')
+    const userDMs = await db.query.dms.findMany({
+        where: (dms, { eq, or }) =>
+            or(eq(dms.user1Id, user.id), eq(dms.user2Id, user.id)),
+        columns: { channelId: true },
     })
 
-    socket.on("leave_channel", (channelId) => {
-        socket.leave(`channel:${channelId}`)
-        console.log('user left channel')
+    userDMs.forEach((dm) => {
+        socket.join(`channel:${dm.channelId}`)
     })
 
     socket.on("send_message", async (msg: ClientMessage) => {
-        console.log('received msg :',msg)
+        console.log("received msg :", msg)
         try {
-            // TODO : make sure user is a member in that channel
+            const { content, channelId } = InsertMessageSchema.parse(msg)
+
             const [message] = await db
                 .insert(messages)
                 .values({
-                    channelId: msg.channelId,
-                    content: msg.content,
+                    channelId,
+                    content,
                     senderId: user.id,
                 })
                 .returning()

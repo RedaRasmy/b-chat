@@ -1,10 +1,12 @@
-import { Channel } from "@bchat/database/tables"
+import { Channel, ChatMessage } from "@bchat/database/tables"
 import { OtherUser } from "./users"
 
 export type Channels = {
     dms: {
         id: Channel["id"]
         friend: OtherUser
+        // lastMessage: ChatMessage
+        // unreadCount: number
     }[]
 }
 
