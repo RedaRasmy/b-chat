@@ -7,6 +7,7 @@ import { comments } from "./comments"
 import { messages } from "./messages"
 import { members } from "./members"
 import { dms } from "./dms"
+import { messageReceipts } from "./message-receipts"
 
 export const role = pgEnum("role", ["admin", "user"])
 export const userStatus = pgEnum("user_status", ["online", "offline"])
@@ -33,6 +34,7 @@ export const usersRelations = relations(users, ({ many }) => ({
     messages: many(messages),
     members: many(members),
     dms: many(dms),
+    receipts: many(messageReceipts),
 }))
 
 export type User = Omit<
