@@ -1,18 +1,9 @@
 export * from "./global"
+export * from "./auth"
 export * from "./friendships"
 export * from "./users"
 export * from "./posts"
-
-export type LoginCredentials = {
-    email: string
-    password: string
-}
-
-export type RegisterCredentials = {
-    name: string
-    email: string
-    password: string
-}
+export * from "./dms"
 
 export type {
     User,
@@ -20,4 +11,6 @@ export type {
     Friendship,
     Comment,
     ChatMessage,
+    Channel,
+    DM,
 } from "@bchat/database/tables"

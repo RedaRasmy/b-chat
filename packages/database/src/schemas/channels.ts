@@ -1,6 +1,6 @@
 import { pgEnum, pgTable, uuid } from "drizzle-orm/pg-core"
 import { createdAt } from "../timestamps"
-import { relations } from "drizzle-orm"
+import { InferSelectModel, relations } from "drizzle-orm"
 import { messages } from "./messages"
 import { members } from "./members"
 
@@ -11,6 +11,8 @@ export const channels = pgTable("channels", {
     type: channelType().notNull(),
     createdAt,
 })
+
+export type Channel = InferSelectModel<typeof channels>
 
 export const channelsRelations = relations(channels, ({ many }) => ({
     messages: many(messages),

@@ -4,3 +4,5 @@ import z from "zod"
 export const InsertDMSchema = z.object({
     friendId: z.uuid(),
 })
+
+export type DMFormData = z.infer<typeof InsertDMSchema>
