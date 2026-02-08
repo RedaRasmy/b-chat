@@ -1,5 +1,5 @@
 import { InferSelectModel, relations } from "drizzle-orm"
-import { pgTable, varchar, uuid, pgEnum } from "drizzle-orm/pg-core"
+import { pgTable, varchar, uuid, pgEnum, timestamp } from "drizzle-orm/pg-core"
 import { refreshTokens } from "./refresh-tokens"
 import { friendships } from "./friendships"
 import { posts } from "./posts"
@@ -9,6 +9,7 @@ import { members } from "./members"
 import { dms } from "./dms"
 
 export const role = pgEnum("role", ["admin", "user"])
+export const userStatus = pgEnum("user_status", ["online", "offline"])
 
 export const users = pgTable("users", {
     id: uuid().primaryKey().defaultRandom(),
@@ -19,6 +20,8 @@ export const users = pgTable("users", {
     hashedPassword: varchar("hashed_password", { length: 255 }),
     githubId: varchar("github_id", { length: 255 }).unique(),
     googleId: varchar("google_id", { length: 255 }).unique(),
+    status: userStatus().default("offline").notNull(),
+    lastSeen: timestamp("last_seen").defaultNow().notNull(),
 })
 
 export const usersRelations = relations(users, ({ many }) => ({
