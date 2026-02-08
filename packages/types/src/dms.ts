@@ -7,3 +7,5 @@ export type Channels = {
         friend: OtherUser
     }[]
 }
+
+export type DMChat = Channels["dms"][number]

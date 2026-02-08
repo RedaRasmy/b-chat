@@ -8,15 +8,22 @@ import {
     SidebarGroupContent,
     SidebarSeparator,
 } from "@/components/ui/sidebar"
+import ChatCard from "@/features/chats/components/chat-card"
+import { fetchChats } from "@/features/chats/requests"
 import {
     Files01Icon,
     User02Icon,
     UserMultiple03Icon,
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
+import { useQuery } from "@tanstack/react-query"
 import { Link } from "react-router-dom"
 
 export function AppSidebar() {
+    const { data } = useQuery({
+        queryKey: ["chats"],
+        queryFn: fetchChats,
+    })
     return (
         <Sidebar>
             <SidebarHeader>
@@ -46,7 +53,12 @@ export function AppSidebar() {
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarGroupLabel>Chats</SidebarGroupLabel>
-                    <SidebarGroupContent></SidebarGroupContent>
+                    <SidebarGroupContent className="grid gap-1 overflow-auto">
+                        {data &&
+                            data.dms.map((dm) => (
+                                <ChatCard key={dm.id} chat={dm} />
+                            ))}
+                    </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
             <SidebarFooter></SidebarFooter>
