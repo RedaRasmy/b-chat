@@ -7,6 +7,7 @@ import { fetchChats, fetchMessages } from "@/features/chats/requests"
 import { useSocket } from "@/features/chats/use-socket"
 import { cn } from "@/lib/utils"
 import LoadingPage from "@/pages/loading"
+import type { TypingData } from "@bchat/types"
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
@@ -18,6 +19,8 @@ export default function ChatPage() {
     const { user } = useAuth()
     const [message, setMessage] = useState("")
     const socket = useSocket()
+    const typingTimeoutRef = useRef<number | null>(null)
+    const [typer, setTyper] = useState<string | null>(null)
 
     const { data, isLoading } = useQuery({
         queryKey: ["chats"],
@@ -38,6 +41,26 @@ export default function ChatPage() {
         socket.emit("mark_read", { channelId: id })
     }, [socket, id])
 
+    useEffect(() => {
+        function typingHandler(data: TypingData) {
+            if (!user || data.userId === user.id) return
+
+            setTyper(data.userName)
+
+            if (typingTimeoutRef.current) {
+                clearTimeout(typingTimeoutRef.current)
+            }
+            typingTimeoutRef.current = setTimeout(() => {
+                setTyper(null)
+            }, 1000)
+        }
+        socket.on("new_typing", typingHandler)
+
+        return () => {
+            socket.off("new_typing", typingHandler)
+        }
+    }, [socket, user])
+
     function handleSend() {
         if (message.length > 0) {
             const sentAt = Date.now()
@@ -54,7 +77,8 @@ export default function ChatPage() {
 
         socket.emit("send_typing", {
             channelId: id,
-            user: user.name,
+            userName: user.name,
+            userId: user.id,
         })
     }
 
@@ -62,8 +86,6 @@ export default function ChatPage() {
 
     const chat = data.dms.find((dm) => dm.id === id)!
     const friend = chat.friend
-
-    console.log(chat)
 
     return (
         <div className="w-full h-screen grid grid-rows-[auto_1fr_auto]">
@@ -78,8 +100,13 @@ export default function ChatPage() {
                         {friend.status}
                     </span>
                 </div>
+                {typer && (
+                    <div className="text-xs text-muted-foreground">
+                        typing...
+                    </div>
+                )}
             </PageHeader>
-            <main className="p-3 space-y-2 overflow-y-auto">
+            <main className="p-3 space-y-2 overflow-y-auto relative">
                 {messages &&
                     messages.map((msg, i) => (
                         <Message

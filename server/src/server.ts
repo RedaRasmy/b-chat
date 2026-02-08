@@ -10,7 +10,7 @@ import { parseCookie } from "cookie"
 import { verifyAccessToken } from "@/lib/jwt"
 import db from "@bchat/database"
 import { messages, users } from "@bchat/database/tables"
-import { ClientMessage } from "@bchat/types"
+import { ClientMessage, TypingData } from "@bchat/types"
 import { InsertMessageSchema } from "@bchat/shared/validation"
 import { and, eq, or } from "drizzle-orm"
 
@@ -128,6 +128,10 @@ io.on("connection", async (socket) => {
         } catch (err) {
             console.error(err)
         }
+    })
+
+    socket.on("send_typing", (data: TypingData) => {
+        io.to(`channel:${data.channelId}`).emit("new_typing", data)
     })
 
     socket.on("disconnect", async () => {

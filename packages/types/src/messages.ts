@@ -5,3 +5,9 @@ export type ClientMessage = {
     content: string
     sentAt: number
 }
+
+export type TypingData = {
+    channelId: string
+    userName: string
+    userId: string
+}
