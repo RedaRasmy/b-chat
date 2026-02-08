@@ -1,4 +1,11 @@
-import { index, pgTable, text, uuid } from "drizzle-orm/pg-core"
+import {
+    index,
+    pgEnum,
+    pgTable,
+    text,
+    timestamp,
+    uuid,
+} from "drizzle-orm/pg-core"
 import { channels } from "./channels"
 import { users } from "./users"
 import { createdAt, updatedAt } from "../timestamps"
@@ -15,6 +22,8 @@ export const messages = pgTable(
             .notNull()
             .references(() => users.id),
         content: text().notNull(),
+        deliveredAt: timestamp("delivered_at"),
+        seenAt: timestamp("seen_at"),
         createdAt,
         updatedAt,
     },
