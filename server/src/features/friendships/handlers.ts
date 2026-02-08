@@ -1,6 +1,7 @@
 import { makeParamsEndpoint, makeSimpleEndpoint } from "@/utils/wrappers"
 import db from "@bchat/database"
 import { friendships } from "@bchat/database/tables"
+import { Friend } from "@bchat/types"
 import { and, eq, isNull, or } from "drizzle-orm"
 
 export const getPending = makeSimpleEndpoint(async (req, res, next) => {
@@ -43,6 +44,8 @@ export const getFriends = makeSimpleEndpoint(async (req, res, next) => {
                         name: true,
                         avatar: true,
                         role: true,
+                        status: true,
+                        lastSeen: true,
                     },
                 },
                 requester: {
@@ -51,18 +54,21 @@ export const getFriends = makeSimpleEndpoint(async (req, res, next) => {
                         name: true,
                         avatar: true,
                         role: true,
+                        status: true,
+                        lastSeen: true,
                     },
                 },
             },
         })
 
-        const friends = data.map((rec) => {
+        const friends: Friend[] = data.map((rec) => {
             const friend =
                 user.id === rec.requesterId ? rec.receiver : rec.requester
             return {
-                id: rec.id,
+                ...friend,
+                acceptedAt: rec.acceptedAt,
                 createdAt: rec.createdAt,
-                friend,
+                friendshipId: rec.id,
             }
         })
         res.json(friends)

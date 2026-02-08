@@ -2,6 +2,7 @@ import { makeBodyEndpoint, makeSimpleEndpoint } from "@/utils/wrappers"
 import db from "@bchat/database"
 import { posts, users } from "@bchat/database/tables"
 import { UpdateProfileSchema } from "@bchat/shared/validation"
+import { Profile } from "@bchat/types"
 import { desc, eq } from "drizzle-orm"
 
 export const getProfile = makeSimpleEndpoint(async (req, res, next) => {
@@ -18,6 +19,7 @@ export const getProfile = makeSimpleEndpoint(async (req, res, next) => {
                 role: true,
             },
         })
+
         if (!profile) {
             return res.status(404).json({
                 message: "Profile not found",
@@ -52,13 +54,21 @@ export const updateProfile = makeBodyEndpoint(
         const { name } = req.body
 
         try {
-            const [newProfile] = await db
+            const [data] = await db
                 .update(users)
                 .set({
                     name,
                 })
                 .where(eq(users.id, user.id))
                 .returning()
+
+            const newProfile: Profile = {
+                id: data.id,
+                name: data.name,
+                avatar: data.avatar,
+                email: data.email,
+                role: data.role,
+            }
 
             res.json(newProfile)
         } catch (err) {

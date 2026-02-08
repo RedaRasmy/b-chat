@@ -1,11 +1,11 @@
-import type { User } from "@bchat/types"
+import type { Profile } from "@bchat/types"
 import { createContext } from "react"
 
 interface AuthContextType {
-    user: User | null
+    user: Profile | null
     isAuthenticated: boolean
     isLoading: boolean
-    setUser: (user: User) => void
+    setUser: (user: Profile) => void
     logout: () => Promise<void>
     refresh: () => Promise<void>
 }

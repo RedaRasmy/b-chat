@@ -8,7 +8,7 @@ import { generateToken } from "@/utils/generate-token"
 import { count, eq } from "drizzle-orm"
 import { accessTokenOptions, refreshTokenOptions } from "./options"
 import { MONTH } from "@/utils/periods"
-import { User } from "@bchat/types"
+import { Profile, User } from "@bchat/types"
 
 let hasAdmin: boolean | null = null
 
@@ -122,7 +122,7 @@ export const login = makeBodyEndpoint(LoginSchema, async (req, res, next) => {
         res.cookie("accessToken", accessToken, accessTokenOptions)
         res.cookie("refreshToken", refreshToken, refreshTokenOptions)
 
-        res.status(200).json({
+        res.json({
             id: user.id,
             email: user.email,
             role: user.role,
@@ -165,7 +165,7 @@ export const refresh = makeSimpleEndpoint(async (req, res, next) => {
 
         res.cookie("accessToken", accessToken)
 
-        res.status(200).json({
+        res.json({
             id: user.id,
             email: user.email,
             role: user.role,
@@ -218,7 +218,7 @@ export const fetchMe = makeSimpleEndpoint(async (req, res, next) => {
             })
         }
 
-        const user: User = {
+        const user: Profile = {
             id: data.id,
             name: data.name,
             email: data.email,

@@ -52,6 +52,8 @@ export const getChannels = makeSimpleEndpoint(async (req, res, next) => {
                         name: true,
                         avatar: true,
                         role: true,
+                        status: true,
+                        lastSeen: true,
                     },
                 },
                 user2: {
@@ -60,6 +62,8 @@ export const getChannels = makeSimpleEndpoint(async (req, res, next) => {
                         name: true,
                         avatar: true,
                         role: true,
+                        status: true,
+                        lastSeen: true,
                     },
                 },
             },

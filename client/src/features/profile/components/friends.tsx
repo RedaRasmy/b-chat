@@ -35,19 +35,27 @@ export default function Friends() {
     return (
         <div className={"flex-1 flex flex-col p-3 xl:p-5 items-center"}>
             <div className="max-w-200 w-full flex flex-col gap-4">
-                {data.map((fs) => (
-                    <UserCard user={fs.friend} key={fs.id}>
+                {data.map((friend) => (
+                    <UserCard
+                        user={{
+                            id: friend.id,
+                            name: friend.name,
+                            avatar: friend.avatar,
+                            role: friend.role,
+                        }}
+                        key={friend.id}
+                    >
                         <Button
                             disabled={unfriendMutation.isPending}
                             onClick={() => {
-                                unfriendMutation.mutate(fs.id)
+                                unfriendMutation.mutate(friend.id)
                             }}
                             variant={"destructive"}
                         >
                             <HugeiconsIcon icon={UserMinus01Icon} />
                             unfriend
                         </Button>
-                        <ChatButton friendId={fs.friend.id} />
+                        <ChatButton friendId={friend.id} />
                     </UserCard>
                 ))}
             </div>
