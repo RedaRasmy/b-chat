@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
-import UserCard from "@/components/user-card"
 import ChatButton from "@/features/chats/components/chat-button"
+import FriendCard from "@/features/friendships/components/friend-card"
 import { getFriends, unfriend } from "@/features/friendships/requests"
 import { UserMinus01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
@@ -36,15 +36,7 @@ export default function Friends() {
         <div className={"flex-1 flex flex-col p-3 xl:p-5 items-center"}>
             <div className="max-w-200 w-full flex flex-col gap-4">
                 {data.map((friend) => (
-                    <UserCard
-                        user={{
-                            id: friend.id,
-                            name: friend.name,
-                            avatar: friend.avatar,
-                            role: friend.role,
-                        }}
-                        key={friend.id}
-                    >
+                    <FriendCard friend={friend} key={friend.id}>
                         <Button
                             disabled={unfriendMutation.isPending}
                             onClick={() => {
@@ -56,7 +48,7 @@ export default function Friends() {
                             unfriend
                         </Button>
                         <ChatButton friendId={friend.id} />
-                    </UserCard>
+                    </FriendCard>
                 ))}
             </div>
         </div>

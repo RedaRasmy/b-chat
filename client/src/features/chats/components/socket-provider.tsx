@@ -4,7 +4,12 @@ import { useEffect, useState, type ReactNode } from "react"
 import { io, Socket } from "socket.io-client"
 import { useQueryClient } from "@tanstack/react-query"
 import { useParams } from "react-router-dom"
-import type { ChatMessage } from "@bchat/types"
+import type {
+    Channels,
+    ChatMessage,
+    Friend,
+    StatusChangeData,
+} from "@bchat/types"
 
 export default function SocketProvider({ children }: { children: ReactNode }) {
     const [socket] = useState<Socket>(() => {
@@ -79,11 +84,48 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
                 (old: ChatMessage[] = []) => [...old, msg],
             )
         }
+        function statusChangeHandler(data: StatusChangeData) {
+            queryClient.setQueryData(["friends"], (old: Friend[]) => {
+                if (old)
+                    return old.map((friend) => {
+                        if (friend.id === data.userId) {
+                            return {
+                                ...friend,
+                                status: data.status,
+                                lastSeen: data.lastSeen,
+                            }
+                        } else {
+                            return friend
+                        }
+                    })
+            })
 
+            queryClient.setQueryData(["chats"], (old: Channels) => {
+                if (old)
+                    return {
+                        ...old,
+                        dms: old.dms.map((dm) =>
+                            dm.friend.id === data.userId
+                                ? {
+                                      ...dm,
+                                      friend: {
+                                          ...dm.friend,
+                                          status: data.status,
+                                          lastSeen: data.lastSeen,
+                                      },
+                                  }
+                                : dm,
+                        ),
+                    }
+            })
+        }
+
+        socket.on("user_status_changed", statusChangeHandler)
         socket.on("new_message", handleNewMessage)
 
         return () => {
             socket.off("new_message", handleNewMessage)
+            socket.off("user_status_changed", statusChangeHandler)
         }
     }, [socket, queryClient, currentChannelId])
 

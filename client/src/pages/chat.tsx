@@ -5,6 +5,7 @@ import { useAuth } from "@/features/auth/use-auth"
 import Message from "@/features/chats/components/message"
 import { fetchChats, fetchMessages } from "@/features/chats/requests"
 import { useSocket } from "@/features/chats/use-socket"
+import { cn } from "@/lib/utils"
 import LoadingPage from "@/pages/loading"
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useRef, useState } from "react"
@@ -60,11 +61,23 @@ export default function ChatPage() {
     if (!data || isLoading || !user) return <LoadingPage />
 
     const chat = data.dms.find((dm) => dm.id === id)!
+    const friend = chat.friend
+
+    console.log(chat)
 
     return (
         <div className="w-full h-screen grid grid-rows-[auto_1fr_auto]">
             <PageHeader>
-                <h1>{chat.friend.name}</h1>
+                <div className="flex items-center gap-3">
+                    <h1>{friend.name}</h1>
+                    <span
+                        className={cn("text-xs text-muted-foreground ", {
+                            "text-primary": friend.status === "online",
+                        })}
+                    >
+                        {friend.status}
+                    </span>
+                </div>
             </PageHeader>
             <main className="p-3 space-y-2 overflow-y-auto">
                 {messages &&

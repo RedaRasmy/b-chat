@@ -9,9 +9,10 @@ import { Server } from "socket.io"
 import { parseCookie } from "cookie"
 import { verifyAccessToken } from "@/lib/jwt"
 import db from "@bchat/database"
-import { messages } from "@bchat/database/tables"
+import { messages, users } from "@bchat/database/tables"
 import { ClientMessage } from "@bchat/types"
 import { InsertMessageSchema } from "@bchat/shared/validation"
+import { and, eq, or } from "drizzle-orm"
 
 const app = express()
 
@@ -67,6 +68,13 @@ io.on("connection", async (socket) => {
     const user = socket.user
     console.log("a user connected : ", user)
 
+    await db
+        .update(users)
+        .set({
+            status: "online",
+        })
+        .where(eq(users.id, user.id))
+
     const userDMs = await db.query.dms.findMany({
         where: (dms, { eq, or }) =>
             or(eq(dms.user1Id, user.id), eq(dms.user2Id, user.id)),
@@ -75,6 +83,31 @@ io.on("connection", async (socket) => {
 
     userDMs.forEach((dm) => {
         socket.join(`channel:${dm.channelId}`)
+    })
+
+    const friendships = await db.query.friendships.findMany({
+        where: (friendships, { and, eq, or }) =>
+            and(
+                or(
+                    eq(friendships.requesterId, user.id),
+                    eq(friendships.receiverId, user.id),
+                ),
+                eq(friendships.status, "friend"),
+            ),
+    })
+
+    const friendIds = friendships.map((f) =>
+        f.requesterId === user.id ? f.receiverId : f.requesterId,
+    )
+
+    socket.join(`user:${user.id}`)
+
+    friendIds.forEach((friendId) => {
+        io.to(`user:${friendId}`).emit("user_status_changed", {
+            userId: user.id,
+            status: "online",
+            lastSeen: new Date(),
+        })
     })
 
     socket.on("send_message", async (msg: ClientMessage) => {
@@ -92,6 +125,29 @@ io.on("connection", async (socket) => {
                 .returning()
 
             io.to(`channel:${msg.channelId}`).emit("new_message", message)
+        } catch (err) {
+            console.error(err)
+        }
+    })
+
+    socket.on("disconnect", async () => {
+        console.log(`User disconnected : `, user)
+        try {
+            await db
+                .update(users)
+                .set({
+                    status: "offline",
+                    lastSeen: new Date(),
+                })
+                .where(eq(users.id, user.id))
+
+            friendIds.forEach((id) => {
+                io.to(`user:${id}`).emit("user_status_changed", {
+                    userId: user.id,
+                    status: "offline",
+                    lastSeen: new Date(),
+                })
+            })
         } catch (err) {
             console.error(err)
         }
