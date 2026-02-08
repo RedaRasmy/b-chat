@@ -1,4 +1,4 @@
-import { SocketContext } from "@/chats/socket-context"
+import { SocketContext } from "@/features/chats/socket-context"
 import { useAuth } from "@/features/auth/use-auth"
 import { useEffect, useState, type ReactNode } from "react"
 import { io, Socket } from "socket.io-client"

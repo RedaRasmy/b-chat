@@ -1,4 +1,4 @@
-import { SocketContext } from "@/chats/socket-context"
+import { SocketContext } from "@/features/chats/socket-context"
 import { useContext } from "react"
 
 export function useSocket() {

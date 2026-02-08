@@ -4,7 +4,7 @@ import "./index.css"
 import { router } from "@/routes.tsx"
 import { AuthProvider } from "@/features/auth/provider"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import SocketProvider from "@/chats/components/socket-provider"
+import SocketProvider from "@/features/chats/components/socket-provider"
 
 const client = new QueryClient()
 
