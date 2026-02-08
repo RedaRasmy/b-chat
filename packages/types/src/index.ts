@@ -4,6 +4,7 @@ export * from "./friendships"
 export * from "./users"
 export * from "./posts"
 export * from "./dms"
+export * from "./messages"
 
 export type {
     User,
