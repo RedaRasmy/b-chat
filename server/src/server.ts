@@ -11,8 +11,14 @@ import { verifyAccessToken } from "@/lib/jwt"
 import db from "@bchat/database"
 import { messages, users } from "@bchat/database/tables"
 import { ClientMessage, TypingData } from "@bchat/types"
-import { InsertMessageSchema } from "@bchat/shared/validation"
-import { and, eq, or } from "drizzle-orm"
+import {
+    InsertMessageSchema,
+    GetMessageSchema,
+    MessageSeenSchema,
+    TypingSchema,
+} from "@bchat/shared/validation"
+import { and, eq, exists, inArray, isNull, or } from "drizzle-orm"
+import { messageReceipts } from "../../packages/database/src/schemas/message-receipts"
 
 const app = express()
 
@@ -115,6 +121,18 @@ io.on("connection", async (socket) => {
         try {
             const { content, channelId } = InsertMessageSchema.parse(msg)
 
+            const channel = await db.query.channels.findFirst({
+                where: (channels, { eq }) => eq(channels.id, channelId),
+                with: {
+                    members: true,
+                },
+            })
+            if (!channel) throw new Error("Channel not found")
+
+            const recipients = channel.members.filter(
+                (m) => m.userId !== user.id,
+            )
+
             const [message] = await db
                 .insert(messages)
                 .values({
@@ -124,14 +142,144 @@ io.on("connection", async (socket) => {
                 })
                 .returning()
 
+            if (channel.type === "dm") {
+                const friendId = recipients[0].userId
+                await db.insert(messageReceipts).values({
+                    messageId: message.id,
+                    userId: friendId,
+                })
+            } else {
+                await db.insert(messageReceipts).values(
+                    recipients.map((r) => ({
+                        messageId: message.id,
+                        userId: r.userId,
+                    })),
+                )
+            }
+
             io.to(`channel:${msg.channelId}`).emit("new_message", message)
         } catch (err) {
             console.error(err)
         }
     })
 
-    socket.on("send_typing", (data: TypingData) => {
-        io.to(`channel:${data.channelId}`).emit("new_typing", data)
+    socket.on("get_message", async (data) => {
+        console.log('message delivered : ',data)
+        try {
+            const { channelId, messageId, senderId } =
+                GetMessageSchema.parse(data)
+
+            const channel = await db.query.channels.findFirst({
+                where: (channels, { eq }) => eq(channels.id, channelId),
+            })
+
+            if (!channel) throw new Error("Channel not found")
+
+            await db
+                .update(messageReceipts)
+                .set({ deliveredAt: new Date() })
+                .where(
+                    and(
+                        eq(messageReceipts.messageId, messageId),
+                        eq(messageReceipts.userId, user.id),
+                    ),
+                )
+
+            if (channel.type === "dm") {
+                await db
+                    .update(messages)
+                    .set({ deliveredAt: new Date() })
+                    .where(eq(messages.id, messageId))
+            }
+
+            io.to(`user:${senderId}`).emit("message_delivered", {
+                messageId,
+                receiverId: user.id,
+                deliveredAt: new Date(),
+                channelId: channel.id,
+            })
+        } catch (err) {
+            console.error(err)
+        }
+    })
+
+    socket.on("see_chat", async (data) => {
+        try {
+            const { channelId } = MessageSeenSchema.parse(data)
+
+            const channel = await db.query.channels.findFirst({
+                where: (channels, { eq }) => eq(channels.id, channelId),
+            })
+
+            if (!channel) throw new Error("Channel not found")
+
+            const unreadMessages = await db.query.messages.findMany({
+                where: and(
+                    eq(messages.channelId, channelId),
+                    exists(
+                        db
+                            .select()
+                            .from(messageReceipts)
+                            .where(
+                                and(
+                                    eq(messageReceipts.messageId, messages.id),
+                                    eq(messageReceipts.userId, user.id),
+                                    isNull(messageReceipts.seenAt),
+                                ),
+                            ),
+                    ),
+                ),
+            })
+
+            await db
+                .update(messageReceipts)
+                .set({ seenAt: new Date() })
+                .where(
+                    and(
+                        inArray(
+                            messageReceipts.messageId,
+                            unreadMessages.map((m) => m.id),
+                        ),
+                        eq(messageReceipts.userId, user.id),
+                    ),
+                )
+
+            if (channel.type === "dm") {
+                await db
+                    .update(messages)
+                    .set({ seenAt: new Date() })
+                    .where(
+                        inArray(
+                            messages.id,
+                            unreadMessages.map((m) => m.id),
+                        ),
+                    )
+            }
+
+            unreadMessages.forEach((msg) => {
+                io.to(`user:${msg.senderId}`).emit("chat_seen", {
+                    messageId: msg.id, // what
+                    userId: user.id, // who
+                    seenAt: new Date(), // when
+                    channelId: channel.id, // where
+                })
+            })
+        } catch (error) {
+            console.error(error)
+        }
+    })
+
+    socket.on("send_typing", (data) => {
+        try {
+            const { channelId, userId, userName } = TypingSchema.parse(data)
+            io.to(`channel:${data.channelId}`).emit("new_typing", {
+                channelId,
+                userId,
+                userName,
+            })
+        } catch (err) {
+            console.error(err)
+        }
     })
 
     socket.on("disconnect", async () => {

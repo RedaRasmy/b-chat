@@ -10,6 +10,10 @@ import type {
     Friend,
     StatusChangeData,
 } from "@bchat/types"
+import type {
+    ChatSeenData,
+    MessageDeliveredData,
+} from "@bchat/shared/validation"
 
 export default function SocketProvider({ children }: { children: ReactNode }) {
     const [socket] = useState<Socket>(() => {
@@ -33,7 +37,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         return newSocket
     })
 
-    const { isAuthenticated } = useAuth()
+    const { isAuthenticated, user } = useAuth()
     const queryClient = useQueryClient()
     const currentChannelId = useParams().id
 
@@ -51,8 +55,6 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         function handleNewMessage(msg: ChatMessage) {
-            console.log("New message received", msg)
-
             // queryClient.setQueryData(["chats"], (old: Channels) => {
             //     return {
             //         ...old,
@@ -71,18 +73,18 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
             //     }
             // })
 
-            // if (msg.channelId !== currentChannelId) {
-            //     showNotification({
-            //         title: msg.senderName,
-            //         body: msg.content,
-            //         channelId: msg.channelId,
-            //     })
-            // }
-
             queryClient.setQueryData(
                 ["messages", msg.channelId],
                 (old: ChatMessage[] = []) => [...old, msg],
             )
+
+            if (user && msg.senderId !== user.id) {
+                socket.emit("get_message", {
+                    messageId: msg.id,
+                    channelId: msg.channelId,
+                    senderId: msg.senderId,
+                })
+            }
         }
         function statusChangeHandler(data: StatusChangeData) {
             queryClient.setQueryData(["friends"], (old: Friend[]) => {
@@ -119,15 +121,60 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
                     }
             })
         }
+        function handleDeliveredMessage({
+            channelId,
+            deliveredAt,
+            messageId,
+        }: MessageDeliveredData) {
+            queryClient.setQueryData(
+                ["messages", channelId],
+                (old: ChatMessage[] = []) =>
+                    old.map((msg) => {
+                        if (msg.id === messageId) {
+                            return {
+                                ...msg,
+                                deliveredAt,
+                            }
+                        } else {
+                            return msg
+                        }
+                    }),
+            )
+        }
+
+        function handleSeenChat({
+            messageId,
+            seenAt,
+            channelId,
+        }: ChatSeenData) {
+            queryClient.setQueryData(
+                ["messages", channelId],
+                (old: ChatMessage[] = []) =>
+                    old.map((msg) => {
+                        if (msg.id === messageId) {
+                            return {
+                                ...msg,
+                                seenAt,
+                            }
+                        } else {
+                            return msg
+                        }
+                    }),
+            )
+        }
 
         socket.on("user_status_changed", statusChangeHandler)
         socket.on("new_message", handleNewMessage)
+        socket.on("message_delivered", handleDeliveredMessage)
+        socket.on("chat_seen", handleSeenChat)
 
         return () => {
             socket.off("new_message", handleNewMessage)
             socket.off("user_status_changed", statusChangeHandler)
+            socket.off("message_delivered", handleDeliveredMessage)
+            socket.off("chat_seen", handleSeenChat)
         }
-    }, [socket, queryClient, currentChannelId])
+    }, [socket, queryClient, currentChannelId, user])
 
     return (
         <SocketContext.Provider

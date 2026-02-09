@@ -7,6 +7,7 @@ import { fetchChats, fetchMessages } from "@/features/chats/requests"
 import { useSocket } from "@/features/chats/use-socket"
 import { cn } from "@/lib/utils"
 import LoadingPage from "@/pages/loading"
+import type { SeeChatData } from "@bchat/shared/validation"
 import type { TypingData } from "@bchat/types"
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useRef, useState } from "react"
@@ -38,8 +39,11 @@ export default function ChatPage() {
     }, [messages])
 
     useEffect(() => {
-        socket.emit("mark_read", { channelId: id })
-    }, [socket, id])
+        const readData: SeeChatData = {
+            channelId: id,
+        }
+        socket.emit("see_chat", readData)
+    }, [socket, id, messages])
 
     useEffect(() => {
         function typingHandler(data: TypingData) {

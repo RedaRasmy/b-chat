@@ -4,7 +4,7 @@ import {
     makeSimpleEndpoint,
 } from "@/utils/wrappers"
 import db from "@bchat/database"
-import { channels, dms } from "@bchat/database/tables"
+import { channels, dms, members } from "@bchat/database/tables"
 import { InsertDMSchema } from "@bchat/shared/validation"
 
 export const createDM = makeBodyEndpoint(
@@ -30,6 +30,11 @@ export const createDM = makeBodyEndpoint(
                         user2Id: friendId,
                     })
                     .returning()
+
+                await tx.insert(members).values([
+                    { channelId: channel.id, userId: userId },
+                    { channelId: channel.id, userId: friendId },
+                ])
                 res.status(201).json(dm)
             })
         } catch (err) {
