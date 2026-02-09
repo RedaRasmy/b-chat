@@ -24,7 +24,9 @@ export default function ChatButton({ friendId }: { friendId: string }) {
 
     function handleClick() {
         if (!data) return
-        const existing = data.dms.find((c) => c.friend.id === friendId)
+        const existing = data.find(
+            (c) => c.type === "dm" && c.friend.id === friendId,
+        )
         if (existing) {
             navigate("chats/" + existing.id)
         } else {
