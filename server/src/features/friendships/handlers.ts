@@ -14,6 +14,7 @@ export const getPending = makeSimpleEndpoint(async (req, res, next) => {
             with: {
                 requester: {
                     columns: {
+                        id: true,
                         name: true,
                         avatar: true,
                         role: true,
