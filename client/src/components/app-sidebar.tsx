@@ -53,10 +53,10 @@ export function AppSidebar() {
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarGroupLabel>Chats</SidebarGroupLabel>
-                    <SidebarGroupContent className="grid gap-1 overflow-auto">
+                    <SidebarGroupContent className="grid gap-1 overflow-auto p-2 -mt-2">
                         {data &&
-                            data.dms.map((dm) => (
-                                <ChatCard key={dm.id} chat={dm} />
+                            data.map((chat) => (
+                                <ChatCard key={chat.id} chat={chat} />
                             ))}
                     </SidebarGroupContent>
                 </SidebarGroup>

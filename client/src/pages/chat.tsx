@@ -8,9 +8,9 @@ import { useSocket } from "@/features/chats/use-socket"
 import { cn } from "@/lib/utils"
 import LoadingPage from "@/pages/loading"
 import type { SeeChatData } from "@bchat/shared/validation"
-import type { TypingData } from "@bchat/types"
+import type { OtherUser, TypingData } from "@bchat/types"
 import { useQuery } from "@tanstack/react-query"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
 
 export default function ChatPage() {
@@ -27,6 +27,14 @@ export default function ChatPage() {
         queryKey: ["chats"],
         queryFn: fetchChats,
     })
+
+    const membersMap: Map<string, OtherUser> = useMemo(() => {
+        const chat = data?.find((c) => c.id === id)
+
+        if (!chat || chat.type === "dm") return new Map()
+
+        return new Map(chat.members.map((m) => [m.id, m]))
+    }, [data, id])
 
     const { data: messages = [] } = useQuery({
         queryKey: ["messages", id],
@@ -88,21 +96,24 @@ export default function ChatPage() {
 
     if (!data || isLoading || !user) return <LoadingPage />
 
-    const chat = data.dms.find((dm) => dm.id === id)!
-    const friend = chat.friend
+    const chat = data.find((chat) => chat.id === id)!
+    const chatName = chat.type === "dm" ? chat.friend.name : "group"
+    const friend = chat.type === "dm" ? chat.friend : null
 
     return (
         <div className="w-full h-screen grid grid-rows-[auto_1fr_auto]">
             <PageHeader>
                 <div className="flex items-center gap-3">
-                    <h1>{friend.name}</h1>
-                    <span
-                        className={cn("text-xs text-muted-foreground ", {
-                            "text-primary": friend.status === "online",
-                        })}
-                    >
-                        {friend.status}
-                    </span>
+                    <h1>{chatName}</h1>
+                    {friend && (
+                        <span
+                            className={cn("text-xs text-muted-foreground ", {
+                                "text-primary": friend.status === "online",
+                            })}
+                        >
+                            {friend.status}
+                        </span>
+                    )}
                 </div>
                 {typer && (
                     <div className="text-xs text-muted-foreground">
@@ -118,7 +129,11 @@ export default function ChatPage() {
                             message={msg}
                             isUser={msg.senderId === user.id}
                             sender={
-                                msg.senderId === user.id ? user : chat.friend
+                                msg.senderId === user.id
+                                    ? user
+                                    : chat.type === "dm"
+                                      ? friend!
+                                      : membersMap.get(msg.senderId)!
                             }
                         />
                     ))}

@@ -4,8 +4,10 @@ import {
     makeSimpleEndpoint,
 } from "@/utils/wrappers"
 import db from "@bchat/database"
-import { channels, dms, members } from "@bchat/database/tables"
+import { channels, dms, members, messages } from "@bchat/database/tables"
 import { InsertDMSchema } from "@bchat/shared/validation"
+import { Channels, OtherUser } from "@bchat/types"
+import { desc } from "drizzle-orm"
 
 export const createDM = makeBodyEndpoint(
     InsertDMSchema,
@@ -47,39 +49,71 @@ export const getChannels = makeSimpleEndpoint(async (req, res, next) => {
     const { id: userId } = req.user!
 
     try {
-        const dms = await db.query.dms.findMany({
-            where: (dms, { eq, or }) =>
-                or(eq(dms.user1Id, userId), eq(dms.user2Id, userId)),
+        const channels = await db.query.members.findMany({
+            where: (members, { eq }) => eq(members.userId, userId),
+            columns: {
+                channelId: true,
+            },
             with: {
-                user1: {
-                    columns: {
-                        id: true,
-                        name: true,
-                        avatar: true,
-                        role: true,
-                        status: true,
-                        lastSeen: true,
-                    },
-                },
-                user2: {
-                    columns: {
-                        id: true,
-                        name: true,
-                        avatar: true,
-                        role: true,
-                        status: true,
-                        lastSeen: true,
+                channel: {
+                    with: {
+                        members: {
+                            where: (members, { ne }) =>
+                                ne(members.userId, userId),
+                            with: {
+                                user: {
+                                    columns: {
+                                        id: true,
+                                        name: true,
+                                        avatar: true,
+                                        role: true,
+                                        status: true,
+                                        lastSeen: true,
+                                    },
+                                },
+                            },
+                        },
+                        messages: {
+                            orderBy: desc(messages.createdAt),
+                            limit: 20,
+                        },
                     },
                 },
             },
         })
 
-        const finalData = {
-            dms: dms.map((dm) => ({
-                id: dm.channelId,
-                friend: dm.user1Id === userId ? dm.user2 : dm.user1,
-            })),
-        }
+        const finalData: Channels = channels.map(({ channel }) => {
+            const count = channel.messages.reduce((acc, msg) => {
+                return !msg.seenAt ? acc + 1 : acc
+            }, 0)
+            const unreadCount = count === 20 ? "20+" : count
+
+            if (channel.type === "dm") {
+                return {
+                    id: channel.id,
+                    type: "dm",
+                    lastMessages: channel.messages,
+                    unreadCount,
+                    friend: channel.members[0].user,
+                }
+            } else {
+                return {
+                    // TODO: add group name (groups table)
+                    id: channel.id,
+                    type: "group",
+                    lastMessages: channel.messages,
+                    unreadCount,
+                    members: channel.members.map(
+                        ({ user }): OtherUser => ({
+                            id: user.id,
+                            name: user.name,
+                            avatar: user.avatar,
+                            role: user.role,
+                        }),
+                    ),
+                }
+            }
+        })
 
         res.json(finalData)
     } catch (err) {

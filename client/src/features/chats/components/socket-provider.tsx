@@ -55,23 +55,20 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         function handleNewMessage(msg: ChatMessage) {
-            // queryClient.setQueryData(["chats"], (old: Channels) => {
-            //     return {
-            //         ...old,
-            //         dms: old.dms.map((dm) =>
-            //             dm.id === msg.channelId
-            //                 ? {
-            //                       ...dm,
-            //                       //   lastMessage: msg.content,
-            //                       //   unreadCount:
-            //                       //       dm.id !== currentChannelId
-            //                       //           ? (dm.unreadCount || 0) + 1
-            //                       //           : 0,
-            //                   }
-            //                 : dm,
-            //         ),
-            //     }
-            // })
+            queryClient.setQueryData(["chats"], (old: Channels) => {
+                return old.map((chat) => {
+                    const newCount =
+                        typeof chat.unreadCount === "number"
+                            ? chat.unreadCount + 1
+                            : String(parseInt(chat.unreadCount) + 1) + "+"
+
+                    return {
+                        ...chat,
+                        unreadCount: newCount,
+                        lastMessages: [msg, ...chat.lastMessages],
+                    }
+                })
+            })
 
             queryClient.setQueryData(
                 ["messages", msg.channelId],
@@ -104,21 +101,18 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
 
             queryClient.setQueryData(["chats"], (old: Channels) => {
                 if (old)
-                    return {
-                        ...old,
-                        dms: old.dms.map((dm) =>
-                            dm.friend.id === data.userId
-                                ? {
-                                      ...dm,
-                                      friend: {
-                                          ...dm.friend,
-                                          status: data.status,
-                                          lastSeen: data.lastSeen,
-                                      },
-                                  }
-                                : dm,
-                        ),
-                    }
+                    return old.map((chat) => {
+                        if (chat.type === "dm")
+                            return {
+                                ...chat,
+                                friend: {
+                                    ...chat.friend,
+                                    status: data.status,
+                                    lastSeen: data.lastSeen,
+                                },
+                            }
+                        return chat
+                    })
             })
         }
         function handleDeliveredMessage({
