@@ -55,18 +55,28 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         function handleNewMessage(msg: ChatMessage) {
+            console.log("new msg :", msg)
             queryClient.setQueryData(["chats"], (old: Channels) => {
+                if (!old.find((chat) => chat.id === msg.channelId)) {
+                    queryClient.invalidateQueries({
+                        queryKey: ["chats"],
+                    })
+                    return
+                }
                 return old.map((chat) => {
-                    const newCount =
-                        typeof chat.unreadCount === "number"
-                            ? chat.unreadCount + 1
-                            : String(parseInt(chat.unreadCount) + 1) + "+"
+                    if (chat.id === msg.channelId) {
+                        const newCount =
+                            typeof chat.unreadCount === "number"
+                                ? chat.unreadCount + 1
+                                : String(parseInt(chat.unreadCount) + 1) + "+"
 
-                    return {
-                        ...chat,
-                        unreadCount: newCount,
-                        lastMessages: [msg, ...chat.lastMessages],
+                        return {
+                            ...chat,
+                            unreadCount: newCount,
+                            lastMessages: [msg, ...chat.lastMessages],
+                        }
                     }
+                    return chat
                 })
             })
 

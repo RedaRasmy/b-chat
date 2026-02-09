@@ -1,3 +1,4 @@
+import { getUserSocket } from "@/server"
 import {
     makeBodyEndpoint,
     makeParamsEndpoint,
@@ -37,6 +38,18 @@ export const createDM = makeBodyEndpoint(
                     { channelId: channel.id, userId: userId },
                     { channelId: channel.id, userId: friendId },
                 ])
+
+                const creatorSocket = getUserSocket(userId)
+                const friendSocket = getUserSocket(friendId)
+
+                if (creatorSocket) {
+                    creatorSocket.join(`channel:${channel.id}`)
+                }
+
+                if (friendSocket) {
+                    friendSocket.join(`channel:${channel.id}`)
+                }
+                
                 res.status(201).json(dm)
             })
         } catch (err) {

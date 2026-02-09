@@ -6,3 +6,8 @@ export const InsertDMSchema = z.object({
 })
 
 export type DMFormData = z.infer<typeof InsertDMSchema>
+
+export const NewDMSchema = z.object({
+    channelId: z.uuid(),
+    friendId: z.uuid(),
+})

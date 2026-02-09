@@ -16,6 +16,7 @@ import {
     GetMessageSchema,
     MessageSeenSchema,
     TypingSchema,
+    NewDMSchema,
 } from "@bchat/shared/validation"
 import { and, eq, exists, inArray, isNull, or } from "drizzle-orm"
 import { messageReceipts } from "../../packages/database/src/schemas/message-receipts"
@@ -164,7 +165,7 @@ io.on("connection", async (socket) => {
     })
 
     socket.on("get_message", async (data) => {
-        console.log('message delivered : ',data)
+        console.log("message delivered : ", data)
         try {
             const { channelId, messageId, senderId } =
                 GetMessageSchema.parse(data)
@@ -309,3 +310,8 @@ io.on("connection", async (socket) => {
 server.listen(3000, () => {
     console.log("Server is running on port 3000")
 })
+
+export function getUserSocket(userId: string) {
+    const sockets = Array.from(io.sockets.sockets.values())
+    return sockets.find((s) => s.user.id === userId)
+}
