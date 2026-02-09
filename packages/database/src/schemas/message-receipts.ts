@@ -8,10 +8,10 @@ export const messageReceipts = pgTable(
     {
         messageId: uuid("message_id")
             .notNull()
-            .references(() => messages.id),
+            .references(() => messages.id, { onDelete: "cascade" }),
         userId: uuid("user_id")
             .notNull()
-            .references(() => users.id),
+            .references(() => users.id, { onDelete: "cascade" }),
         deliveredAt: timestamp("delivered_at"),
         seenAt: timestamp("seen_at"),
     },
