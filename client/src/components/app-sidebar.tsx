@@ -24,6 +24,7 @@ export function AppSidebar() {
         queryKey: ["chats"],
         queryFn: fetchChats,
     })
+
     return (
         <Sidebar>
             <SidebarHeader>

@@ -39,7 +39,8 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
 
     const { isAuthenticated, user } = useAuth()
     const queryClient = useQueryClient()
-    const currentChannelId = useParams().id
+    const params = useParams()
+    const currentChannelId = params.id
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -54,9 +55,11 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
     }, [socket, isAuthenticated])
 
     useEffect(() => {
+        if (!user) return
+
         function handleNewMessage(msg: ChatMessage) {
             console.log("new msg :", msg)
-            queryClient.setQueryData(["chats"], (old: Channels) => {
+            queryClient.setQueryData(["chats"], (old: Channels = []) => {
                 if (!old.find((chat) => chat.id === msg.channelId)) {
                     queryClient.invalidateQueries({
                         queryKey: ["chats"],
@@ -64,19 +67,13 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
                     return
                 }
                 return old.map((chat) => {
-                    if (chat.id === msg.channelId) {
-                        const newCount =
-                            typeof chat.unreadCount === "number"
-                                ? chat.unreadCount + 1
-                                : String(parseInt(chat.unreadCount) + 1) + "+"
+                    if (chat.id !== msg.channelId) return chat
+                    if (chat.id === currentChannelId) return chat
 
-                        return {
-                            ...chat,
-                            unreadCount: newCount,
-                            lastMessages: [msg, ...chat.lastMessages],
-                        }
+                    return {
+                        ...chat,
+                        lastMessage: msg,
                     }
-                    return chat
                 })
             })
 
@@ -134,13 +131,10 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
                 ["messages", channelId],
                 (old: ChatMessage[] = []) =>
                     old.map((msg) => {
-                        if (msg.id === messageId) {
-                            return {
-                                ...msg,
-                                deliveredAt,
-                            }
-                        } else {
-                            return msg
+                        if (msg.id !== messageId) return msg
+                        return {
+                            ...msg,
+                            deliveredAt,
                         }
                     }),
             )
@@ -155,20 +149,17 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
                 ["messages", channelId],
                 (old: ChatMessage[] = []) =>
                     old.map((msg) => {
-                        if (msg.id === messageId) {
-                            return {
-                                ...msg,
-                                seenAt,
-                            }
-                        } else {
-                            return msg
+                        if (msg.id !== messageId) return msg
+                        return {
+                            ...msg,
+                            seenAt,
                         }
                     }),
             )
         }
 
-        socket.on("user_status_changed", statusChangeHandler)
         socket.on("new_message", handleNewMessage)
+        socket.on("user_status_changed", statusChangeHandler)
         socket.on("message_delivered", handleDeliveredMessage)
         socket.on("chat_seen", handleSeenChat)
 

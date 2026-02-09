@@ -5,15 +5,13 @@ import { Prettify } from "./global"
 export type DMChat = {
     id: Channel["id"]
     type: "dm"
-    lastMessages: ChatMessage[]
-    unreadCount: number | string
+    lastMessage: ChatMessage | null
     friend: Prettify<OtherUser & UserStatus>
 }
 export type GroupChat = {
     id: Channel["id"]
     type: "group"
-    lastMessages: ChatMessage[]
-    unreadCount: number | string
+    lastMessage: ChatMessage | null
     members: OtherUser[]
     // name ... TODO
 }

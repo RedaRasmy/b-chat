@@ -49,7 +49,7 @@ export const createDM = makeBodyEndpoint(
                 if (friendSocket) {
                     friendSocket.join(`channel:${channel.id}`)
                 }
-                
+
                 res.status(201).json(dm)
             })
         } catch (err) {
@@ -88,7 +88,7 @@ export const getChannels = makeSimpleEndpoint(async (req, res, next) => {
                         },
                         messages: {
                             orderBy: desc(messages.createdAt),
-                            limit: 20,
+                            limit: 1,
                         },
                     },
                 },
@@ -96,17 +96,12 @@ export const getChannels = makeSimpleEndpoint(async (req, res, next) => {
         })
 
         const finalData: Channels = channels.map(({ channel }) => {
-            const count = channel.messages.reduce((acc, msg) => {
-                return !msg.seenAt ? acc + 1 : acc
-            }, 0)
-            const unreadCount = count === 20 ? "20+" : count
-
+            const lastMessage = channel.messages[0] ?? null
             if (channel.type === "dm") {
                 return {
                     id: channel.id,
                     type: "dm",
-                    lastMessages: channel.messages,
-                    unreadCount,
+                    lastMessage,
                     friend: channel.members[0].user,
                 }
             } else {
@@ -114,8 +109,7 @@ export const getChannels = makeSimpleEndpoint(async (req, res, next) => {
                     // TODO: add group name (groups table)
                     id: channel.id,
                     type: "group",
-                    lastMessages: channel.messages,
-                    unreadCount,
+                    lastMessage,
                     members: channel.members.map(
                         ({ user }): OtherUser => ({
                             id: user.id,

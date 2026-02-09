@@ -8,8 +8,8 @@ import { useSocket } from "@/features/chats/use-socket"
 import { cn } from "@/lib/utils"
 import LoadingPage from "@/pages/loading"
 import type { SeeChatData } from "@bchat/shared/validation"
-import type { OtherUser, TypingData } from "@bchat/types"
-import { useQuery } from "@tanstack/react-query"
+import type { Channels, OtherUser, TypingData } from "@bchat/types"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
 
@@ -22,6 +22,7 @@ export default function ChatPage() {
     const socket = useSocket()
     const typingTimeoutRef = useRef<number | null>(null)
     const [typer, setTyper] = useState<string | null>(null)
+    const queryClient = useQueryClient()
 
     const { data, isLoading } = useQuery({
         queryKey: ["chats"],
@@ -54,6 +55,26 @@ export default function ChatPage() {
         }
         socket.emit("see_chat", readData)
     }, [socket, id, messages])
+
+    useEffect(() => {
+        if (!user) return
+        queryClient.setQueryData(["chats"], (old: Channels = []) => {
+            return old.map((channel) => {
+                if (channel.id !== id) return channel
+                return {
+                    ...channel,
+                    lastMessage: channel.lastMessage
+                        ? channel.lastMessage.senderId === user.id
+                            ? channel.lastMessage
+                            : {
+                                  ...channel.lastMessage,
+                                  seenAt: new Date(),
+                              }
+                        : null,
+                }
+            })
+        })
+    }, [socket, queryClient, id, user])
 
     useEffect(() => {
         function typingHandler(data: TypingData) {

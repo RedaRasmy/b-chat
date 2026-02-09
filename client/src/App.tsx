@@ -1,6 +1,7 @@
 import { AppSidebar } from "@/components/app-sidebar"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { useAuth } from "@/features/auth/use-auth"
+import SocketProvider from "@/features/chats/components/socket-provider"
 import LoadingPage from "@/pages/loading"
 import { Navigate, Outlet } from "react-router-dom"
 import { Toaster } from "sonner"
@@ -14,16 +15,18 @@ export function App() {
     }
 
     return (
-        <SidebarProvider>
-            <Toaster
-                position="top-right"
-                richColors
-                closeButton
-                duration={4000}
-            />
-            <AppSidebar />
-            <Outlet />
-        </SidebarProvider>
+        <SocketProvider>
+            <SidebarProvider>
+                <Toaster
+                    position="top-right"
+                    richColors
+                    closeButton
+                    duration={4000}
+                />
+                <AppSidebar />
+                <Outlet />
+            </SidebarProvider>
+        </SocketProvider>
     )
 }
 
