@@ -212,7 +212,7 @@ export const remove = makeParamsEndpoint(["id"], async (req, res, next) => {
         )
         if (result.rowCount === 0) {
             return res.status(403).json({
-                message: "Unable to perform this action",
+                message: "Action not allowed",
             })
         }
 

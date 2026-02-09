@@ -1,25 +1,13 @@
-import { Button } from "@/components/ui/button"
 import ChatButton from "@/features/chats/components/chat-button"
 import FriendCard from "@/features/friendships/components/friend-card"
-import { getFriends, unfriend } from "@/features/friendships/requests"
-import { UserMinus01Icon } from "@hugeicons/core-free-icons"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import UnfriendButton from "@/features/friendships/components/unfriend-button"
+import { getFriends } from "@/features/friendships/requests"
+import { useQuery } from "@tanstack/react-query"
 
 export default function Friends() {
-    const queryClient = useQueryClient()
     const { data, isLoading } = useQuery({
         queryKey: ["friends"],
         queryFn: getFriends,
-    })
-
-    const unfriendMutation = useMutation({
-        mutationFn: unfriend,
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["friends"],
-            })
-        },
     })
 
     if (isLoading || !data) return null
@@ -37,16 +25,7 @@ export default function Friends() {
             <div className="max-w-200 w-full flex flex-col gap-4">
                 {data.map((friend) => (
                     <FriendCard friend={friend} key={friend.id}>
-                        <Button
-                            disabled={unfriendMutation.isPending}
-                            onClick={() => {
-                                unfriendMutation.mutate(friend.id)
-                            }}
-                            variant={"destructive"}
-                        >
-                            <HugeiconsIcon icon={UserMinus01Icon} />
-                            unfriend
-                        </Button>
+                        <UnfriendButton friendshipId={friend.friendshipId} />
                         <ChatButton friendId={friend.id} />
                     </FriendCard>
                 ))}
