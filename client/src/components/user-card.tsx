@@ -1,3 +1,4 @@
+import Avatar from "@/components/avatar"
 import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import type { OtherUser } from "@bchat/types"
@@ -18,9 +19,7 @@ export default function UserCard({
         >
             <CardContent className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
-                    <div className="size-10 rounded-full bg-primary text-xl text-foreground/70 uppercase flex items-center justify-center">
-                        {user.name.charAt(0)}
-                    </div>
+                    <Avatar data={user} className="size-10" />
                     <h1 className="text-lg">{user.name}</h1>
                     {user.role === "admin" && (
                         <span className="text-xs text-primary">(admin)</span>
