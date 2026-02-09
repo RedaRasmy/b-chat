@@ -5,10 +5,12 @@ import { Link } from "react-router-dom"
 export default function ChatCard({ chat }: { chat: DMChat | GroupChat }) {
     const chatName = chat.type === "dm" ? chat.friend.name : "group"
     const lastMessage = chat.lastMessages[0]
-    const time = new Date(lastMessage.createdAt).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-    })
+    const time = lastMessage
+        ? new Date(lastMessage.createdAt).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+          })
+        : null
     const isNew = typeof chat.unreadCount === "string" || chat.unreadCount > 0
     return (
         <Link
@@ -29,7 +31,7 @@ export default function ChatCard({ chat }: { chat: DMChat | GroupChat }) {
                 <div>
                     <h1 className="text-sm">{chatName}</h1>
                     <span className="text-xs text-muted-foreground ml-2">
-                        {lastMessage.content}
+                        {lastMessage && lastMessage.content}
                     </span>
                 </div>
             </section>
