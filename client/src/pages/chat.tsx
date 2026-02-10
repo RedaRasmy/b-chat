@@ -4,21 +4,15 @@ import { Input } from "@/components/ui/input"
 import { useAuth } from "@/features/auth/use-auth"
 import Message from "@/features/chats/components/message"
 import { useTyping } from "@/features/chats/hooks/use-typing"
+import { useMessage } from "@/features/chats/hooks/useMessage"
 import { fetchChats, fetchMessages } from "@/features/chats/requests"
 import { useSocket } from "@/features/chats/use-socket"
 import { cn } from "@/lib/utils"
 import LoadingPage from "@/pages/loading"
 import type { SeeChatData } from "@bchat/shared/validation"
-import type {
-    Channels,
-    ChatMessage,
-    ClientMessage,
-    MessageAck,
-    OtherUser,
-    SendMessageData,
-} from "@bchat/types"
+import type { Channels, OtherUser } from "@bchat/types"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef } from "react"
 import { useParams } from "react-router-dom"
 
 export default function ChatPage() {
@@ -26,9 +20,9 @@ export default function ChatPage() {
     const bottomRef = useRef<HTMLDivElement>(null)
     const id = params.id!
     const { user } = useAuth()
-    const [message, setMessage] = useState("")
     const socket = useSocket()
     const { sendTyping, isTyping } = useTyping(id)
+    const { message, setMessage, send, retry } = useMessage(id)
     const queryClient = useQueryClient()
 
     const { data: chats, isLoading } = useQuery({
@@ -36,8 +30,6 @@ export default function ChatPage() {
         queryFn: fetchChats,
         staleTime: Infinity,
     })
-
-    console.log("chats in chat page : ", chats)
 
     const membersMap: Map<string, OtherUser> = useMemo(() => {
         if (!chats) return new Map()
@@ -96,109 +88,6 @@ export default function ChatPage() {
         })
     }, [socket, queryClient, id, user])
 
-    function handleAck(tempMessage: ClientMessage, res: MessageAck) {
-        if (res.success) {
-            console.log("ack : good")
-            // replace temp message
-            queryClient.setQueryData(
-                ["messages", id],
-                (old: ClientMessage[] = []) =>
-                    old.map((msg) =>
-                        msg.id === res.tempId
-                            ? {
-                                  ...tempMessage,
-                                  id: res.messageId,
-                                  status: "sent",
-                              }
-                            : msg,
-                    ),
-            )
-        } else {
-            console.log("ack : bad")
-            queryClient.setQueryData(
-                ["messages", id],
-                (old: ClientMessage[] = []) =>
-                    old.map((m) =>
-                        m.id === res.tempId
-                            ? {
-                                  ...m,
-                                  status: "failed",
-                              }
-                            : m,
-                    ),
-            )
-        }
-    }
-
-    function handleSend() {
-        if (!user) return
-        if (message.length > 0) {
-            const sentAt = Date.now()
-            const tempId = `temp-${sentAt}`
-
-            const tempMessage: ClientMessage = {
-                id: tempId,
-                content: message,
-                createdAt: new Date(),
-                senderId: user.id,
-                channelId: id,
-                deliveredAt: null,
-                seenAt: null,
-                updatedAt: new Date(),
-                status: "sending",
-            }
-            queryClient.setQueryData(
-                ["messages", id],
-                (old: ChatMessage[] = []) => [...old, tempMessage],
-            )
-
-            socket.emit(
-                "send_message",
-                {
-                    channelId: id,
-                    content: message,
-                    tempId,
-                } satisfies SendMessageData,
-                (res: MessageAck) => {
-                    handleAck(tempMessage, res)
-                },
-            )
-            queryClient.setQueryData(["chats"], (old: Channels = []) =>
-                old.map((chat) =>
-                    chat.id === id
-                        ? {
-                              ...chat,
-                              lastMessage: tempMessage,
-                          }
-                        : chat,
-                ),
-            )
-            setMessage("")
-        }
-    }
-
-    function handleRetry(message: ClientMessage) {
-        queryClient.setQueryData(
-            ["messages", id],
-            (old: ClientMessage[] = []) =>
-                old.map((msg) =>
-                    msg.id === message.id ? { ...msg, status: "sending" } : msg,
-                ),
-        )
-
-        socket.emit(
-            "send_message",
-            {
-                tempId: message.id,
-                channelId: message.channelId,
-                content: message.content,
-            } satisfies SendMessageData,
-            (res: MessageAck) => {
-                handleAck(message, res)
-            },
-        )
-    }
-
     if (!chats || isLoading || !user) return <LoadingPage />
 
     const chat = chats.find((chat) => chat.id === id)
@@ -247,7 +136,7 @@ export default function ChatPage() {
                                       ? friend!
                                       : membersMap.get(msg.senderId)!
                             }
-                            onRetry={handleRetry}
+                            onRetry={retry}
                         />
                     ))}
                 <div ref={bottomRef} />
@@ -259,13 +148,13 @@ export default function ChatPage() {
                     className="max-w-150"
                     onKeyDown={(e) => {
                         if (e.key === "Enter") {
-                            handleSend()
+                            send()
                         } else {
                             sendTyping()
                         }
                     }}
                 />
-                <Button onClick={handleSend}> Send</Button>
+                <Button onClick={send}> Send</Button>
             </footer>
         </div>
     )
