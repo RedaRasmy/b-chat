@@ -9,6 +9,7 @@ import {
     SidebarSeparator,
 } from "@/components/ui/sidebar"
 import ChatCard from "@/features/chats/components/chat-card"
+import { GroupFormDialog } from "@/features/chats/components/group-form"
 import { fetchChats } from "@/features/chats/requests"
 import {
     Files01Icon,
@@ -53,7 +54,10 @@ export function AppSidebar() {
             <SidebarSeparator />
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Chats</SidebarGroupLabel>
+                    <SidebarGroupLabel className="flex justify-between items-center">
+                        <h1>Chats</h1>
+                        <GroupFormDialog/>
+                    </SidebarGroupLabel>
                     <SidebarGroupContent className="grid gap-1 overflow-auto p-2 -mt-2">
                         {data &&
                             data.map((chat) => (
