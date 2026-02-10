@@ -2,7 +2,7 @@ import PageHeader from "@/components/page-header"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import UserCard from "@/components/user-card"
-import { getUsers, requestFriendship } from "@/features/friendships/requests"
+import { fetchUsers, requestFriendship } from "@/features/friendships/requests"
 import { cn } from "@/lib/utils"
 import LoadingPage from "@/pages/loading"
 import { UserAdd01Icon } from "@hugeicons/core-free-icons"
@@ -15,7 +15,7 @@ export default function UsersPage() {
     const { data, isPlaceholderData } = useQuery({
         queryKey: ["users", name],
         queryFn: () => {
-            return getUsers(name || undefined)
+            return fetchUsers(name || undefined)
         },
         placeholderData: keepPreviousData,
     })

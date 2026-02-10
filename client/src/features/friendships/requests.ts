@@ -9,7 +9,7 @@ import type {
 
 // Queries
 
-export async function getUsers(name: string | undefined) {
+export async function fetchUsers(name: string | undefined) {
     const res = await api.get("/users", {
         params: {
             search: name,
@@ -18,17 +18,17 @@ export async function getUsers(name: string | undefined) {
     return res.data as OtherUser[]
 }
 
-export async function getPendingRequests() {
+export async function fetchPendingRequests() {
     const res = await api.get("/friendships/pending")
     return res.data as FriendshipRequest[]
 }
 
-export async function getFriends() {
+export async function fetchFriends() {
     const res = await api.get("/friendships/friends")
     return res.data as Friend[]
 }
 
-export async function getBlocked() {
+export async function fetchBlocked() {
     const res = await api.get("/friendships/blocked")
     return res.data
 }

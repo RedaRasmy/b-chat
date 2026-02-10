@@ -1,13 +1,13 @@
 import ChatButton from "@/features/chats/components/chat-button"
 import FriendCard from "@/features/friendships/components/friend-card"
 import UnfriendButton from "@/features/friendships/components/unfriend-button"
-import { getFriends } from "@/features/friendships/requests"
+import { fetchFriends } from "@/features/friendships/requests"
 import { useQuery } from "@tanstack/react-query"
 
 export default function Friends() {
     const { data, isLoading } = useQuery({
         queryKey: ["friends"],
-        queryFn: getFriends,
+        queryFn: fetchFriends,
     })
 
     if (isLoading || !data) return null

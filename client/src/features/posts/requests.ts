@@ -13,14 +13,14 @@ import type {
     PostWithAuthor,
 } from "@bchat/types"
 
-export async function getPosts(query: PostsQuery) {
+export async function fetchPosts(query: PostsQuery) {
     const res = await api.get("/posts", {
         params: query,
     })
     return res.data as PaginatedResult<PostWithAuthor[]>
 }
 
-export async function addPost(data: PostFormData) {
+export async function fetchPost(data: PostFormData) {
     const res = await api.post("/posts", data)
     return res.data as Post
 }
@@ -41,7 +41,7 @@ export async function deletePost(id: Post["id"]) {
     return res
 }
 
-export async function getPostComments({
+export async function fetchPostComments({
     id,
     query,
 }: {

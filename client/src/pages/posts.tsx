@@ -2,7 +2,7 @@ import PageHeader from "@/components/page-header"
 import { Button } from "@/components/ui/button"
 import Post from "@/features/posts/components/post"
 import { PostForm } from "@/features/posts/components/post-form"
-import { addPost, getPosts } from "@/features/posts/requests"
+import { fetchPost, fetchPosts } from "@/features/posts/requests"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 
@@ -12,14 +12,14 @@ export default function PostsPage() {
     const { data } = useQuery({
         queryKey: ["posts"],
         queryFn: () =>
-            getPosts({
+            fetchPosts({
                 page: 1,
                 perPage: 20,
             }),
     })
 
     const addMutation = useMutation({
-        mutationFn: addPost,
+        mutationFn: fetchPost,
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ["posts"],
