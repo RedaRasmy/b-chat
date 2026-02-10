@@ -5,14 +5,11 @@ import { useAuth } from "@/features/auth/use-auth"
 import Message from "@/features/chats/components/message"
 import { useTyping } from "@/features/chats/hooks/use-typing"
 import { useMessage } from "@/features/chats/hooks/use-message"
-import { fetchChats } from "@/features/chats/requests"
 import { cn } from "@/lib/utils"
 import LoadingPage from "@/pages/loading"
-import type { OtherUser } from "@bchat/types"
-import { useQuery } from "@tanstack/react-query"
-import { useMemo } from "react"
 import { useParams } from "react-router-dom"
 import { useChatMessages } from "@/features/chats/hooks/use-chat-messages"
+import { useChat } from "@/features/chats/hooks/use-chat"
 
 export default function ChatPage() {
     const params = useParams()
@@ -21,26 +18,9 @@ export default function ChatPage() {
     const { sendTyping, isTyping } = useTyping(id)
     const { message, setMessage, send, retry } = useMessage(id)
     const { messages, bottomRef } = useChatMessages(id)
+    const { chat, isLoading, chatName, friend, members } = useChat(id)
 
-    const { data: chats, isLoading } = useQuery({
-        queryKey: ["chats"],
-        queryFn: fetchChats,
-        staleTime: Infinity,
-    })
-
-    const membersMap: Map<string, OtherUser> = useMemo(() => {
-        if (!chats) return new Map()
-
-        const chat = chats.find((c) => c.id === id)
-
-        if (!chat || chat.type === "dm") return new Map()
-
-        return new Map(chat.members.map((m) => [m.id, m]))
-    }, [chats, id])
-
-    if (!chats || isLoading || !user) return <LoadingPage />
-
-    const chat = chats.find((chat) => chat.id === id)
+    if (isLoading || !user) return <LoadingPage />
 
     if (!chat)
         return (
@@ -48,8 +28,6 @@ export default function ChatPage() {
                 Chat Not Found!
             </div>
         )
-    const chatName = chat.type === "dm" ? chat.friend.name : chat.name
-    const friend = chat.type === "dm" ? chat.friend : null
 
     return (
         <div className="w-full h-screen grid grid-rows-[auto_1fr_auto]">
@@ -84,7 +62,7 @@ export default function ChatPage() {
                                     ? user
                                     : chat.type === "dm"
                                       ? friend!
-                                      : membersMap.get(msg.senderId)!
+                                      : members.get(msg.senderId)!
                             }
                             onRetry={retry}
                         />

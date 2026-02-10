@@ -94,6 +94,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
             }
         }
         function statusChangeHandler(data: StatusChangeData) {
+            console.log("status change : ", data)
             queryClient.setQueryData(["friends"], (old: Friend[]) => {
                 if (old)
                     return old.map((friend) => {
@@ -129,6 +130,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
             deliveredAt,
             messageId,
         }: MessageDeliveredData) {
+            console.log("message is delivered")
             queryClient.setQueryData(
                 ["messages", channelId],
                 (old: ChatMessage[] = []) =>
@@ -147,7 +149,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
             seenAt,
             channelId,
         }: ChatSeenData) {
-            console.log("someone see chat")
+            console.log("chat is seen")
             queryClient.setQueryData(
                 ["messages", channelId],
                 (old: ChatMessage[] = []) =>
