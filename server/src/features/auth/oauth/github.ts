@@ -64,6 +64,7 @@ export const githubCallback = makeSimpleEndpoint(async (req, res, next) => {
             emails.find((email: any) => email.verified)
 
         const primaryEmail = primaryEmailObject.email
+        const githubId = githubUser.id.toString()
 
         if (!primaryEmail) {
             return res.redirect(
@@ -72,8 +73,19 @@ export const githubCallback = makeSimpleEndpoint(async (req, res, next) => {
         }
 
         let user = await db.query.users.findFirst({
-            where: eq(users.githubId, githubUser.id.toString()),
+            where: (users, { eq, or }) =>
+                or(eq(users.githubId, githubId), eq(users.email, primaryEmail)),
         })
+
+        if (user) {
+            await db
+                .update(users)
+                .set({
+                    githubId,
+                    avatar: githubUser.avatar_url,
+                })
+                .where(eq(users.id, user.id))
+        }
 
         if (!user) {
             const [newUser] = await db
@@ -104,7 +116,7 @@ export const githubCallback = makeSimpleEndpoint(async (req, res, next) => {
         res.cookie("accessToken", accessToken, accessTokenOptions)
         res.cookie("refreshToken", refreshToken, refreshTokenOptions)
 
-        res.redirect(`${process.env.FRONTEND_URL}/profile`)
+        res.redirect(`${process.env.FRONTEND_URL}`)
     } catch (err) {
         next(err)
     }
