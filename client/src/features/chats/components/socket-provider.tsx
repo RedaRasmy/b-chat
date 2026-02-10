@@ -59,6 +59,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
 
         function handleNewMessage(msg: ChatMessage) {
             console.log("new msg :", msg)
+
             queryClient.setQueryData(["chats"], (old: Channels = []) => {
                 if (!old.find((chat) => chat.id === msg.channelId)) {
                     console.log("invalidate chats")
@@ -69,21 +70,22 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
                 }
                 return old.map((chat) => {
                     if (chat.id !== msg.channelId) return chat
-                    if (chat.id === currentChannelId) return chat
-
+                    const isChatOpen = chat.id === currentChannelId
                     return {
                         ...chat,
-                        lastMessage: msg,
+                        lastMessage: {
+                            ...msg,
+                            seenAt: isChatOpen ? new Date() : null,
+                        },
                     }
                 })
             })
 
-            queryClient.setQueryData(
-                ["messages", msg.channelId],
-                (old: ChatMessage[] = []) => [...old, msg],
-            )
-
             if (user && msg.senderId !== user.id) {
+                queryClient.setQueryData(
+                    ["messages", msg.channelId],
+                    (old: ChatMessage[] = []) => [...old, msg],
+                )
                 socket.emit("get_message", {
                     messageId: msg.id,
                     channelId: msg.channelId,

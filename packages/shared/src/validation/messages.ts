@@ -2,7 +2,7 @@ import z from "zod"
 
 export const InsertMessageSchema = z.object({
     channelId: z.uuid(),
-    sentAt: z.number(),
+    tempId: z.string(),
     content: z.string().min(1),
 })
 

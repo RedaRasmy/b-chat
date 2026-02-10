@@ -8,7 +8,15 @@ import { useSocket } from "@/features/chats/use-socket"
 import { cn } from "@/lib/utils"
 import LoadingPage from "@/pages/loading"
 import type { SeeChatData } from "@bchat/shared/validation"
-import type { Channels, ChatMessage, OtherUser, TypingData } from "@bchat/types"
+import type {
+    Channels,
+    ChatMessage,
+    ClientMessage,
+    MessageAck,
+    OtherUser,
+    SendMessageData,
+    TypingData,
+} from "@bchat/types"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
@@ -104,17 +112,48 @@ export default function ChatPage() {
         }
     }, [socket, user])
 
+    function handleAck(tempMessage: ClientMessage, res: MessageAck) {
+        if (res.success) {
+            console.log("ack : good")
+            // replace temp message
+            queryClient.setQueryData(
+                ["messages", id],
+                (old: ClientMessage[] = []) =>
+                    old.map((msg) =>
+                        msg.id === res.tempId
+                            ? {
+                                  ...tempMessage,
+                                  id: res.messageId,
+                                  status: "sent",
+                              }
+                            : msg,
+                    ),
+            )
+        } else {
+            console.log("ack : bad")
+            queryClient.setQueryData(
+                ["messages", id],
+                (old: ClientMessage[] = []) =>
+                    old.map((m) =>
+                        m.id === res.tempId
+                            ? {
+                                  ...m,
+                                  status: "failed",
+                              }
+                            : m,
+                    ),
+            )
+        }
+    }
+
     function handleSend() {
         if (!user) return
         if (message.length > 0) {
             const sentAt = Date.now()
-            socket.emit("send_message", {
-                channelId: id,
-                content: message,
-                sentAt,
-            })
-            const lastMessage: ChatMessage = {
-                id: crypto.randomUUID(),
+            const tempId = `temp-${sentAt}`
+
+            const tempMessage: ClientMessage = {
+                id: tempId,
                 content: message,
                 createdAt: new Date(),
                 senderId: user.id,
@@ -122,13 +161,30 @@ export default function ChatPage() {
                 deliveredAt: null,
                 seenAt: null,
                 updatedAt: new Date(),
+                status: "sending",
             }
+            queryClient.setQueryData(
+                ["messages", id],
+                (old: ChatMessage[] = []) => [...old, tempMessage],
+            )
+
+            socket.emit(
+                "send_message",
+                {
+                    channelId: id,
+                    content: message,
+                    tempId,
+                } satisfies SendMessageData,
+                (res: MessageAck) => {
+                    handleAck(tempMessage, res)
+                },
+            )
             queryClient.setQueryData(["chats"], (old: Channels = []) =>
                 old.map((chat) =>
                     chat.id === id
                         ? {
                               ...chat,
-                              lastMessage,
+                              lastMessage: tempMessage,
                           }
                         : chat,
                 ),
@@ -144,6 +200,28 @@ export default function ChatPage() {
             userName: user.name,
             userId: user.id,
         })
+    }
+
+    function handleRetry(message: ClientMessage) {
+        queryClient.setQueryData(
+            ["messages", id],
+            (old: ClientMessage[] = []) =>
+                old.map((msg) =>
+                    msg.id === message.id ? { ...msg, status: "sending" } : msg,
+                ),
+        )
+
+        socket.emit(
+            "send_message",
+            {
+                tempId: message.id,
+                channelId: message.channelId,
+                content: message.content,
+            } satisfies SendMessageData,
+            (res: MessageAck) => {
+                handleAck(message, res)
+            },
+        )
     }
 
     if (!data || isLoading || !user) return <LoadingPage />
@@ -193,6 +271,7 @@ export default function ChatPage() {
                                       ? friend!
                                       : membersMap.get(msg.senderId)!
                             }
+                            onRetry={handleRetry}
                         />
                     ))}
                 <div ref={bottomRef} />

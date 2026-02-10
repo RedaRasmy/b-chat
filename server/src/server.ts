@@ -10,7 +10,7 @@ import { parseCookie } from "cookie"
 import { verifyAccessToken } from "@/lib/jwt"
 import db from "@bchat/database"
 import { messages, users } from "@bchat/database/tables"
-import { ClientMessage, TypingData } from "@bchat/types"
+import { SendMessageData, TypingData } from "@bchat/types"
 import {
     InsertMessageSchema,
     GetMessageSchema,
@@ -118,11 +118,17 @@ io.on("connection", async (socket) => {
         })
     })
 
-    socket.on("send_message", async (msg: ClientMessage) => {
+    socket.on("send_message", async (msg: SendMessageData, callback) => {
         console.log("received msg :", msg)
-        try {
-            const { content, channelId } = InsertMessageSchema.parse(msg)
+        const result = InsertMessageSchema.safeParse(msg)
 
+        if (!result.success) {
+            throw new Error("Invalid message data on send_message event")
+        }
+
+        const { content, channelId, tempId } = result.data
+
+        try {
             const channel = await db.query.channels.findFirst({
                 where: (channels, { eq }) => eq(channels.id, channelId),
                 with: {
@@ -135,35 +141,53 @@ io.on("connection", async (socket) => {
                 (m) => m.userId !== user.id,
             )
 
-            const [message] = await db
-                .insert(messages)
-                .values({
-                    channelId,
-                    content,
-                    senderId: user.id,
-                })
-                .returning()
+            await db.transaction(async (tx) => {
+                const [message] = await tx
+                    .insert(messages)
+                    .values({
+                        channelId,
+                        content,
+                        senderId: user.id,
+                    })
+                    .returning()
 
-            if (channel.type === "dm") {
-                const friendId = recipients[0].userId
-                await db.insert(messageReceipts).values({
-                    messageId: message.id,
-                    userId: friendId,
-                })
-            } else {
-                await db.insert(messageReceipts).values(
-                    recipients.map((r) => ({
+                if (channel.type === "dm") {
+                    const friendId = recipients[0].userId
+                    await tx.insert(messageReceipts).values({
                         messageId: message.id,
-                        userId: r.userId,
-                    })),
-                )
-            }
+                        userId: friendId,
+                    })
+                } else {
+                    await tx.insert(messageReceipts).values(
+                        recipients.map((r) => ({
+                            messageId: message.id,
+                            userId: r.userId,
+                        })),
+                    )
+                }
 
-            await sleep(500)
+                await sleep(200)
 
-            io.to(`channel:${msg.channelId}`).emit("new_message", message)
+                // if (Math.random() > 0.5) {
+                //     throw Error("test")
+                // }
+
+                io.to(`channel:${msg.channelId}`).emit("new_message", message)
+
+                callback({
+                    success: true,
+                    messageId: message.id,
+                    tempId,
+                    channelId,
+                })
+            })
         } catch (err) {
             console.error(err)
+            callback({
+                success: false,
+                tempId,
+                channelId,
+            })
         }
     })
 
