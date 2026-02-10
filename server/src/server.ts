@@ -21,6 +21,7 @@ import {
 import { and, eq, exists, inArray, isNull, or } from "drizzle-orm"
 import { messageReceipts } from "../../packages/database/src/schemas/message-receipts"
 import { sleep } from "@/utils/sleep"
+import { getFriendsIds } from "@/queries/get-friends"
 
 const app = express()
 
@@ -83,30 +84,16 @@ io.on("connection", async (socket) => {
         })
         .where(eq(users.id, user.id))
 
-    const userDMs = await db.query.dms.findMany({
-        where: (dms, { eq, or }) =>
-            or(eq(dms.user1Id, user.id), eq(dms.user2Id, user.id)),
+    const channels = await db.query.members.findMany({
+        where: (members, { eq }) => eq(members.userId, user.id),
         columns: { channelId: true },
     })
 
-    userDMs.forEach((dm) => {
-        socket.join(`channel:${dm.channelId}`)
+    channels.forEach(({ channelId }) => {
+        socket.join(`channel:${channelId}`)
     })
 
-    const friendships = await db.query.friendships.findMany({
-        where: (friendships, { and, eq, or }) =>
-            and(
-                or(
-                    eq(friendships.requesterId, user.id),
-                    eq(friendships.receiverId, user.id),
-                ),
-                eq(friendships.status, "friend"),
-            ),
-    })
-
-    const friendIds = friendships.map((f) =>
-        f.requesterId === user.id ? f.receiverId : f.requesterId,
-    )
+    const friendIds = await getFriendsIds(user.id)
 
     socket.join(`user:${user.id}`)
 
