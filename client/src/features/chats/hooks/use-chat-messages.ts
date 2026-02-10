@@ -19,9 +19,6 @@ export function useChatMessages(channelId: string) {
     })
 
     useEffect(() => {
-        // queryClient.invalidateQueries({
-        //     queryKey: ["chats"],
-        // })
         queryClient.invalidateQueries({
             queryKey: ["messages", channelId],
         })
@@ -40,23 +37,22 @@ export function useChatMessages(channelId: string) {
 
     useEffect(() => {
         if (!user) return
-        queryClient.setQueryData(["chats"], (old: Channels = []) => {
-            return old.map((channel) => {
+        queryClient.setQueryData(["chats"], (old: Channels = []) =>
+            old.map((channel) => {
                 if (channel.id !== channelId) return channel
                 const lastMessage = channel.lastMessage
-                if (!lastMessage) return lastMessage
+                if (!lastMessage) return channel
+                if (lastMessage.senderId === user.id) return channel
+
                 return {
                     ...channel,
-                    lastMessage:
-                        lastMessage.senderId === user.id
-                            ? lastMessage
-                            : {
-                                  ...channel.lastMessage,
-                                  seenAt: new Date(),
-                              },
+                    lastMessage: {
+                        ...lastMessage,
+                        seenAt: new Date(),
+                    },
                 }
-            })
-        })
+            }),
+        )
     }, [queryClient, channelId, user])
 
     return {

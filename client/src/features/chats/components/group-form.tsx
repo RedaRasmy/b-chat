@@ -23,7 +23,7 @@ import { InsertGroupSchema, type GroupFormData } from "@bchat/shared/validation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { PlusSignIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
@@ -44,12 +44,16 @@ export function GroupFormDialog() {
     })
 
     const navigate = useNavigate()
+    const queryClient = useQueryClient()
 
     const mutation = useMutation({
         mutationFn: createGroup,
         onSuccess: async (group) => {
             form.reset()
             setOpen(false)
+            queryClient.invalidateQueries({
+                queryKey: ["chats"],
+            })
             navigate("/chats/" + group.channelId)
         },
     })

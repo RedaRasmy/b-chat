@@ -9,12 +9,8 @@ export function useChat(channelId: string) {
         queryFn: fetchChats,
         staleTime: Infinity,
     })
-    console.log(isLoading)
-
-    console.log(chats)
 
     const chat = chats ? chats.find((c) => c.id === channelId) : undefined
-    console.log(chat)
 
     const members: Map<string, OtherUser> = useMemo(() => {
         if (!chat || chat.type === "dm") return new Map()
