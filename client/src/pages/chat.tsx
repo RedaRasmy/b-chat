@@ -27,6 +27,7 @@ export default function ChatPage() {
     const { data, isLoading } = useQuery({
         queryKey: ["chats"],
         queryFn: fetchChats,
+        staleTime: Infinity,
     })
 
     const membersMap: Map<string, OtherUser> = useMemo(() => {
@@ -59,18 +60,20 @@ export default function ChatPage() {
     useEffect(() => {
         if (!user) return
         queryClient.setQueryData(["chats"], (old: Channels = []) => {
+            console.log("setting chat data")
             return old.map((channel) => {
                 if (channel.id !== id) return channel
+                const lastMessage = channel.lastMessage
+                if (!lastMessage) return lastMessage
                 return {
                     ...channel,
-                    lastMessage: channel.lastMessage
-                        ? channel.lastMessage.senderId === user.id
-                            ? channel.lastMessage
+                    lastMessage:
+                        lastMessage.senderId === user.id
+                            ? lastMessage
                             : {
                                   ...channel.lastMessage,
                                   seenAt: new Date(),
-                              }
-                        : null,
+                              },
                 }
             })
         })

@@ -61,6 +61,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
             console.log("new msg :", msg)
             queryClient.setQueryData(["chats"], (old: Channels = []) => {
                 if (!old.find((chat) => chat.id === msg.channelId)) {
+                    console.log("invalidate chats")
                     queryClient.invalidateQueries({
                         queryKey: ["chats"],
                     })
@@ -106,20 +107,19 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
                     })
             })
 
-            queryClient.setQueryData(["chats"], (old: Channels) => {
-                if (old)
-                    return old.map((chat) => {
-                        if (chat.type === "dm")
-                            return {
-                                ...chat,
-                                friend: {
-                                    ...chat.friend,
-                                    status: data.status,
-                                    lastSeen: data.lastSeen,
-                                },
-                            }
-                        return chat
-                    })
+            queryClient.setQueryData(["chats"], (old: Channels = []) => {
+                return old.map((chat) => {
+                    if (chat.type === "dm" && data.userId == chat.friend.id)
+                        return {
+                            ...chat,
+                            friend: {
+                                ...chat.friend,
+                                status: data.status,
+                                lastSeen: data.lastSeen,
+                            },
+                        }
+                    return chat
+                })
             })
         }
         function handleDeliveredMessage({
@@ -145,6 +145,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
             seenAt,
             channelId,
         }: ChatSeenData) {
+            console.log("someone see chat")
             queryClient.setQueryData(
                 ["messages", channelId],
                 (old: ChatMessage[] = []) =>
