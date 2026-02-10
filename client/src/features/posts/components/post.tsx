@@ -23,8 +23,9 @@ export default function Post({
                 <CardTitle>{post.author.name}</CardTitle>
                 <CardDescription>
                     posted at <span>{date}</span>
+                    {post.isEdited && <span className="ml-2">(edited)</span>}
                 </CardDescription>
-                <CardAction className="space-x-0.5">{children}</CardAction>
+                <CardAction className="space-x-0.5 ">{children}</CardAction>
             </CardHeader>
             <CardContent>
                 <p className="wrap-break-word whitespace-pre-wrap">
