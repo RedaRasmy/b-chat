@@ -201,24 +201,34 @@ export const getMessages = makeParamsEndpoint(
         const user = req.user!
 
         try {
-            const userChannel = await db.query.dms.findFirst({
-                where: (dms, { eq, and, or }) =>
+            const channel = await db.query.channels.findFirst({
+                where: (channels, { eq, and, exists }) =>
                     and(
-                        eq(dms.channelId, id),
-                        or(eq(dms.user1Id, user.id), eq(dms.user2Id, user.id)),
+                        eq(channels.id, id),
+                        exists(
+                            // check if the user is a member
+                            db
+                                .select()
+                                .from(members)
+                                .where(
+                                    and(
+                                        eq(members.userId, user.id),
+                                        eq(members.channelId, channels.id),
+                                    ),
+                                ),
+                        ),
                     ),
+                with: {
+                    messages: true,
+                },
             })
-            if (!userChannel) {
+            if (!channel) {
                 return res.status(404).json({
                     message: "Channel not found",
                 })
             }
-            const data = await db.query.messages.findMany({
-                where: (msgs, { eq }) => eq(msgs.channelId, id),
-                orderBy: asc(messages.createdAt),
-            })
 
-            res.json(data)
+            res.json(channel.messages)
         } catch (err) {
             next(err)
         }
