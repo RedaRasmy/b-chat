@@ -37,6 +37,7 @@ export const getPosts = makeQueryEndpoint(
                 with: {
                     author: {
                         columns: {
+                            id: true,
                             avatar: true,
                             name: true,
                             role: true,
@@ -175,6 +176,7 @@ export const getPostComments = makeIdQueryEndpoint(
                 with: {
                     author: {
                         columns: {
+                            id: true,
                             avatar: true,
                             name: true,
                             role: true,

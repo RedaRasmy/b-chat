@@ -53,6 +53,7 @@ export default function MyPosts() {
                     post={{
                         ...post,
                         author: {
+                            id: user.id,
                             name: user.name,
                             role: user.role,
                             avatar: user.avatar,
