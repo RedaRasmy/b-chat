@@ -8,3 +8,4 @@ export * from "./messages"
 export * from "./members"
 export * from "./dms"
 export * from "./message-receipts"
+export * from './groups'
