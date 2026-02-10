@@ -8,7 +8,7 @@ import db from "@bchat/database"
 import { channels, dms, members, messages } from "@bchat/database/tables"
 import { InsertDMSchema } from "@bchat/shared/validation"
 import { Channels, OtherUser } from "@bchat/types"
-import { desc } from "drizzle-orm"
+import { asc, desc } from "drizzle-orm"
 
 export const createDM = makeBodyEndpoint(
     InsertDMSchema,
@@ -147,11 +147,12 @@ export const getMessages = makeParamsEndpoint(
                     message: "Channel not found",
                 })
             }
-            const messages = await db.query.messages.findMany({
+            const data = await db.query.messages.findMany({
                 where: (msgs, { eq }) => eq(msgs.channelId, id),
+                orderBy: asc(messages.createdAt),
             })
 
-            res.json(messages)
+            res.json(data)
         } catch (err) {
             next(err)
         }
