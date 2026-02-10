@@ -1,8 +1,10 @@
 import UserAvatar from "@/components/avatar"
+import { useAuth } from "@/features/auth/use-auth"
 import type { DMChat, GroupChat } from "@bchat/types"
 import { Link } from "react-router-dom"
 
 export default function ChatCard({ chat }: { chat: DMChat | GroupChat }) {
+    const { user } = useAuth()
     const chatName = chat.type === "dm" ? chat.friend.name : "group"
 
     const lastMessage = chat.lastMessage
@@ -13,10 +15,12 @@ export default function ChatCard({ chat }: { chat: DMChat | GroupChat }) {
           })
         : null
 
-    const isNew = lastMessage && !lastMessage.seenAt
-    console.log({
-        chat,
-    })
+    const isNew =
+        lastMessage &&
+        !lastMessage.seenAt &&
+        user &&
+        lastMessage.senderId !== user.id
+
     return (
         <Link
             to={"/chats/" + chat.id}

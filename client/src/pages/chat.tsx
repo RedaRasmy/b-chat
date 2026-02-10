@@ -8,7 +8,7 @@ import { useSocket } from "@/features/chats/use-socket"
 import { cn } from "@/lib/utils"
 import LoadingPage from "@/pages/loading"
 import type { SeeChatData } from "@bchat/shared/validation"
-import type { Channels, OtherUser, TypingData } from "@bchat/types"
+import type { Channels, ChatMessage, OtherUser, TypingData } from "@bchat/types"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useParams } from "react-router-dom"
@@ -105,6 +105,7 @@ export default function ChatPage() {
     }, [socket, user])
 
     function handleSend() {
+        if (!user) return
         if (message.length > 0) {
             const sentAt = Date.now()
             socket.emit("send_message", {
@@ -112,6 +113,26 @@ export default function ChatPage() {
                 content: message,
                 sentAt,
             })
+            const lastMessage: ChatMessage = {
+                id: crypto.randomUUID(),
+                content: message,
+                createdAt: new Date(),
+                senderId: user.id,
+                channelId: id,
+                deliveredAt: null,
+                seenAt: null,
+                updatedAt: new Date(),
+            }
+            queryClient.setQueryData(["chats"], (old: Channels = []) =>
+                old.map((chat) =>
+                    chat.id === id
+                        ? {
+                              ...chat,
+                              lastMessage,
+                          }
+                        : chat,
+                ),
+            )
             setMessage("")
         }
     }
