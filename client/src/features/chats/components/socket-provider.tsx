@@ -66,7 +66,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
                     queryClient.invalidateQueries({
                         queryKey: ["chats"],
                     })
-                    return
+                    return old
                 }
                 return old.map((chat) => {
                     if (chat.id !== msg.channelId) return chat

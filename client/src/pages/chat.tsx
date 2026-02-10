@@ -5,25 +5,22 @@ import { useAuth } from "@/features/auth/use-auth"
 import Message from "@/features/chats/components/message"
 import { useTyping } from "@/features/chats/hooks/use-typing"
 import { useMessage } from "@/features/chats/hooks/use-message"
-import { fetchChats, fetchMessages } from "@/features/chats/requests"
-import { useSocket } from "@/features/chats/use-socket"
+import { fetchChats } from "@/features/chats/requests"
 import { cn } from "@/lib/utils"
 import LoadingPage from "@/pages/loading"
-import type { SeeChatData } from "@bchat/shared/validation"
-import type { Channels, OtherUser } from "@bchat/types"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { useEffect, useMemo, useRef } from "react"
+import type { OtherUser } from "@bchat/types"
+import { useQuery } from "@tanstack/react-query"
+import { useMemo } from "react"
 import { useParams } from "react-router-dom"
+import { useChatMessages } from "@/features/chats/hooks/use-chat-messages"
 
 export default function ChatPage() {
     const params = useParams()
-    const bottomRef = useRef<HTMLDivElement>(null)
     const id = params.id!
     const { user } = useAuth()
-    const socket = useSocket()
     const { sendTyping, isTyping } = useTyping(id)
     const { message, setMessage, send, retry } = useMessage(id)
-    const queryClient = useQueryClient()
+    const { messages, bottomRef } = useChatMessages(id)
 
     const { data: chats, isLoading } = useQuery({
         queryKey: ["chats"],
@@ -40,53 +37,6 @@ export default function ChatPage() {
 
         return new Map(chat.members.map((m) => [m.id, m]))
     }, [chats, id])
-
-    const { data: messages = [] } = useQuery({
-        queryKey: ["messages", id],
-        queryFn: () => fetchMessages(id),
-        staleTime: Infinity,
-    })
-
-    useEffect(() => {
-        queryClient.invalidateQueries({
-            queryKey: ["chats"],
-        })
-        queryClient.invalidateQueries({
-            queryKey: ["messages", id],
-        })
-    }, [queryClient, id])
-
-    useEffect(() => {
-        bottomRef.current?.scrollIntoView()
-    }, [messages])
-
-    useEffect(() => {
-        const readData: SeeChatData = {
-            channelId: id,
-        }
-        socket.emit("see_chat", readData)
-    }, [socket, id, messages])
-
-    useEffect(() => {
-        if (!user) return
-        queryClient.setQueryData(["chats"], (old: Channels = []) => {
-            return old.map((channel) => {
-                if (channel.id !== id) return channel
-                const lastMessage = channel.lastMessage
-                if (!lastMessage) return lastMessage
-                return {
-                    ...channel,
-                    lastMessage:
-                        lastMessage.senderId === user.id
-                            ? lastMessage
-                            : {
-                                  ...channel.lastMessage,
-                                  seenAt: new Date(),
-                              },
-                }
-            })
-        })
-    }, [socket, queryClient, id, user])
 
     if (!chats || isLoading || !user) return <LoadingPage />
 
