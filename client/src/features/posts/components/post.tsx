@@ -1,7 +1,7 @@
+import Avatar from "@/components/avatar"
 import {
     Card,
     CardHeader,
-    CardDescription,
     CardTitle,
     CardContent,
     CardAction,
@@ -20,11 +20,18 @@ export default function Post({
     return (
         <Card className="w-full max-w-200">
             <CardHeader>
-                <CardTitle>{post.author.name}</CardTitle>
-                <CardDescription>
-                    posted at <span>{date}</span>
-                    {post.isEdited && <span className="ml-2">(edited)</span>}
-                </CardDescription>
+                <CardTitle className="flex items-center gap-2">
+                    <Avatar data={post.author} className="size-9" />
+                    <section>
+                        {post.author.name}
+                        <div className="text-xs text-muted-foreground">
+                            posted at <span>{date}</span>
+                            {post.isEdited && (
+                                <span className="ml-2">(edited)</span>
+                            )}
+                        </div>
+                    </section>
+                </CardTitle>
                 <CardAction className="space-x-0.5 ">{children}</CardAction>
             </CardHeader>
             <CardContent>
@@ -32,9 +39,6 @@ export default function Post({
                     {post.content}
                 </p>
             </CardContent>
-            {/* <CardFooter className="">
-                comments : <span>{post.commentsCount}</span>
-            </CardFooter> */}
         </Card>
     )
 }
