@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 
 export default function ChatCard({ chat }: { chat: DMChat | GroupChat }) {
     const { user } = useAuth()
-    const chatName = chat.type === "dm" ? chat.friend.name : "group"
+    const chatName = chat.type === "dm" ? chat.friend.name : chat.name
 
     const lastMessage = chat.lastMessage
     const time = lastMessage

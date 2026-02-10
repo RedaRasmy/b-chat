@@ -6,6 +6,7 @@ export const InsertDMSchema = z.object({
 export const InsertGroupSchema = z.object({
     name: z
         .string()
+        .min(1, "Group name is required")
         .min(3, "Name length must be between 3 and 20")
         .max(20, "Name length must be between 3 and 20"),
     members: z.array(z.uuid()),

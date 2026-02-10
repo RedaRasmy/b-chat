@@ -158,10 +158,10 @@ export const getChannels = makeSimpleEndpoint(async (req, res, next) => {
 
         const finalData: Channels = channels.map(({ channel }) => {
             const lastMessage = channel.messages[0] ?? null
-            const friend = channel.members.find(
-                (member) => member.userId !== userId,
-            )!.user
             if (channel.type === "dm") {
+                const friend = channel.members.find(
+                    (member) => member.userId !== userId,
+                )!.user
                 return {
                     id: channel.id,
                     type: "dm",

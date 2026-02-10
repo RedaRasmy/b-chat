@@ -14,4 +14,5 @@ export type {
     ChatMessage,
     Channel,
     DM,
+    Group,
 } from "@bchat/database/tables"

@@ -1,10 +1,15 @@
 import { api } from "@/lib/api"
-import type { DMFormData } from "@bchat/shared/validation"
-import type { Channel, Channels, ChatMessage, DM } from "@bchat/types"
+import type { DMFormData, GroupFormData } from "@bchat/shared/validation"
+import type { Channel, Channels, ChatMessage, DM, Group } from "@bchat/types"
 
 export async function createDM(data: DMFormData) {
     const res = await api.post("/channels/dm", data)
     return res.data as DM
+}
+
+export async function createGroup(data: GroupFormData) {
+    const res = await api.post("/channels/group", data)
+    return res.data as Group
 }
 
 export async function fetchChats() {

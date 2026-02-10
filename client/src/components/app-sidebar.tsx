@@ -24,7 +24,10 @@ export function AppSidebar() {
     const { data } = useQuery({
         queryKey: ["chats"],
         queryFn: fetchChats,
+        // staleTime: Infinity,
     })
+
+    console.log("chats in sidebar : ", data)
 
     return (
         <Sidebar>
@@ -53,10 +56,10 @@ export function AppSidebar() {
             </SidebarHeader>
             <SidebarSeparator />
             <SidebarContent>
-                <SidebarGroup>
+                <SidebarGroup className="space-y-1">
                     <SidebarGroupLabel className="flex justify-between items-center">
                         <h1>Chats</h1>
-                        <GroupFormDialog/>
+                        <GroupFormDialog />
                     </SidebarGroupLabel>
                     <SidebarGroupContent className="grid gap-1 overflow-auto p-2 -mt-2">
                         {data &&

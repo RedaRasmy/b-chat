@@ -32,21 +32,23 @@ export default function ChatPage() {
     const [typer, setTyper] = useState<string | null>(null)
     const queryClient = useQueryClient()
 
-    const { data, isLoading } = useQuery({
+    const { data: chats, isLoading } = useQuery({
         queryKey: ["chats"],
         queryFn: fetchChats,
         staleTime: Infinity,
     })
 
-    const membersMap: Map<string, OtherUser> = useMemo(() => {
-        if (!data) return new Map()
+    console.log("chats in chat page : ", chats)
 
-        const chat = data.find((c) => c.id === id)
+    const membersMap: Map<string, OtherUser> = useMemo(() => {
+        if (!chats) return new Map()
+
+        const chat = chats.find((c) => c.id === id)
 
         if (!chat || chat.type === "dm") return new Map()
 
         return new Map(chat.members.map((m) => [m.id, m]))
-    }, [data, id])
+    }, [chats, id])
 
     const { data: messages = [] } = useQuery({
         queryKey: ["messages", id],
@@ -55,6 +57,9 @@ export default function ChatPage() {
     })
 
     useEffect(() => {
+        queryClient.invalidateQueries({
+            queryKey: ["chats"],
+        })
         queryClient.invalidateQueries({
             queryKey: ["messages", id],
         })
@@ -224,16 +229,17 @@ export default function ChatPage() {
         )
     }
 
-    if (!data || isLoading || !user) return <LoadingPage />
+    if (!chats || isLoading || !user) return <LoadingPage />
 
-    const chat = data.find((chat) => chat.id === id)
+    const chat = chats.find((chat) => chat.id === id)
+
     if (!chat)
         return (
             <div className="h-screen w-full text-3xl flex items-center justify-center">
                 Chat Not Found!
             </div>
         )
-    const chatName = chat.type === "dm" ? chat.friend.name : "group"
+    const chatName = chat.type === "dm" ? chat.friend.name : chat.name
     const friend = chat.type === "dm" ? chat.friend : null
 
     return (

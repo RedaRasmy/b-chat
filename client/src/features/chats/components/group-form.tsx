@@ -17,15 +17,19 @@ import {
     FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { createGroup } from "@/features/chats/requests"
 import { fetchFriends } from "@/features/friendships/requests"
 import { InsertGroupSchema, type GroupFormData } from "@bchat/shared/validation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { PlusSignIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
+import { useNavigate } from "react-router-dom"
 
 export function GroupFormDialog() {
+    const [open, setOpen] = useState(false)
     const form = useForm<GroupFormData>({
         resolver: zodResolver(InsertGroupSchema),
         defaultValues: {
@@ -39,12 +43,23 @@ export function GroupFormDialog() {
         queryFn: fetchFriends,
     })
 
-    async function onSubmit(data: GroupFormData) {
-        console.log(data)
+    const navigate = useNavigate()
+
+    const mutation = useMutation({
+        mutationFn: createGroup,
+        onSuccess: async (group) => {
+            form.reset()
+            setOpen(false)
+            navigate("/chats/" + group.channelId)
+        },
+    })
+
+    function onSubmit(data: GroupFormData) {
+        mutation.mutate(data)
     }
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger
                 render={
                     <Button variant="outline" size={"icon-xs"}>
@@ -152,7 +167,9 @@ export function GroupFormDialog() {
                         <DialogClose
                             render={<Button variant="outline">Cancel</Button>}
                         />
-                        <Button type="submit">Create</Button>
+                        <Button type="submit" disabled={mutation.isPending}>
+                            Create
+                        </Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
