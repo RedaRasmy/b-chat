@@ -128,15 +128,11 @@ export const getChannels = makeSimpleEndpoint(async (req, res, next) => {
     try {
         const channels = await db.query.members.findMany({
             where: (members, { eq }) => eq(members.userId, userId),
-            columns: {
-                channelId: true,
-            },
+            columns: {},
             with: {
                 channel: {
                     with: {
                         members: {
-                            where: (members, { ne }) =>
-                                ne(members.userId, userId),
                             with: {
                                 user: {
                                     columns: {
@@ -162,12 +158,15 @@ export const getChannels = makeSimpleEndpoint(async (req, res, next) => {
 
         const finalData: Channels = channels.map(({ channel }) => {
             const lastMessage = channel.messages[0] ?? null
+            const friend = channel.members.find(
+                (member) => member.userId !== userId,
+            )!.user
             if (channel.type === "dm") {
                 return {
                     id: channel.id,
                     type: "dm",
                     lastMessage,
-                    friend: channel.members[0].user,
+                    friend,
                 }
             } else {
                 return {
