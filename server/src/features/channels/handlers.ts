@@ -1,3 +1,4 @@
+import { getFriendsIds } from "@/queries/get-friends"
 import { getUserSocket } from "@/server"
 import {
     makeBodyEndpoint,
@@ -5,8 +6,14 @@ import {
     makeSimpleEndpoint,
 } from "@/utils/wrappers"
 import db from "@bchat/database"
-import { channels, dms, members, messages } from "@bchat/database/tables"
-import { InsertDMSchema } from "@bchat/shared/validation"
+import {
+    channels,
+    dms,
+    groups,
+    members,
+    messages,
+} from "@bchat/database/tables"
+import { InsertDMSchema, InsertGroupSchema } from "@bchat/shared/validation"
 import { Channels, OtherUser } from "@bchat/types"
 import { asc, desc } from "drizzle-orm"
 
@@ -51,6 +58,63 @@ export const createDM = makeBodyEndpoint(
                 }
 
                 res.status(201).json(dm)
+            })
+        } catch (err) {
+            next(err)
+        }
+    },
+)
+
+export const createGroup = makeBodyEndpoint(
+    InsertGroupSchema,
+    async (req, res, next) => {
+        const userId = req.user!.id
+        const { name, members: unsafeMembers } = req.body
+
+        try {
+            const friends = await getFriendsIds(userId)
+
+            const validMembers = unsafeMembers.filter((id) =>
+                friends.includes(id),
+            )
+
+            validMembers.push(userId)
+
+            await db.transaction(async (tx) => {
+                const [channel] = await tx
+                    .insert(channels)
+                    .values({
+                        type: "group",
+                    })
+                    .returning()
+
+                const [group] = await tx
+                    .insert(groups)
+                    .values({
+                        channelId: channel.id,
+                        name,
+                    })
+                    .returning()
+
+                await tx.insert(members).values(
+                    validMembers.map((memberId) => ({
+                        channelId: channel.id,
+                        userId: memberId,
+                    })),
+                )
+
+                const creatorSocket = getUserSocket(userId)
+                if (creatorSocket) {
+                    creatorSocket.join(`channel:${channel.id}`)
+                }
+                validMembers.forEach((memberId) => {
+                    const memberSocket = getUserSocket(memberId)
+                    if (memberSocket) {
+                        memberSocket.join(`channel:${channel.id}`)
+                    }
+                })
+
+                res.status(201).json(group)
             })
         } catch (err) {
             next(err)
