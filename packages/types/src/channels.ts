@@ -13,7 +13,10 @@ export type GroupChat = {
     type: "group"
     lastMessage: ChatMessage | null
     members: OtherUser[]
-    // name ... TODO
+    name: string
+    avatar: string | null
 }
+
+export type Chat = DMChat | GroupChat
 
 export type Channels = (DMChat | GroupChat)[]

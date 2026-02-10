@@ -90,6 +90,7 @@ export const getChannels = makeSimpleEndpoint(async (req, res, next) => {
                             orderBy: desc(messages.createdAt),
                             limit: 1,
                         },
+                        group: true,
                     },
                 },
             },
@@ -106,7 +107,6 @@ export const getChannels = makeSimpleEndpoint(async (req, res, next) => {
                 }
             } else {
                 return {
-                    // TODO: add group name (groups table)
                     id: channel.id,
                     type: "group",
                     lastMessage,
@@ -118,6 +118,8 @@ export const getChannels = makeSimpleEndpoint(async (req, res, next) => {
                             role: user.role,
                         }),
                     ),
+                    name: channel.group.name,
+                    avatar: channel.group.avatar,
                 }
             }
         })

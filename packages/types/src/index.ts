@@ -3,7 +3,7 @@ export * from "./auth"
 export * from "./friendships"
 export * from "./users"
 export * from "./posts"
-export * from "./dms"
+export * from "./channels"
 export * from "./messages"
 
 export type {
