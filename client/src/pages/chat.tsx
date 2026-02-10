@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useAuth } from "@/features/auth/use-auth"
 import Message from "@/features/chats/components/message"
+import { useTyping } from "@/features/chats/hooks/use-typing"
 import { fetchChats, fetchMessages } from "@/features/chats/requests"
 import { useSocket } from "@/features/chats/use-socket"
 import { cn } from "@/lib/utils"
@@ -15,7 +16,6 @@ import type {
     MessageAck,
     OtherUser,
     SendMessageData,
-    TypingData,
 } from "@bchat/types"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useEffect, useMemo, useRef, useState } from "react"
@@ -28,8 +28,7 @@ export default function ChatPage() {
     const { user } = useAuth()
     const [message, setMessage] = useState("")
     const socket = useSocket()
-    const typingTimeoutRef = useRef<number | null>(null)
-    const [typer, setTyper] = useState<string | null>(null)
+    const { sendTyping, isTyping } = useTyping(id)
     const queryClient = useQueryClient()
 
     const { data: chats, isLoading } = useQuery({
@@ -96,26 +95,6 @@ export default function ChatPage() {
             })
         })
     }, [socket, queryClient, id, user])
-
-    useEffect(() => {
-        function typingHandler(data: TypingData) {
-            if (!user || data.userId === user.id) return
-
-            setTyper(data.userName)
-
-            if (typingTimeoutRef.current) {
-                clearTimeout(typingTimeoutRef.current)
-            }
-            typingTimeoutRef.current = setTimeout(() => {
-                setTyper(null)
-            }, 1000)
-        }
-        socket.on("new_typing", typingHandler)
-
-        return () => {
-            socket.off("new_typing", typingHandler)
-        }
-    }, [socket, user])
 
     function handleAck(tempMessage: ClientMessage, res: MessageAck) {
         if (res.success) {
@@ -197,15 +176,6 @@ export default function ChatPage() {
             setMessage("")
         }
     }
-    function handleTyping() {
-        if (!user) return
-
-        socket.emit("send_typing", {
-            channelId: id,
-            userName: user.name,
-            userId: user.id,
-        })
-    }
 
     function handleRetry(message: ClientMessage) {
         queryClient.setQueryData(
@@ -257,7 +227,7 @@ export default function ChatPage() {
                         </span>
                     )}
                 </div>
-                {typer && (
+                {isTyping && (
                     <div className="text-xs text-muted-foreground">
                         typing...
                     </div>
@@ -291,7 +261,7 @@ export default function ChatPage() {
                         if (e.key === "Enter") {
                             handleSend()
                         } else {
-                            handleTyping()
+                            sendTyping()
                         }
                     }}
                 />
