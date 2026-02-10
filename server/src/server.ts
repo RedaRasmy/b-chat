@@ -158,12 +158,15 @@ io.on("connection", async (socket) => {
                         userId: friendId,
                     })
                 } else {
-                    await tx.insert(messageReceipts).values(
-                        recipients.map((r) => ({
-                            messageId: message.id,
-                            userId: r.userId,
-                        })),
-                    )
+                    // Note: group with 1 member -> 0 recipients
+                    if (recipients.length > 0) {
+                        await tx.insert(messageReceipts).values(
+                            recipients.map((r) => ({
+                                messageId: message.id,
+                                userId: r.userId,
+                            })),
+                        )
+                    }
                 }
 
                 await sleep(200)
