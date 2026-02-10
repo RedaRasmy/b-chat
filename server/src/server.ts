@@ -20,6 +20,7 @@ import {
 } from "@bchat/shared/validation"
 import { and, eq, exists, inArray, isNull, or } from "drizzle-orm"
 import { messageReceipts } from "../../packages/database/src/schemas/message-receipts"
+import { sleep } from "@/utils/sleep"
 
 const app = express()
 
@@ -157,6 +158,8 @@ io.on("connection", async (socket) => {
                     })),
                 )
             }
+
+            await sleep(500)
 
             io.to(`channel:${msg.channelId}`).emit("new_message", message)
         } catch (err) {
