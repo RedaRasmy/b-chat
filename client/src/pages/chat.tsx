@@ -47,6 +47,12 @@ export default function ChatPage() {
     })
 
     useEffect(() => {
+        queryClient.invalidateQueries({
+            queryKey: ["messages", id],
+        })
+    }, [queryClient, id])
+
+    useEffect(() => {
         bottomRef.current?.scrollIntoView()
     }, [messages])
 
@@ -60,7 +66,6 @@ export default function ChatPage() {
     useEffect(() => {
         if (!user) return
         queryClient.setQueryData(["chats"], (old: Channels = []) => {
-            console.log("setting chat data")
             return old.map((channel) => {
                 if (channel.id !== id) return channel
                 const lastMessage = channel.lastMessage
