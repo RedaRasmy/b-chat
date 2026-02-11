@@ -66,7 +66,7 @@ export default function Avatar({
             }}
         >
             {character}
-            {"status" in data && (
+            {"status" in data && data.status && (
                 <div
                     className={cn(
                         "size-[30%] bg-red-500 absolute bottom-0 right-0 rounded-full",
