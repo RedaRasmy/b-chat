@@ -15,7 +15,7 @@ import {
 } from "@bchat/database/tables"
 import { InsertDMSchema, InsertGroupSchema } from "@bchat/shared/validation"
 import { Channels, OtherUser } from "@bchat/types"
-import { asc, desc } from "drizzle-orm"
+import { desc } from "drizzle-orm"
 
 export const createDM = makeBodyEndpoint(
     InsertDMSchema,
