@@ -1,30 +1,17 @@
 import Avatar from "@/components/avatar"
 import { useAuth } from "@/features/auth/use-auth"
 import { getChatAvatar, getChatName } from "@/features/chats/utils/chats"
-import { fetchFriends } from "@/features/friendships/requests"
 import type { DMChat, GroupChat } from "@bchat/types"
-import { useQuery } from "@tanstack/react-query"
 import { Link } from "react-router-dom"
 
 export default function ChatCard({ chat }: { chat: DMChat | GroupChat }) {
     const { user } = useAuth()
-    const { data: friends } = useQuery({
-        queryKey: ["friends"],
-        queryFn: fetchFriends,
-        staleTime: Infinity,
-    })
 
     if (!user) return
 
-    const friendId = chat.members.find((m) => m.id !== user.id)?.id
-    const friend =
-        chat.type === "dm" && friends
-            ? friends.find((f) => f.id === friendId)
-            : undefined
-
     const chatName = getChatName(chat, user.id)
     const chatAvatar = getChatAvatar(chat, user.id)
-
+    const status = chat.type === "dm" ? chat.status : undefined
     const lastMessage = chat.lastMessage
 
     const time = lastMessage
@@ -52,7 +39,7 @@ export default function ChatCard({ chat }: { chat: DMChat | GroupChat }) {
                         id: chat.id,
                         name: chatName,
                         avatar: chatAvatar,
-                        status: friend?.status,
+                        status,
                     }}
                 />
                 <div>

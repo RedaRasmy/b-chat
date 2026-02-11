@@ -1,4 +1,4 @@
-import { Channel } from "@bchat/database/tables"
+import { Channel, User } from "@bchat/database/tables"
 import { OtherUser } from "./users"
 import { ChatMessage } from "./messages"
 
@@ -9,7 +9,11 @@ export type DMChat = {
     members: OtherUser[]
     name: null
     avatar: null
+    status?: User["status"]
+    lastSeen?: User["lastSeen"]
+    typingUser?: User["name"]
 }
+
 export type GroupChat = {
     id: Channel["id"]
     type: "group"
@@ -17,6 +21,7 @@ export type GroupChat = {
     members: OtherUser[]
     name: string
     avatar: string | null
+    typingUser?: User["name"]
 }
 
 export type Chat = DMChat | GroupChat
