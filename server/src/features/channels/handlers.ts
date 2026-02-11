@@ -14,8 +14,8 @@ import {
     messages,
 } from "@bchat/database/tables"
 import { InsertDMSchema, InsertGroupSchema } from "@bchat/shared/validation"
-import { Channels, OtherUser } from "@bchat/types"
-import { desc } from "drizzle-orm"
+import { Channels, ChatMessage } from "@bchat/types"
+import { asc, desc } from "drizzle-orm"
 
 export const createDM = makeBodyEndpoint(
     InsertDMSchema,
@@ -147,8 +147,6 @@ export const getChannels = makeSimpleEndpoint(async (req, res, next) => {
                                         name: true,
                                         avatar: true,
                                         role: true,
-                                        status: true,
-                                        lastSeen: true,
                                     },
                                 },
                             },
@@ -172,33 +170,20 @@ export const getChannels = makeSimpleEndpoint(async (req, res, next) => {
         const finalData: Channels = channels.map(({ channel }) => {
             const lastMessage = channel.messages[0] ?? null
             if (channel.type === "dm") {
-                const friend = channel.members.find(
-                    (member) => member.userId !== userId,
-                )!.user
                 return {
                     id: channel.id,
                     type: "dm",
                     lastMessage,
-                    friend,
+                    members: channel.members.map((mem) => mem.user),
+                    name: null,
+                    avatar: null,
                 }
             } else {
-                const isNew = !!lastMessage
-                    ? lastMessage.receipts.length > 0 &&
-                      lastMessage.receipts[0].seenAt === null
-                    : false
                 return {
                     id: channel.id,
                     type: "group",
                     lastMessage,
-                    isNew,
-                    members: channel.members.map(
-                        ({ user }): OtherUser => ({
-                            id: user.id,
-                            name: user.name,
-                            avatar: user.avatar,
-                            role: user.role,
-                        }),
-                    ),
+                    members: channel.members.map((mem) => mem.user),
                     name: channel.group.name,
                     avatar: channel.group.avatar,
                 }
@@ -222,7 +207,16 @@ export const getMessages = makeParamsEndpoint(
                 where: (members, { eq, and }) =>
                     and(eq(members.channelId, id), eq(members.userId, user.id)),
                 with: {
-                    channel: true,
+                    channel: {
+                        with: {
+                            messages: {
+                                orderBy: asc(messages.createdAt),
+                                with: {
+                                    receipts: true,
+                                },
+                            },
+                        },
+                    },
                 },
             })
 
@@ -231,23 +225,10 @@ export const getMessages = makeParamsEndpoint(
                     message: "Channel not found",
                 })
             }
-            const channelId = member.channel.id
-            const type = member.channel.type
 
-            if (type === "dm") {
-                const messages = await db.query.messages.findMany({
-                    where: (msg, { eq }) => eq(msg.channelId, channelId),
-                })
-                res.json(messages)
-            } else {
-                const messages = await db.query.messages.findMany({
-                    where: (msg, { eq }) => eq(msg.channelId, channelId),
-                    with: {
-                        receipts: true,
-                    },
-                })
-                res.json(messages)
-            }
+            const data: ChatMessage[] = member.channel.messages
+
+            res.json(data)
         } catch (err) {
             next(err)
         }

@@ -48,9 +48,8 @@ export function useChatMessages(channelId: string) {
                     ...channel,
                     lastMessage: {
                         ...lastMessage,
-                        seenAt: new Date(),
+                        receipts: [],
                     },
-                    isNew: false,
                 }
             }),
         )

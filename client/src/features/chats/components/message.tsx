@@ -20,14 +20,10 @@ export default function Message({
     onRetry: (message: ClientMessage) => void
 }) {
     const isRetry = isUser && message.status === "failed"
-    const isSeen = message.receipts
-        ? message.receipts.every((rec) => rec.seenAt)
-        : message.seenAt
-    const isDelivered = message.receipts
-        ? message.receipts.every((rec) => rec.deliveredAt)
-        : message.deliveredAt
+    const isSeen = message.receipts.every((rec) => rec.seenAt)
+    const isDelivered = message.receipts.every((rec) => rec.deliveredAt)
 
-    console.log('the msg : ',message)
+    console.log("the msg : ", message)
     return (
         <div
             className={cn("flex items-center gap-2", {

@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { createDM, fetchChats } from "@/features/chats/requests"
 import { Message01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
 
 export default function ChatButton({ friendId }: { friendId: string }) {
@@ -11,10 +11,14 @@ export default function ChatButton({ friendId }: { friendId: string }) {
         queryKey: ["chats"],
         queryFn: fetchChats,
     })
+    const queryClient = useQueryClient()
 
     const mutation = useMutation({
         mutationFn: createDM,
         onSuccess: (data) => {
+            queryClient.invalidateQueries({
+                queryKey: ["chats"],
+            })
             navigate("chats/" + data.channelId)
         },
         onError: (error) => {
@@ -25,7 +29,8 @@ export default function ChatButton({ friendId }: { friendId: string }) {
     function handleClick() {
         if (!data) return
         const existing = data.find(
-            (c) => c.type === "dm" && c.friend.id === friendId,
+            (c) =>
+                c.type === "dm" && c.members.find((mem) => mem.id === friendId),
         )
         if (existing) {
             navigate("chats/" + existing.id)

@@ -1,13 +1,19 @@
 import UserAvatar from "@/components/avatar"
 import { useAuth } from "@/features/auth/use-auth"
+import { getChatAvatar, getChatName } from "@/features/chats/utils/chats"
 import type { DMChat, GroupChat } from "@bchat/types"
 import { Link } from "react-router-dom"
 
 export default function ChatCard({ chat }: { chat: DMChat | GroupChat }) {
     const { user } = useAuth()
-    const chatName = chat.type === "dm" ? chat.friend.name : chat.name
+
+    if (!user) return
+
+    const chatName = getChatName(chat, user.id)
+    const chatAvatar = getChatAvatar(chat, user.id)
 
     const lastMessage = chat.lastMessage
+
     const time = lastMessage
         ? new Date(lastMessage.createdAt).toLocaleTimeString([], {
               hour: "2-digit",
@@ -17,9 +23,8 @@ export default function ChatCard({ chat }: { chat: DMChat | GroupChat }) {
 
     const isNew =
         lastMessage &&
-        (chat.type === "group"
-            ? chat.isNew
-            : !lastMessage.seenAt && user && lastMessage.senderId !== user.id)
+        lastMessage.receipts.length > 0 &&
+        lastMessage.receipts[0].seenAt === null
 
     return (
         <Link
@@ -28,14 +33,11 @@ export default function ChatCard({ chat }: { chat: DMChat | GroupChat }) {
         >
             <section className="flex gap-2 items-center">
                 <UserAvatar
-                    data={
-                        chat.type === "dm"
-                            ? chat.friend
-                            : {
-                                  id: chat.id,
-                                  name: chatName,
-                              }
-                    }
+                    data={{
+                        id: chat.id,
+                        name: chatName,
+                        avatar: chatAvatar,
+                    }}
                 />
                 <div>
                     <h1 className="text-sm">{chatName}</h1>

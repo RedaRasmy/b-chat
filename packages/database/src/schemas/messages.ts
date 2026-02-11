@@ -16,8 +16,6 @@ export const messages = pgTable(
             .notNull()
             .references(() => users.id),
         content: text().notNull(),
-        deliveredAt: timestamp("delivered_at"),
-        seenAt: timestamp("seen_at"),
         createdAt,
         updatedAt,
     },

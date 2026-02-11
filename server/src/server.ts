@@ -9,17 +9,15 @@ import { Server } from "socket.io"
 import { parseCookie } from "cookie"
 import { verifyAccessToken } from "@/lib/jwt"
 import db from "@bchat/database"
-import { messages, users } from "@bchat/database/tables"
-import { SendMessageData, TypingData } from "@bchat/types"
+import { messageReceipts, messages, users } from "@bchat/database/tables"
+import { SendMessageData, MessageReceipt } from "@bchat/types"
 import {
     InsertMessageSchema,
     GetMessageSchema,
     MessageSeenSchema,
     TypingSchema,
-    NewDMSchema,
 } from "@bchat/shared/validation"
-import { and, eq, exists, inArray, isNull, or } from "drizzle-orm"
-import { messageReceipts } from "../../packages/database/src/schemas/message-receipts"
+import { and, eq, exists, inArray, isNull } from "drizzle-orm"
 import { sleep } from "@/utils/sleep"
 import { getFriendsIds } from "@/queries/get-friends"
 
@@ -110,7 +108,7 @@ io.on("connection", async (socket) => {
         const result = InsertMessageSchema.safeParse(msg)
 
         if (!result.success) {
-            throw new Error("Invalid message data on send_message event")
+            throw new Error("Invalid message data")
         }
 
         const { content, channelId, tempId } = result.data
@@ -138,7 +136,7 @@ io.on("connection", async (socket) => {
                     })
                     .returning()
 
-                let receipts
+                let receipts: MessageReceipt[] = []
                 // Note: group with 1 member -> 0 recipients
                 if (recipients.length > 0) {
                     receipts = await tx
@@ -186,8 +184,13 @@ io.on("connection", async (socket) => {
             const { channelId, messageId, senderId } =
                 GetMessageSchema.parse(data)
 
-            const channel = await db.query.channels.findFirst({
-                where: (channels, { eq }) => eq(channels.id, channelId),
+            const channel = await db.query.members.findFirst({
+                where: (members, { eq, and }) =>
+                    and(
+                        eq(members.channelId, channelId),
+                        eq(members.userId, user.id),
+                    ),
+                columns: { channelId: true },
             })
 
             if (!channel) throw new Error("Channel not found")
@@ -202,18 +205,11 @@ io.on("connection", async (socket) => {
                     ),
                 )
 
-            if (channel.type === "dm") {
-                await db
-                    .update(messages)
-                    .set({ deliveredAt: new Date() })
-                    .where(eq(messages.id, messageId))
-            }
-
             io.to(`user:${senderId}`).emit("message_delivered", {
                 messageId,
                 receiverId: user.id,
                 deliveredAt: new Date(),
-                channelId: channel.id,
+                channelId,
             })
         } catch (err) {
             console.error(err)
@@ -224,8 +220,13 @@ io.on("connection", async (socket) => {
         try {
             const { channelId } = MessageSeenSchema.parse(data)
 
-            const channel = await db.query.channels.findFirst({
-                where: (channels, { eq }) => eq(channels.id, channelId),
+            const channel = await db.query.members.findFirst({
+                where: (members, { eq, and }) =>
+                    and(
+                        eq(members.channelId, channelId),
+                        eq(members.userId, user.id),
+                    ),
+                columns: { channelId: true },
             })
 
             if (!channel) throw new Error("Channel not found")
@@ -261,24 +262,12 @@ io.on("connection", async (socket) => {
                     ),
                 )
 
-            if (channel.type === "dm") {
-                await db
-                    .update(messages)
-                    .set({ seenAt: new Date() })
-                    .where(
-                        inArray(
-                            messages.id,
-                            unreadMessages.map((m) => m.id),
-                        ),
-                    )
-            }
-
             unreadMessages.forEach((msg) => {
                 io.to(`user:${msg.senderId}`).emit("chat_seen", {
                     messageId: msg.id, // what
                     userId: user.id, // who
                     seenAt: new Date(), // when
-                    channelId: channel.id, // where
+                    channelId, // where
                 })
             })
         } catch (error) {

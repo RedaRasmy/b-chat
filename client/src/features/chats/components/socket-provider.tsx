@@ -59,6 +59,10 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
 
         function handleNewMessage(msg: ChatMessage) {
             console.log("new msg :", msg)
+            if (!user) {
+                console.warn("User not defined")
+                return
+            }
 
             queryClient.setQueryData(["chats"], (old: Channels = []) => {
                 if (!old.find((chat) => chat.id === msg.channelId)) {
@@ -75,14 +79,17 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
                         ...chat,
                         lastMessage: {
                             ...msg,
-                            seenAt: isChatOpen ? new Date() : null,
+                            receipts: msg.receipts.map((rec) =>
+                                rec.userId === user.id && isChatOpen
+                                    ? { ...rec, seenAt: new Date() }
+                                    : rec,
+                            ),
                         },
-                        isNew: isChatOpen === false,
                     }
                 })
             })
 
-            if (user && msg.senderId !== user.id) {
+            if (msg.senderId !== user.id) {
                 queryClient.setQueryData(
                     ["messages", msg.channelId],
                     (old: ChatMessage[] = []) => [...old, msg],
@@ -92,7 +99,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
                     channelId: msg.channelId,
                     senderId: msg.senderId,
                 })
-            }
+            } 
         }
         function statusChangeHandler(data: StatusChangeData) {
             console.log("status change : ", data)
@@ -110,21 +117,6 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
                         }
                     })
             })
-
-            queryClient.setQueryData(["chats"], (old: Channels = []) => {
-                return old.map((chat) => {
-                    if (chat.type === "dm" && data.userId == chat.friend.id)
-                        return {
-                            ...chat,
-                            friend: {
-                                ...chat.friend,
-                                status: data.status,
-                                lastSeen: data.lastSeen,
-                            },
-                        }
-                    return chat
-                })
-            })
         }
 
         function handleDeliveredMessage({
@@ -141,17 +133,14 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
                         if (msg.id !== messageId) return msg
                         return {
                             ...msg,
-                            deliveredAt,
-                            receipts: msg.receipts
-                                ? msg.receipts.map((rec) =>
-                                      rec.userId === receiverId
-                                          ? {
-                                                ...rec,
-                                                deliveredAt,
-                                            }
-                                          : rec,
-                                  )
-                                : msg.receipts,
+                            receipts: msg.receipts.map((rec) =>
+                                rec.userId === receiverId
+                                    ? {
+                                          ...rec,
+                                          deliveredAt,
+                                      }
+                                    : rec,
+                            ),
                         }
                     }),
             )

@@ -15,4 +15,5 @@ export type {
     Channel,
     DM,
     Group,
+    MessageReceipt,
 } from "@bchat/database/tables"

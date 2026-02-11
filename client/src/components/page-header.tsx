@@ -3,7 +3,7 @@ import type { ReactNode } from "react"
 
 export default function PageHeader({ children }: { children: ReactNode }) {
     return (
-        <header className="bg-accent h-12 flex items-center px-3 gap-3 border-b">
+        <header className="bg-accent h-12 flex items-center px-1 gap-2 border-b">
             <SidebarTrigger size={"lg"} />
             <div className="flex justify-between items-center w-full">
                 {children}

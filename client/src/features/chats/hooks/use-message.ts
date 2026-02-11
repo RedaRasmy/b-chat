@@ -4,12 +4,13 @@ import type {
     Channels,
     ClientMessage,
     MessageAck,
+    OtherUser,
     SendMessageData,
 } from "@bchat/types"
 import { useQueryClient } from "@tanstack/react-query"
 import { useCallback, useState } from "react"
 
-export function useMessage(channelId: string) {
+export function useMessage(channelId: string, members: OtherUser[]) {
     const queryClient = useQueryClient()
     const socket = useSocket()
     const { user } = useAuth()
@@ -40,6 +41,12 @@ export function useMessage(channelId: string) {
                                       ...tempMessage,
                                       id: res.messageId,
                                       status: undefined,
+                                      receipts: tempMessage.receipts.map(
+                                          (r) => ({
+                                              ...r,
+                                              messageId: res.messageId,
+                                          }),
+                                      ),
                                   },
                               }
                             : chat,
@@ -88,10 +95,16 @@ export function useMessage(channelId: string) {
                 createdAt: new Date(),
                 senderId: user.id,
                 channelId: channelId,
-                deliveredAt: null,
-                seenAt: null,
                 updatedAt: new Date(),
                 status: "sending",
+                receipts: members
+                    .filter((m) => m.id !== user.id)
+                    .map((mem) => ({
+                        userId: mem.id,
+                        messageId: tempId,
+                        seenAt: null,
+                        deliveredAt: null,
+                    })),
             }
             queryClient.setQueryData(
                 ["messages", channelId],
@@ -122,7 +135,7 @@ export function useMessage(channelId: string) {
             )
             setMessage("")
         }
-    }, [channelId, handleAck, message, socket, user, queryClient])
+    }, [channelId, handleAck, message, socket, user, queryClient, members])
 
     const retry = useCallback(
         (message: ClientMessage) => {

@@ -13,19 +13,14 @@ export function useChat(channelId: string) {
     const chat = chats ? chats.find((c) => c.id === channelId) : undefined
 
     const members: Map<string, OtherUser> = useMemo(() => {
-        if (!chat || chat.type === "dm") return new Map()
+        if (!chat) return new Map()
         return new Map(chat.members.map((m) => [m.id, m]))
     }, [chat])
-
-    const chatName = chat?.type === "dm" ? chat.friend.name : chat?.name
-    const friend = chat?.type === "dm" ? chat.friend : null
 
     return {
         chat,
         isLoading,
         chats,
         members,
-        chatName,
-        friend,
     }
 }

@@ -5,20 +5,24 @@ import { useAuth } from "@/features/auth/use-auth"
 import Message from "@/features/chats/components/message"
 import { useTyping } from "@/features/chats/hooks/use-typing"
 import { useMessage } from "@/features/chats/hooks/use-message"
-import { cn } from "@/lib/utils"
 import LoadingPage from "@/pages/loading"
 import { useParams } from "react-router-dom"
 import { useChatMessages } from "@/features/chats/hooks/use-chat-messages"
 import { useChat } from "@/features/chats/hooks/use-chat"
+import { getChatAvatar, getChatName } from "@/features/chats/utils/chats"
+import Avatar from "@/components/avatar"
 
 export default function ChatPage() {
     const params = useParams()
     const id = params.id!
     const { user } = useAuth()
     const { sendTyping, isTyping } = useTyping(id)
-    const { message, setMessage, send, retry } = useMessage(id)
     const { messages, bottomRef } = useChatMessages(id)
-    const { chat, isLoading, chatName, friend, members } = useChat(id)
+    const { chat, isLoading, members } = useChat(id)
+    const { message, setMessage, send, retry } = useMessage(
+        id,
+        Array.from(members.values()),
+    )
 
     if (isLoading || !user) return <LoadingPage />
 
@@ -29,12 +33,22 @@ export default function ChatPage() {
             </div>
         )
 
+    const chatName = getChatName(chat, user.id)
+    const chatAvatar = getChatAvatar(chat, user.id)
+
     return (
         <div className="w-full h-screen grid grid-rows-[auto_1fr_auto]">
             <PageHeader>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                    <Avatar
+                        data={{
+                            id: chat.id,
+                            name: chatName,
+                            avatar: chatAvatar,
+                        }}
+                    />
                     <h1>{chatName}</h1>
-                    {friend && (
+                    {/* {friend && (
                         <span
                             className={cn("text-xs text-muted-foreground ", {
                                 "text-primary": friend.status === "online",
@@ -42,7 +56,7 @@ export default function ChatPage() {
                         >
                             {friend.status}
                         </span>
-                    )}
+                    )} */}
                 </div>
                 {isTyping && (
                     <div className="text-xs text-muted-foreground">
@@ -57,13 +71,7 @@ export default function ChatPage() {
                             key={i}
                             message={msg}
                             isUser={msg.senderId === user.id}
-                            sender={
-                                msg.senderId === user.id
-                                    ? user
-                                    : chat.type === "dm"
-                                      ? friend!
-                                      : members.get(msg.senderId)!
-                            }
+                            sender={members.get(msg.senderId)!}
                             onRetry={retry}
                         />
                     ))}
