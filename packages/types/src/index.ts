@@ -11,7 +11,7 @@ export type {
     Post,
     Friendship,
     Comment,
-    ChatMessage,
+    Message,
     Channel,
     DM,
     Group,

@@ -17,9 +17,9 @@ export default function ChatCard({ chat }: { chat: DMChat | GroupChat }) {
 
     const isNew =
         lastMessage &&
-        !lastMessage.seenAt &&
-        user &&
-        lastMessage.senderId !== user.id
+        (chat.type === "group"
+            ? chat.isNew
+            : !lastMessage.seenAt && user && lastMessage.senderId !== user.id)
 
     return (
         <Link

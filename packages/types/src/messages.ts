@@ -1,5 +1,11 @@
-import { Channel, ChatMessage } from "@bchat/database/tables"
+import { Channel, Message, MessageReceipt } from "@bchat/database/tables"
 import { Prettify } from "./global"
+
+export type ChatMessage = Prettify<
+    Message & {
+        receipts: MessageReceipt[]
+    }
+>
 
 export type SendMessageData = {
     channelId: Channel["id"]
@@ -31,3 +37,4 @@ export type ClientMessage = Prettify<
         status?: "sending" | "failed" | "sent"
     }
 >
+

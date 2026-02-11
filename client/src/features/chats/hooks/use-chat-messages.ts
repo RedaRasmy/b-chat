@@ -50,6 +50,7 @@ export function useChatMessages(channelId: string) {
                         ...lastMessage,
                         seenAt: new Date(),
                     },
+                    isNew: false,
                 }
             }),
         )

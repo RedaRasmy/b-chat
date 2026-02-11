@@ -24,7 +24,7 @@ export const messages = pgTable(
     (table) => [index().on(table.channelId), index().on(table.createdAt)],
 )
 
-export type ChatMessage = InferSelectModel<typeof messages>
+export type Message = InferSelectModel<typeof messages>
 
 export const messagesRelations = relations(messages, ({ one, many }) => ({
     channel: one(channels, {

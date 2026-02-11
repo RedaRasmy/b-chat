@@ -155,6 +155,12 @@ export const getChannels = makeSimpleEndpoint(async (req, res, next) => {
                         },
                         messages: {
                             orderBy: desc(messages.createdAt),
+                            with: {
+                                receipts: {
+                                    where: (rec, { eq, and }) =>
+                                        and(eq(rec.userId, userId)),
+                                },
+                            },
                             limit: 1,
                         },
                         group: true,
@@ -176,10 +182,15 @@ export const getChannels = makeSimpleEndpoint(async (req, res, next) => {
                     friend,
                 }
             } else {
+                const isNew = !!lastMessage
+                    ? lastMessage.receipts.length > 0 &&
+                      lastMessage.receipts[0].seenAt === null
+                    : false
                 return {
                     id: channel.id,
                     type: "group",
                     lastMessage,
+                    isNew,
                     members: channel.members.map(
                         ({ user }): OtherUser => ({
                             id: user.id,
@@ -207,34 +218,36 @@ export const getMessages = makeParamsEndpoint(
         const user = req.user!
 
         try {
-            const channel = await db.query.channels.findFirst({
-                where: (channels, { eq, and, exists }) =>
-                    and(
-                        eq(channels.id, id),
-                        exists(
-                            // check if the user is a member
-                            db
-                                .select()
-                                .from(members)
-                                .where(
-                                    and(
-                                        eq(members.userId, user.id),
-                                        eq(members.channelId, channels.id),
-                                    ),
-                                ),
-                        ),
-                    ),
+            const member = await db.query.members.findFirst({
+                where: (members, { eq, and }) =>
+                    and(eq(members.channelId, id), eq(members.userId, user.id)),
                 with: {
-                    messages: true,
+                    channel: true,
                 },
             })
-            if (!channel) {
+
+            if (!member) {
                 return res.status(404).json({
                     message: "Channel not found",
                 })
             }
+            const channelId = member.channel.id
+            const type = member.channel.type
 
-            res.json(channel.messages)
+            if (type === "dm") {
+                const messages = await db.query.messages.findMany({
+                    where: (msg, { eq }) => eq(msg.channelId, channelId),
+                })
+                res.json(messages)
+            } else {
+                const messages = await db.query.messages.findMany({
+                    where: (msg, { eq }) => eq(msg.channelId, channelId),
+                    with: {
+                        receipts: true,
+                    },
+                })
+                res.json(messages)
+            }
         } catch (err) {
             next(err)
         }

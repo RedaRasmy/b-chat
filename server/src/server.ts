@@ -138,22 +138,18 @@ io.on("connection", async (socket) => {
                     })
                     .returning()
 
-                if (channel.type === "dm") {
-                    const friendId = recipients[0].userId
-                    await tx.insert(messageReceipts).values({
-                        messageId: message.id,
-                        userId: friendId,
-                    })
-                } else {
-                    // Note: group with 1 member -> 0 recipients
-                    if (recipients.length > 0) {
-                        await tx.insert(messageReceipts).values(
+                let receipts
+                // Note: group with 1 member -> 0 recipients
+                if (recipients.length > 0) {
+                    receipts = await tx
+                        .insert(messageReceipts)
+                        .values(
                             recipients.map((r) => ({
                                 messageId: message.id,
                                 userId: r.userId,
                             })),
                         )
-                    }
+                        .returning()
                 }
 
                 await sleep(200)
@@ -162,7 +158,10 @@ io.on("connection", async (socket) => {
                 //     throw Error("test")
                 // }
 
-                io.to(`channel:${msg.channelId}`).emit("new_message", message)
+                io.to(`channel:${msg.channelId}`).emit("new_message", {
+                    ...message,
+                    receipts,
+                })
 
                 callback({
                     success: true,

@@ -20,6 +20,14 @@ export default function Message({
     onRetry: (message: ClientMessage) => void
 }) {
     const isRetry = isUser && message.status === "failed"
+    const isSeen = message.receipts
+        ? message.receipts.every((rec) => rec.seenAt)
+        : message.seenAt
+    const isDelivered = message.receipts
+        ? message.receipts.every((rec) => rec.deliveredAt)
+        : message.deliveredAt
+
+    console.log('the msg : ',message)
     return (
         <div
             className={cn("flex items-center gap-2", {
@@ -51,12 +59,12 @@ export default function Message({
                     </span>
                     {isUser && (
                         <span className="absolute bottom-0 right-1 text-[0.6rem] text-muted/80 font-extralight">
-                            {message.seenAt ? (
+                            {isSeen ? (
                                 <HugeiconsIcon
                                     icon={TickDouble02Icon}
                                     size={"15"}
                                 />
-                            ) : message.deliveredAt ? (
+                            ) : isDelivered ? (
                                 <HugeiconsIcon icon={Tick02Icon} size={"15"} />
                             ) : null}
                         </span>

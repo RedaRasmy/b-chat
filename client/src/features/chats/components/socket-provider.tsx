@@ -77,6 +77,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
                             ...msg,
                             seenAt: isChatOpen ? new Date() : null,
                         },
+                        isNew: isChatOpen === false,
                     }
                 })
             })
@@ -125,10 +126,12 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
                 })
             })
         }
+
         function handleDeliveredMessage({
             channelId,
             deliveredAt,
             messageId,
+            receiverId,
         }: MessageDeliveredData) {
             console.log("message is delivered")
             queryClient.setQueryData(
@@ -139,6 +142,16 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
                         return {
                             ...msg,
                             deliveredAt,
+                            receipts: msg.receipts
+                                ? msg.receipts.map((rec) =>
+                                      rec.userId === receiverId
+                                          ? {
+                                                ...rec,
+                                                deliveredAt,
+                                            }
+                                          : rec,
+                                  )
+                                : msg.receipts,
                         }
                     }),
             )
@@ -148,6 +161,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
             messageId,
             seenAt,
             channelId,
+            userId,
         }: ChatSeenData) {
             console.log("chat is seen")
             queryClient.setQueryData(
@@ -158,6 +172,16 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
                         return {
                             ...msg,
                             seenAt,
+                            receipts: msg.receipts
+                                ? msg.receipts.map((rec) =>
+                                      rec.userId === userId
+                                          ? {
+                                                ...rec,
+                                                seenAt,
+                                            }
+                                          : rec,
+                                  )
+                                : msg.receipts,
                         }
                     }),
             )

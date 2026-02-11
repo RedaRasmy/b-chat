@@ -1,7 +1,7 @@
 import { pgTable, primaryKey, timestamp, uuid } from "drizzle-orm/pg-core"
 import { messages } from "./messages"
 import { users } from "./users"
-import { relations } from "drizzle-orm"
+import { InferSelectModel, relations } from "drizzle-orm"
 
 export const messageReceipts = pgTable(
     "message_receipts",
@@ -17,6 +17,8 @@ export const messageReceipts = pgTable(
     },
     (table) => [primaryKey({ columns: [table.messageId, table.userId] })],
 )
+
+export type MessageReceipt = InferSelectModel<typeof messageReceipts>
 
 export const receiptsRelations = relations(messageReceipts, ({ one }) => ({
     receiver: one(users, {
