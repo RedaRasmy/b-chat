@@ -16,7 +16,7 @@ export default function ChatPage() {
     const params = useParams()
     const id = params.id!
     const { user } = useAuth()
-    const { sendTyping, isTyping } = useTyping(id)
+    const { sendTyping, isTyping, typingUser } = useTyping(id)
     const { messages, bottomRef } = useChatMessages(id)
     const { chat, isLoading, members } = useChat(id)
     const { message, setMessage, send, retry } = useMessage(
@@ -60,6 +60,14 @@ export default function ChatPage() {
                 </div>
                 {isTyping && (
                     <div className="text-xs text-muted-foreground">
+                        {chat.type === "group" && (
+                            <span>
+                                <span className="text-primary">
+                                    {typingUser}
+                                </span>{" "}
+                                is
+                            </span>
+                        )}{" "}
                         typing...
                     </div>
                 )}

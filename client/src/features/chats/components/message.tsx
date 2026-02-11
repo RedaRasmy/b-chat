@@ -23,7 +23,6 @@ export default function Message({
     const isSeen = message.receipts.every((rec) => rec.seenAt)
     const isDelivered = message.receipts.every((rec) => rec.deliveredAt)
 
-    console.log("the msg : ", message)
     return (
         <div
             className={cn("flex items-center gap-2", {

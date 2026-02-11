@@ -24,7 +24,9 @@ export default function ChatCard({ chat }: { chat: DMChat | GroupChat }) {
     const isNew =
         lastMessage &&
         lastMessage.receipts.length > 0 &&
-        lastMessage.receipts[0].seenAt === null
+        lastMessage.receipts.find(
+            (rec) => rec.userId === user.id && rec.seenAt === null,
+        )
 
     return (
         <Link
