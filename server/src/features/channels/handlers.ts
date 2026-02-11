@@ -24,6 +24,13 @@ export const createDM = makeBodyEndpoint(
         const { friendId } = req.body
 
         try {
+            const friendsIds = await getFriendsIds(userId)
+            if (!friendsIds.includes(friendId)) {
+                return res.status(403).json({
+                    message: "Action not allowed",
+                })
+            }
+
             await db.transaction(async (tx) => {
                 const [channel] = await tx
                     .insert(channels)
