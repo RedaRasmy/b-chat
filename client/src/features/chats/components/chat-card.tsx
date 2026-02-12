@@ -1,6 +1,7 @@
 import Avatar from "@/components/avatar"
 import { useAuth } from "@/features/auth/use-auth"
 import { getChatAvatar, getChatName } from "@/features/chats/utils/chats"
+import { getTime } from "@/features/chats/utils/get-time"
 import type { DMChat, GroupChat } from "@bchat/types"
 import { Link } from "react-router-dom"
 
@@ -14,12 +15,7 @@ export default function ChatCard({ chat }: { chat: DMChat | GroupChat }) {
     const status = chat.type === "dm" ? chat.status : undefined
     const lastMessage = chat.lastMessage
 
-    const time = lastMessage
-        ? new Date(lastMessage.createdAt).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-          })
-        : null
+    const time = lastMessage ? getTime(lastMessage.createdAt) : null
 
     const isNew =
         lastMessage &&

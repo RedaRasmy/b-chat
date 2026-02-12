@@ -16,6 +16,7 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { getTime } from "@/features/chats/utils/get-time"
 
 export default function Message({
     message,
@@ -60,13 +61,18 @@ export default function Message({
                         >
                             <div
                                 className={cn(
-                                    "bg-primary shrink-0 w-fit px-5 py-3.5 pb-1 rounded-xl relative max-w-70 sm:max-w-100 lg:max-w-150 xl:max-w-200  text-ellipsis overflow-hidden",
+                                    "bg-primary grid grid-rows-[5px_1fr] gap-2 w-fit px-2 py-1 pb-1 rounded-xl relative max-w-70 sm:max-w-100 lg:max-w-150 xl:max-w-200  text-ellipsis overflow-hidden",
                                 )}
                             >
-                                {message.content}
-                                <span className="absolute top-0.5 left-2 text-[0.7rem] text-accent font-extralight">
+                                <div className=" text-[0.7rem] text-accent font-extralight flex justify-between gap-4">
                                     {sender.name}
-                                </span>
+                                    <span className="text-[0.65rem]">
+                                        {getTime(message.createdAt)}
+                                    </span>
+                                </div>
+                                <div className="w-full text-end px-4">
+                                    {message.content}
+                                </div>
                                 {isUser && (
                                     <span className="absolute bottom-0 right-1 text-[0.6rem] text-muted/80 font-extralight">
                                         {isSeen ? (
