@@ -16,6 +16,9 @@ import type {
     MessageDeliveredData,
 } from "@bchat/shared/validation"
 import { useTyping } from "@/features/chats/hooks/use-typing"
+import { useSidebar } from "@/components/ui/sidebar"
+import { toast } from "sonner"
+import { getChatName } from "@/features/chats/utils/chats"
 
 export default function SocketProvider({ children }: { children: ReactNode }) {
     const [socket] = useState<Socket>(() => {
@@ -43,6 +46,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
     const queryClient = useQueryClient()
     const params = useParams()
     const currentChannelId = params.id
+    const { open } = useSidebar()
     useTyping(socket)
 
     useEffect(() => {
@@ -78,6 +82,14 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
                 return old.map((chat) => {
                     if (chat.id !== msg.channelId) return chat
                     const isChatOpen = chat.id === currentChannelId
+                    if (!open && !isChatOpen) {
+                        toast.info(
+                            `new message from ${getChatName(chat, user.id)}`,
+                            {
+                                description: msg.content,
+                            },
+                        )
+                    }
                     return {
                         ...chat,
                         lastMessage: {
@@ -230,7 +242,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
             socket.off("chat_seen", handleSeenChat)
             socket.off("message_deleted", handleDeletedMessage)
         }
-    }, [socket, queryClient, currentChannelId, user])
+    }, [socket, queryClient, currentChannelId, user, open])
 
     return (
         <SocketContext.Provider
