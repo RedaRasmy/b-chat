@@ -154,6 +154,18 @@ export function makeIdBodyEndpoint<Body>(
     return makeParamsEndpoint(["id"], makeBodyEndpoint(schema, callback))
 }
 
+export function makeParamsBodyEndpoint<T extends readonly string[], Body>(
+    params: [...T],
+    schema: z.ZodType<Body>,
+    callback: (
+        req: Request<ToRecord<T>, any, Body>,
+        res: Response,
+        next: NextFunction,
+    ) => void,
+) {
+    return makeParamsEndpoint(params, makeBodyEndpoint(schema, callback))
+}
+
 export function makeIdQueryEndpoint<Query>(
     schema: z.ZodType<Query>,
     callback: (
