@@ -14,6 +14,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { deleteMessage } from "@/features/chats/requests"
 import type { ChatMessage, ClientMessage } from "@bchat/types"
 import { useSocket } from "@/features/chats/use-socket"
+import { ChatSettings } from "@/features/chats/components/chat-settings"
 
 export default function ChatPage() {
     const params = useParams()
@@ -98,19 +99,22 @@ export default function ChatPage() {
                         </span>
                     )} */}
                 </div>
-                {chat.typingUser && (
-                    <div className="text-xs text-muted-foreground">
-                        {chat.type === "group" && (
-                            <span>
-                                <span className="text-primary">
-                                    {chat.typingUser}
-                                </span>{" "}
-                                is
-                            </span>
-                        )}{" "}
-                        typing...
-                    </div>
-                )}
+                <div className="flex gap-2 items-center">
+                    {chat.typingUser && (
+                        <div className="text-xs text-muted-foreground">
+                            {chat.type === "group" && (
+                                <span>
+                                    <span className="text-primary">
+                                        {chat.typingUser}
+                                    </span>{" "}
+                                    is
+                                </span>
+                            )}{" "}
+                            typing...
+                        </div>
+                    )}
+                    <ChatSettings chat={chat} chatName={chatName} />
+                </div>
             </PageHeader>
             <main className="p-3 space-y-2 overflow-y-auto relative">
                 {messages &&

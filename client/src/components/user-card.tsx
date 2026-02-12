@@ -7,13 +7,15 @@ import type { ReactNode } from "react"
 export default function UserCard({
     user,
     children,
+    className,
 }: {
     user: OtherUser
-    children: ReactNode
+    children?: ReactNode
+    className?: string
 }) {
     return (
         <Card
-            className={cn({
+            className={cn(className, "py-2", {
                 "border-primary border": user.role === "admin",
             })}
         >
