@@ -1,5 +1,6 @@
 import {
     index,
+    pgEnum,
     pgTable,
     primaryKey,
     timestamp,
@@ -7,7 +8,9 @@ import {
 } from "drizzle-orm/pg-core"
 import { channels } from "./channels"
 import { users } from "./users"
-import { relations } from "drizzle-orm"
+import { InferInsertModel, InferSelectModel, relations } from "drizzle-orm"
+
+export const chatRole = pgEnum("chat_role", ["owner", "admin", "member"])
 
 export const members = pgTable(
     "members",
@@ -19,6 +22,7 @@ export const members = pgTable(
             .notNull()
             .references(() => users.id, { onDelete: "cascade" }),
         joinedAt: timestamp("joined_at").notNull().defaultNow(),
+        role: chatRole().default("member").notNull(),
     },
     (table) => [
         primaryKey({ columns: [table.channelId, table.userId] }),
@@ -26,6 +30,9 @@ export const members = pgTable(
         index().on(table.channelId),
     ],
 )
+
+export type Member = InferSelectModel<typeof members>
+export type IMember = InferInsertModel<typeof members>
 
 export const membersRelations = relations(members, ({ one }) => ({
     channel: one(channels, {

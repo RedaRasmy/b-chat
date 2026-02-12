@@ -10,6 +10,7 @@ import {
     channels,
     dms,
     groups,
+    IMember,
     members,
     messages,
 } from "@bchat/database/tables"
@@ -104,10 +105,13 @@ export const createGroup = makeBodyEndpoint(
                     .returning()
 
                 await tx.insert(members).values(
-                    validMembers.map((memberId) => ({
-                        channelId: channel.id,
-                        userId: memberId,
-                    })),
+                    validMembers.map(
+                        (memberId): IMember => ({
+                            channelId: channel.id,
+                            userId: memberId,
+                            role: memberId === userId ? "owner" : "member",
+                        }),
+                    ),
                 )
 
                 const creatorSocket = getUserSocket(userId)
