@@ -27,27 +27,26 @@ export default function ChatCard({ chat }: { chat: DMChat | GroupChat }) {
     return (
         <Link
             to={"/chats/" + chat.id}
-            className="border relative flex rounded-md  items-center justify-between px-3 py-1 cursor-pointer bg-accent"
+            className="border relative grid gap-2 gap-y-0 grid-cols-[auto_1fr] grid-rows-[auto_1fr] rounded-md items-center justify-between px-2 py-1 cursor-pointer bg-accent"
         >
-            <section className="flex gap-2 items-center">
-                <Avatar
-                    data={{
-                        id: chat.id,
-                        name: chatName,
-                        avatar: chatAvatar,
-                        status,
-                    }}
-                />
-                <div>
-                    <h1 className="text-sm">{chatName}</h1>
-                    <span className="text-xs text-muted-foreground ml-2">
-                        {lastMessage?.content}
-                    </span>
-                </div>
+            <Avatar
+                className="row-span-2 "
+                data={{
+                    id: chat.id,
+                    name: chatName,
+                    avatar: chatAvatar,
+                    status,
+                }}
+            />
+            <section className="flex justify-between gap-2 items-center">
+                <h1 className="text-sm ">{chatName}</h1>
+                <span className="text-[0.65rem] h-full text-muted-foreground ">
+                    {time}
+                </span>
             </section>
-            <section className="text-[0.65rem] h-full text-muted-foreground ">
-                {time}
-            </section>
+            <span className="text-xs text-muted-foreground text-nowrap overflow-hidden text-ellipsis">
+                {lastMessage?.content}
+            </span>
             {isNew && (
                 <div className="size-2 bg-primary rounded-full absolute top-0 right-0 -translate-y-1/2 translate-x-1/2" />
             )}

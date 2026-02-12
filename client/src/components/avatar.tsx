@@ -18,7 +18,7 @@ export default function Avatar({
         return (
             <div
                 className={cn(
-                    "size-8 relative border-black/90 borde",
+                    "size-8 relative border-black/90 borde shrink-0",
                     className,
                 )}
             >
@@ -58,7 +58,7 @@ export default function Avatar({
     return (
         <div
             className={cn(
-                "size-8 rounded-full relative border-black/30 border flex items-center justify-center text-xl uppercase",
+                "size-8 rounded-full shrink-0 relative border-black/30 border flex items-center justify-center text-xl uppercase",
                 className,
             )}
             style={{
