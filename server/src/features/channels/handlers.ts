@@ -15,7 +15,7 @@ import {
     messages,
 } from "@bchat/database/tables"
 import { InsertDMSchema, InsertGroupSchema } from "@bchat/shared/validation"
-import { Channels, ChatMessage, OtherUser } from "@bchat/types"
+import { Channels, ChatMember, ChatMessage, OtherUser } from "@bchat/types"
 import { asc, desc, eq } from "drizzle-orm"
 
 export const createDM = makeBodyEndpoint(
@@ -179,11 +179,13 @@ export const getChannels = makeSimpleEndpoint(async (req, res, next) => {
                 (m) => m.userId !== userId,
             )!
             const members = channel.members.map(
-                ({ user: u }): OtherUser => ({
+                ({ user: u, joinedAt, role }): ChatMember => ({
                     id: u.id,
                     name: u.name,
                     role: u.role,
                     avatar: u.avatar,
+                    joinedAt,
+                    chatRole: role,
                 }),
             )
             if (channel.type === "dm") {
@@ -202,7 +204,7 @@ export const getChannels = makeSimpleEndpoint(async (req, res, next) => {
                     id: channel.id,
                     type: "group",
                     lastMessage,
-                    members: channel.members.map((mem) => mem.user),
+                    members,
                     name: channel.group.name,
                     avatar: channel.group.avatar,
                 }

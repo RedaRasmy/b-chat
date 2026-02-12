@@ -1,4 +1,5 @@
-import { User } from "@bchat/database/tables"
+import { Member, User } from "@bchat/database/tables"
+import { Prettify } from "./global"
 
 export type OtherUser = Pick<User, "id" | "name" | "avatar" | "role">
 
@@ -11,3 +12,10 @@ export type StatusChangeData = {
 }
 
 export type UserStatus = Pick<User, "status" | "lastSeen">
+
+export type ChatMember = Prettify<
+    OtherUser & {
+        joinedAt: Member["joinedAt"]
+        chatRole: Member["role"]
+    }
+>
