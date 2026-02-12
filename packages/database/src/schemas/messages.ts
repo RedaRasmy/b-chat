@@ -14,7 +14,7 @@ export const messages = pgTable(
             .references(() => channels.id, { onDelete: "cascade" }),
         senderId: uuid("sender_id")
             .notNull()
-            .references(() => users.id),
+            .references(() => users.id, { onDelete: "cascade" }),
         content: text().notNull(),
         createdAt,
         updatedAt,

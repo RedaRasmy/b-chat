@@ -16,7 +16,7 @@ import {
 } from "@bchat/database/tables"
 import { InsertDMSchema, InsertGroupSchema } from "@bchat/shared/validation"
 import { Channels, ChatMessage, OtherUser } from "@bchat/types"
-import { asc, desc } from "drizzle-orm"
+import { asc, desc, eq } from "drizzle-orm"
 
 export const createDM = makeBodyEndpoint(
     InsertDMSchema,
@@ -248,6 +248,51 @@ export const getMessages = makeParamsEndpoint(
             const data: ChatMessage[] = member.channel.messages
 
             res.json(data)
+        } catch (err) {
+            next(err)
+        }
+    },
+)
+
+export const deleteChannel = makeParamsEndpoint(
+    ["id"],
+    async (req, res, next) => {
+        const id = req.params.id
+        const user = req.user!
+
+        try {
+            const channel = await db.query.channels.findFirst({
+                where: (channels, { eq }) => eq(channels.id, id),
+                with: {
+                    members: true,
+                },
+            })
+            if (!channel) {
+                return res.status(404).json({
+                    message: "Channel not found",
+                })
+            }
+            const member = channel.members.find((mem) => mem.userId === user.id)
+
+            if (!member) {
+                return res.status(403).json({
+                    message: "Action not allowed",
+                })
+            }
+
+            const isOwner = member.role === "owner"
+
+            if (!isOwner && channel.type === "group") {
+                return res.status(403).json({
+                    message: "Action not allowed",
+                })
+            }
+
+            // delete if the user is a : DM member OR Group owner
+
+            await db.delete(channels).where(eq(channels.id, id))
+
+            res.sendStatus(204)
         } catch (err) {
             next(err)
         }
