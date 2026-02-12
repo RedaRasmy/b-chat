@@ -21,3 +21,8 @@ export async function fetchMessages(id: Channel["id"]) {
     const res = await api.get(`/channels/${id}/messages`)
     return res.data as ChatMessage[]
 }
+
+export async function deleteMessage(id: string) {
+    const res = await api.delete("/messages/" + id)
+    return res
+}

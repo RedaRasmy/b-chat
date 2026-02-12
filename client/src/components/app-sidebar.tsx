@@ -27,8 +27,6 @@ export function AppSidebar() {
         // staleTime: Infinity,
     })
 
-    console.log("chats in sidebar : ", data)
-
     return (
         <Sidebar>
             <SidebarHeader>

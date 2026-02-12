@@ -8,6 +8,7 @@ import type {
     Channels,
     ChatMessage,
     Friend,
+    MessageDeletedData,
     StatusChangeData,
 } from "@bchat/types"
 import type {
@@ -189,16 +190,43 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
             )
         }
 
+        function handleDeletedMessage({
+            channelId,
+            messageId,
+        }: MessageDeletedData) {
+            queryClient.setQueryData(["chats"], (old: Channels = []) =>
+                old.map((chat) =>
+                    chat.id === channelId
+                        ? {
+                              ...chat,
+                              lastMessage: chat.lastMessage
+                                  ? chat.lastMessage.id === messageId
+                                      ? null
+                                      : chat.lastMessage
+                                  : null,
+                          }
+                        : chat,
+                ),
+            )
+            queryClient.setQueryData(
+                ["messages", channelId],
+                (old: ChatMessage[] = []) =>
+                    old.filter((msg) => msg.id !== messageId),
+            )
+        }
+
         socket.on("new_message", handleNewMessage)
         socket.on("user_status_changed", statusChangeHandler)
         socket.on("message_delivered", handleDeliveredMessage)
         socket.on("chat_seen", handleSeenChat)
+        socket.on("message_deleted", handleDeletedMessage)
 
         return () => {
             socket.off("new_message", handleNewMessage)
             socket.off("user_status_changed", statusChangeHandler)
             socket.off("message_delivered", handleDeliveredMessage)
             socket.off("chat_seen", handleSeenChat)
+            socket.off("message_deleted", handleDeletedMessage)
         }
     }, [socket, queryClient, currentChannelId, user])
 

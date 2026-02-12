@@ -11,6 +11,9 @@ import { useChatMessages } from "@/features/chats/hooks/use-chat-messages"
 import { useChat } from "@/features/chats/hooks/use-chat"
 import { getChatAvatar, getChatName } from "@/features/chats/utils/chats"
 import Avatar from "@/components/avatar"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { deleteMessage } from "@/features/chats/requests"
+import type { ChatMessage, ClientMessage } from "@bchat/types"
 
 export default function ChatPage() {
     const params = useParams()
@@ -23,6 +26,32 @@ export default function ChatPage() {
         id,
         Array.from(members.values()),
     )
+
+    const deleteMutation = useMutation({
+        mutationFn: deleteMessage,
+        // onSuccess: () => {
+        //     console.log("deleted")
+        // },
+        onError: (error) => {
+            queryClient.setQueryData(
+                ["messages", id],
+                (old: ClientMessage[] = []) =>
+                    old.map((msg) =>
+                        msg.id === id ? { ...msg, status: undefined } : msg,
+                    ),
+            )
+            console.error(error)
+        },
+    })
+    const queryClient = useQueryClient()
+    function handleDelete(id: string) {
+        queryClient.setQueryData(["messages", id], (old: ChatMessage[] = []) =>
+            old.map((msg) =>
+                msg.id === id ? { ...msg, status: "sending" } : msg,
+            ),
+        )
+        deleteMutation.mutate(id)
+    }
 
     if (isLoading || !user) return <LoadingPage />
 
@@ -76,6 +105,7 @@ export default function ChatPage() {
                 {messages &&
                     messages.map((msg, i) => (
                         <Message
+                            onDelete={handleDelete}
                             key={i}
                             message={msg}
                             isUser={msg.senderId === user.id}

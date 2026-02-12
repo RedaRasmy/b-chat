@@ -21,7 +21,7 @@ export const deleteMessage = makeParamsEndpoint(
                 })
             }
             if (
-                message.senderId !== user.id ||
+                message.senderId !== user.id &&
                 !hasPermission(user.role, "message:delete:any")
             ) {
                 return res.status(403).json({
