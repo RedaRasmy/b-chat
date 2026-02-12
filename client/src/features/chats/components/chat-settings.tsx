@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import UserCard from "@/components/user-card"
 import { useAuth } from "@/features/auth/use-auth"
 import { AddMembersForm } from "@/features/chats/components/add-members-form"
-import { deleteChat, exitGroup } from "@/features/chats/requests"
+import { deleteChat, deleteMember, exitGroup } from "@/features/chats/requests"
 import { cn } from "@/lib/utils"
 import type { Chat } from "@bchat/types"
 import {
@@ -47,11 +47,21 @@ export function ChatSettings({
               (mem) => mem.id === user.id && mem.chatRole === "admin",
           )
         : false
+    const isMember = !isOwner && !isAdmin
 
     const deleteMutation = useMutation({
         mutationFn: deleteChat,
         onSuccess: () => {
             navigate("/")
+            queryClient.invalidateQueries({
+                queryKey: ["chats"],
+            })
+        },
+    })
+
+    const banMutation = useMutation({
+        mutationFn: deleteMember,
+        onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ["chats"],
             })
@@ -97,16 +107,43 @@ export function ChatSettings({
                     >
                         {chat.members.map((member) => (
                             <UserCard key={member.id} user={member}>
-                                <span
-                                    className={cn("text-muted-foreground", {
-                                        "text-green-600":
-                                            member.chatRole === "admin",
-                                        "text-yellow-500":
-                                            member.chatRole === "owner",
-                                    })}
-                                >
-                                    {member.chatRole}
-                                </span>
+                                {isMember && (
+                                    <span
+                                        className={cn("text-muted-foreground", {
+                                            "text-green-600":
+                                                member.chatRole === "admin",
+                                            "text-yellow-500":
+                                                member.chatRole === "owner",
+                                        })}
+                                    >
+                                        {member.chatRole}
+                                    </span>
+                                )}
+                                {(isAdmin || isOwner) &&
+                                    member.chatRole !== "owner" &&
+                                    (isAdmin ||
+                                        member.chatRole !== "admin") && (
+                                        <ActionButton
+                                            action={() =>
+                                                banMutation.mutate({
+                                                    channelId: chat.id,
+                                                    userId: member.id,
+                                                })
+                                            }
+                                            requireAreYouSure
+                                            areYouSureDescription={`Delete member : ${member.name}`}
+                                            triggerElement={
+                                                <Button
+                                                    variant={"destructive"}
+                                                    className={"w-full"}
+                                                >
+                                                    <HugeiconsIcon
+                                                        icon={Delete02Icon}
+                                                    />
+                                                </Button>
+                                            }
+                                        ></ActionButton>
+                                    )}
                             </UserCard>
                         ))}
                     </TabsContent>

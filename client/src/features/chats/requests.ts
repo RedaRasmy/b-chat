@@ -30,6 +30,16 @@ export async function exitGroup(id: string) {
     return await api.delete("/members/" + id)
 }
 
+export async function deleteMember({
+    channelId,
+    userId,
+}: {
+    channelId: string
+    userId: string
+}) {
+    return await api.delete(`/members/${channelId}/${userId}`)
+}
+
 export async function fetchChats() {
     const res = await api.get("/channels")
     return res.data as Channels

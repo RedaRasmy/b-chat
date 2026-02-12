@@ -130,32 +130,30 @@ export const deleteMember = makeParamsEndpoint(
         const { channelId, userId } = req.params
         const user = req.user!
         try {
-            if (user.id === userId) {
-                await db
-                    .delete(members)
-                    .where(
-                        and(
-                            eq(members.channelId, channelId),
-                            eq(members.userId, userId),
-                        ),
-                    )
-
-                return res.sendStatus(204)
-            }
-
-            const member = await db.query.members.findFirst({
-                where: (members, { eq, and }) =>
+            const [m1, m2] = await db.query.members.findMany({
+                where: (members, { eq, and, or }) =>
                     and(
                         eq(members.channelId, channelId),
-                        eq(members.userId, user.id),
+                        or(
+                            eq(members.userId, user.id),
+                            eq(members.userId, userId),
+                        ),
                     ),
             })
-            if (!member) {
+
+            if (!m1 || !m2) {
                 return res.status(404).json({
                     message: "Channel not found",
                 })
             }
-            if (member.role === "member") {
+            const member = m1.userId === user.id ? m1 : m2
+            const targetMember = m1.userId === userId ? m1 : m2
+
+            if (
+                member.role === "member" ||
+                targetMember.role === "owner" ||
+                (member.role === "admin" && targetMember.role === "admin")
+            ) {
                 return res.status(403).json({
                     message: "Action not allowed",
                 })
