@@ -1,51 +1,61 @@
 import { useAuth } from "@/features/auth/use-auth"
-import { useSocket } from "@/features/chats/use-socket"
-import type { TypingData } from "@bchat/types"
-import { useCallback, useEffect, useRef, useState } from "react"
+import type { Channels, TypingData } from "@bchat/types"
+import { useEffect, useRef } from "react"
+import { useQueryClient } from "@tanstack/react-query"
+import { Socket } from "socket.io-client"
 
-export function useTyping(channelId: string) {
-    const typingTimeoutRef = useRef<number | null>(null)
-    const [typer, setTyper] = useState<string | null>(null)
-    const socket = useSocket()
+export function useTyping(socket: Socket) {
+    const typingTimeoutsRef = useRef<Map<string, number>>(new Map())
     const { user } = useAuth()
+    const queryClient = useQueryClient()
 
     useEffect(() => {
-        function typingHandler(data: TypingData) {
-            if (data.channelId !== channelId) return
-            if (!user || data.userId === user.id) return
+        const timeouts = typingTimeoutsRef.current
 
-            setTyper(data.userName)
+        function typingHandler({ channelId, userId, userName }: TypingData) {
+            if (!user || userId === user.id) return
 
-            if (typingTimeoutRef.current) {
-                clearTimeout(typingTimeoutRef.current)
+            if (typingTimeoutsRef.current.has(channelId)) {
+                clearTimeout(typingTimeoutsRef.current.get(channelId))
+                typingTimeoutsRef.current.delete(channelId)
             }
-            typingTimeoutRef.current = setTimeout(() => {
-                setTyper(null)
-            }, 1000)
+
+            queryClient.setQueryData(["chats"], (old: Channels = []) =>
+                old.map((chat) => {
+                    if (chat.id === channelId) {
+                        return {
+                            ...chat,
+                            typingUser: userName,
+                        }
+                    }
+                    return chat
+                }),
+            )
+
+            const timeout = setTimeout(() => {
+                queryClient.setQueryData(["chats"], (old: Channels = []) =>
+                    old.map((chat) => {
+                        if (chat.id === channelId) {
+                            return {
+                                ...chat,
+                                typingUser: undefined,
+                            }
+                        }
+                        return chat
+                    }),
+                )
+                typingTimeoutsRef.current.delete(channelId)
+            }, 3000)
+
+            typingTimeoutsRef.current.set(channelId, timeout)
         }
+
         socket.on("new_typing", typingHandler)
 
         return () => {
             socket.off("new_typing", typingHandler)
-            if (typingTimeoutRef.current) {
-                clearTimeout(typingTimeoutRef.current)
-            }
+            timeouts.forEach((timeout) => clearTimeout(timeout))
+            timeouts.clear()
         }
-    }, [socket, user, channelId])
-
-    const sendTyping = useCallback(() => {
-        if (!user) return
-
-        socket.emit("send_typing", {
-            channelId,
-            userName: user.name,
-            userId: user.id,
-        })
-    }, [socket, user, channelId])
-
-    return {
-        sendTyping,
-        typingUser: typer,
-        isTyping: typer !== null,
-    }
+    }, [socket, user, queryClient])
 }

@@ -15,6 +15,7 @@ import type {
     ChatSeenData,
     MessageDeliveredData,
 } from "@bchat/shared/validation"
+import { useTyping } from "@/features/chats/hooks/use-typing"
 
 export default function SocketProvider({ children }: { children: ReactNode }) {
     const [socket] = useState<Socket>(() => {
@@ -42,6 +43,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
     const queryClient = useQueryClient()
     const params = useParams()
     const currentChannelId = params.id
+    useTyping(socket)
 
     useEffect(() => {
         if (isAuthenticated) {

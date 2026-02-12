@@ -13,7 +13,7 @@ export default function ChatCard({ chat }: { chat: DMChat | GroupChat }) {
     const chatName = getChatName(chat, user.id)
     const chatAvatar = getChatAvatar(chat, user.id)
     const status = chat.type === "dm" ? chat.status : undefined
-    const lastMessage = chat.lastMessage
+    const { lastMessage, typingUser } = chat
 
     const time = lastMessage ? getTime(lastMessage.createdAt) : null
 
@@ -45,7 +45,13 @@ export default function ChatCard({ chat }: { chat: DMChat | GroupChat }) {
                 </span>
             </section>
             <span className="text-xs text-muted-foreground text-nowrap overflow-hidden text-ellipsis">
-                {lastMessage?.content}
+                {typingUser ? (
+                    <span className="text-primary">
+                        {chat.type === "group" && `${typingUser} is `}typing...
+                    </span>
+                ) : (
+                    lastMessage?.content
+                )}
             </span>
             {isNew && (
                 <div className="size-2 bg-primary rounded-full absolute top-0 right-0 -translate-y-1/2 translate-x-1/2" />

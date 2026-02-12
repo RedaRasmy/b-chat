@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useAuth } from "@/features/auth/use-auth"
 import Message from "@/features/chats/components/message"
-import { useTyping } from "@/features/chats/hooks/use-typing"
 import { useMessage } from "@/features/chats/hooks/use-message"
 import LoadingPage from "@/pages/loading"
 import { useParams } from "react-router-dom"
@@ -14,18 +13,20 @@ import Avatar from "@/components/avatar"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { deleteMessage } from "@/features/chats/requests"
 import type { ChatMessage, ClientMessage } from "@bchat/types"
+import { useSocket } from "@/features/chats/use-socket"
 
 export default function ChatPage() {
     const params = useParams()
     const id = params.id!
     const { user } = useAuth()
-    const { sendTyping, isTyping, typingUser } = useTyping(id)
+    // const { sendTyping, isTyping, typingUser } = useTyping(id)
     const { messages, bottomRef } = useChatMessages(id)
     const { chat, isLoading, members } = useChat(id)
     const { message, setMessage, send, retry } = useMessage(
         id,
         Array.from(members.values()),
     )
+    const socket = useSocket()
 
     const deleteMutation = useMutation({
         mutationFn: deleteMessage,
@@ -51,6 +52,16 @@ export default function ChatPage() {
             ),
         )
         deleteMutation.mutate(id)
+    }
+
+    function sendTyping() {
+        if (!user) return
+
+        socket.emit("send_typing", {
+            channelId: id,
+            userName: user.name,
+            userId: user.id,
+        })
     }
 
     if (isLoading || !user) return <LoadingPage />
@@ -87,12 +98,12 @@ export default function ChatPage() {
                         </span>
                     )} */}
                 </div>
-                {isTyping && (
+                {chat.typingUser && (
                     <div className="text-xs text-muted-foreground">
                         {chat.type === "group" && (
                             <span>
                                 <span className="text-primary">
-                                    {typingUser}
+                                    {chat.typingUser}
                                 </span>{" "}
                                 is
                             </span>
