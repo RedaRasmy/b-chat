@@ -11,10 +11,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import UserCard from "@/components/user-card"
 import { useAuth } from "@/features/auth/use-auth"
 import { AddMembersForm } from "@/features/chats/components/add-members-form"
-import { deleteChat } from "@/features/chats/requests"
+import { deleteChat, exitGroup } from "@/features/chats/requests"
 import { cn } from "@/lib/utils"
 import type { Chat } from "@bchat/types"
-import { Delete02Icon, MoreHorizontalIcon } from "@hugeicons/core-free-icons"
+import {
+    Delete02Icon,
+    Logout02Icon,
+    MoreHorizontalIcon,
+} from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
@@ -31,6 +35,7 @@ export function ChatSettings({
     const { user } = useAuth()
 
     const isDM = chat.type === "dm"
+    const isGroup = chat.type === "group"
     const isOwner = user
         ? !!chat.members.find(
               (mem) => mem.id === user.id && mem.chatRole === "owner",
@@ -45,6 +50,16 @@ export function ChatSettings({
 
     const deleteMutation = useMutation({
         mutationFn: deleteChat,
+        onSuccess: () => {
+            navigate("/")
+            queryClient.invalidateQueries({
+                queryKey: ["chats"],
+            })
+        },
+    })
+
+    const exitMutation = useMutation({
+        mutationFn: exitGroup,
         onSuccess: () => {
             navigate("/")
             queryClient.invalidateQueries({
@@ -106,6 +121,21 @@ export function ChatSettings({
                                 channelId={chat.id}
                                 members={chat.members.map((m) => m.id)}
                             />
+                        )}
+                        {!isOwner && isGroup && (
+                            <ActionButton
+                                action={() => exitMutation.mutate(chat.id)}
+                                requireAreYouSure
+                                triggerElement={
+                                    <Button
+                                        variant={"destructive"}
+                                        className={"w-full"}
+                                    >
+                                        <HugeiconsIcon icon={Logout02Icon} />
+                                        Exit Group
+                                    </Button>
+                                }
+                            ></ActionButton>
                         )}
                         {(isDM || isOwner) && (
                             <ActionButton

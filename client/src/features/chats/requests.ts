@@ -26,6 +26,10 @@ export async function createMembers({
     return await api.post("/members/" + channelId, data)
 }
 
+export async function exitGroup(id: string) {
+    return await api.delete("/members/" + id)
+}
+
 export async function fetchChats() {
     const res = await api.get("/channels")
     return res.data as Channels

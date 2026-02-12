@@ -130,6 +130,19 @@ export const deleteMember = makeParamsEndpoint(
         const { channelId, userId } = req.params
         const user = req.user!
         try {
+            if (user.id === userId) {
+                await db
+                    .delete(members)
+                    .where(
+                        and(
+                            eq(members.channelId, channelId),
+                            eq(members.userId, userId),
+                        ),
+                    )
+
+                return res.sendStatus(204)
+            }
+
             const member = await db.query.members.findFirst({
                 where: (members, { eq, and }) =>
                     and(
@@ -154,6 +167,28 @@ export const deleteMember = makeParamsEndpoint(
                     and(
                         eq(members.channelId, channelId),
                         eq(members.userId, userId),
+                    ),
+                )
+
+            res.sendStatus(204)
+        } catch (err) {
+            next(err)
+        }
+    },
+)
+
+export const exitChannel = makeParamsEndpoint(
+    ["channelId"],
+    async (req, res, next) => {
+        const { channelId } = req.params
+        const user = req.user!
+        try {
+            await db
+                .delete(members)
+                .where(
+                    and(
+                        eq(members.channelId, channelId),
+                        eq(members.userId, user.id),
                     ),
                 )
 
