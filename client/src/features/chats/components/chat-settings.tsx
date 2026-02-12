@@ -10,10 +10,11 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import UserCard from "@/components/user-card"
 import { useAuth } from "@/features/auth/use-auth"
+import { AddMembersForm } from "@/features/chats/components/add-members-form"
 import { deleteChat } from "@/features/chats/requests"
 import { cn } from "@/lib/utils"
 import type { Chat } from "@bchat/types"
-import { MoreHorizontalIcon } from "@hugeicons/core-free-icons"
+import { Delete02Icon, MoreHorizontalIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
@@ -33,6 +34,12 @@ export function ChatSettings({
     const isOwner = user
         ? !!chat.members.find(
               (mem) => mem.id === user.id && mem.chatRole === "owner",
+          )
+        : false
+
+    const isAdmin = user
+        ? !!chat.members.find(
+              (mem) => mem.id === user.id && mem.chatRole === "admin",
           )
         : false
 
@@ -58,10 +65,6 @@ export function ChatSettings({
             <SheetContent className={"-space-y-4 pb-5"}>
                 <SheetHeader>
                     <SheetTitle className={"text-xl"}>{chatName}</SheetTitle>
-                    {/* <SheetDescription>
-                        Make changes to your profile here. Click save when
-                        you&apos;re done.
-                    </SheetDescription> */}
                 </SheetHeader>
                 <Tabs
                     defaultValue="members"
@@ -92,7 +95,18 @@ export function ChatSettings({
                             </UserCard>
                         ))}
                     </TabsContent>
-                    <TabsContent value="settings">
+                    <TabsContent
+                        value="settings"
+                        className={
+                            "space-y-1.5 overflow-auto h-full px-1 pt-1 pb-13"
+                        }
+                    >
+                        {(isAdmin || isOwner) && (
+                            <AddMembersForm
+                                channelId={chat.id}
+                                members={chat.members.map((m) => m.id)}
+                            />
+                        )}
                         {(isDM || isOwner) && (
                             <ActionButton
                                 action={() => deleteMutation.mutate(chat.id)}
@@ -100,8 +114,9 @@ export function ChatSettings({
                                 triggerElement={
                                     <Button
                                         variant={"destructive"}
-                                        className={"w-full my-1 py-4"}
+                                        className={"w-full"}
                                     >
+                                        <HugeiconsIcon icon={Delete02Icon} />
                                         Delete Chat
                                     </Button>
                                 }
