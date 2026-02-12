@@ -1,16 +1,15 @@
-import {
-    makeBodyEndpoint,
-    makeParamsBodyEndpoint,
-    makeParamsEndpoint,
-} from "@/utils/wrappers"
+import { makeParamsBodyEndpoint, makeParamsEndpoint } from "@/utils/wrappers"
 import db from "@bchat/database"
 import { IMember, members } from "@bchat/database/tables"
-import { InsertMemberSchema } from "@bchat/shared/validation"
+import {
+    InsertMembersSchema,
+    UpdateMemberSchema,
+} from "@bchat/shared/validation"
 import { and, eq } from "drizzle-orm"
 
 export const addMembers = makeParamsBodyEndpoint(
     ["channelId"],
-    InsertMemberSchema,
+    InsertMembersSchema,
     async (req, res, next) => {
         const user = req.user!
         const channelId = req.params.channelId
@@ -51,15 +50,74 @@ export const addMembers = makeParamsBodyEndpoint(
             const memberIds = channel.members.map((mem) => mem.userId)
 
             const values: IMember[] = data
-                .filter((mem) => !memberIds.includes(mem.userId))
-                .map((member) => ({
+                .filter((id) => !memberIds.includes(id))
+                .map((id) => ({
                     channelId,
-                    userId: member.userId,
-                    role: member.role,
+                    userId: id,
                 }))
 
             await db.insert(members).values(values)
-            
+
+            res.sendStatus(204)
+        } catch (err) {
+            next(err)
+        }
+    },
+)
+
+export const updateMember = makeParamsBodyEndpoint(
+    ["channelId", "userId"],
+    UpdateMemberSchema,
+    async (req, res, next) => {
+        const user = req.user!
+        const { channelId, userId } = req.params
+        const { role } = req.body
+        try {
+            const channel = await db.query.channels.findFirst({
+                where: (channels, { eq }) => eq(channels.id, channelId),
+                with: {
+                    members: {
+                        columns: {
+                            userId: true,
+                            role: true,
+                        },
+                    },
+                },
+            })
+
+            if (!channel) {
+                return res.status(404).json({
+                    message: "Channel not found",
+                })
+            }
+
+            const member = channel.members.find(
+                (member) => (member.userId = user.id),
+            )
+
+            if (
+                !member ||
+                member.role !== "owner" ||
+                channel.type !== "group"
+            ) {
+                return res.status(403).json({
+                    message: "Action not allowed",
+                })
+            }
+
+            await db
+                .update(members)
+                .set({
+                    role,
+                })
+                .where(
+                    and(
+                        eq(members.channelId, channelId),
+                        eq(members.userId, userId),
+                    ),
+                )
+
+            res.sendStatus(204)
         } catch (err) {
             next(err)
         }
