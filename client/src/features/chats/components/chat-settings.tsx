@@ -1,3 +1,4 @@
+import { ActionButton } from "@/components/action-button"
 import { Button } from "@/components/ui/button"
 import {
     Sheet,
@@ -8,10 +9,14 @@ import {
 } from "@/components/ui/sheet"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import UserCard from "@/components/user-card"
+import { useAuth } from "@/features/auth/use-auth"
+import { deleteChat } from "@/features/chats/requests"
 import { cn } from "@/lib/utils"
 import type { Chat } from "@bchat/types"
 import { MoreHorizontalIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useNavigate } from "react-router-dom"
 
 export function ChatSettings({
     chat,
@@ -20,12 +25,33 @@ export function ChatSettings({
     chat: Chat
     chatName: string
 }) {
+    const queryClient = useQueryClient()
+    const navigate = useNavigate()
+    const { user } = useAuth()
+
+    const isDM = chat.type === "dm"
+    const isOwner = user
+        ? !!chat.members.find(
+              (mem) => mem.id === user.id && mem.chatRole === "owner",
+          )
+        : false
+
+    const deleteMutation = useMutation({
+        mutationFn: deleteChat,
+        onSuccess: () => {
+            navigate("/")
+            queryClient.invalidateQueries({
+                queryKey: ["chats"],
+            })
+        },
+    })
+
     return (
         <Sheet>
             <SheetTrigger
                 render={
                     <Button variant="outline" size={"icon"}>
-                        <HugeiconsIcon icon={MoreHorizontalIcon} size={60} />
+                        <HugeiconsIcon icon={MoreHorizontalIcon} />
                     </Button>
                 }
             />
@@ -66,7 +92,22 @@ export function ChatSettings({
                             </UserCard>
                         ))}
                     </TabsContent>
-                    <TabsContent value="settings">settings</TabsContent>
+                    <TabsContent value="settings">
+                        {(isDM || isOwner) && (
+                            <ActionButton
+                                action={() => deleteMutation.mutate(chat.id)}
+                                requireAreYouSure
+                                triggerElement={
+                                    <Button
+                                        variant={"destructive"}
+                                        className={"w-full my-1 py-4"}
+                                    >
+                                        Delete Chat
+                                    </Button>
+                                }
+                            ></ActionButton>
+                        )}
+                    </TabsContent>
                 </Tabs>
             </SheetContent>
         </Sheet>

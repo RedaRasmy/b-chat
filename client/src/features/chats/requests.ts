@@ -26,3 +26,7 @@ export async function deleteMessage(id: string) {
     const res = await api.delete("/messages/" + id)
     return res
 }
+
+export async function deleteChat(id: string) {
+    return await api.delete("/channels/" + id)
+}
