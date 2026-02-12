@@ -40,6 +40,18 @@ export async function deleteMember({
     return await api.delete(`/members/${channelId}/${userId}`)
 }
 
+export async function updateMember({
+    channelId,
+    userId,
+    role,
+}: {
+    channelId: string
+    userId: string
+    role: "admin" | "member"
+}) {
+    return await api.patch(`/members/${channelId}/${userId}`, { role })
+}
+
 export async function fetchChats() {
     const res = await api.get("/channels")
     return res.data as Channels

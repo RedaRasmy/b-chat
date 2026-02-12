@@ -16,18 +16,18 @@ export default function UserCard({
     return (
         <Card
             className={cn(className, "py-2", {
-                "border-primary border": user.role === "admin",
+                // "border-primary border ": user.role === "admin",
             })}
         >
-            <CardContent className="flex justify-between items-center">
+            <CardContent className="flex justify-between items-center text-center">
                 <div className="flex items-center gap-3">
                     <Avatar data={user} className="size-10" />
                     <h1 className="text-lg">{user.name}</h1>
-                    {user.role === "admin" && (
+                    {/* {user.role === "admin" && (
                         <span className="text-xs text-primary">(admin)</span>
-                    )}
+                    )} */}
                 </div>
-                <div className="flex gap-1">{children}</div>
+                <div className="flex gap-1 items-center">{children}</div>
             </CardContent>
         </Card>
     )

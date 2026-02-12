@@ -1,4 +1,5 @@
 import { ActionButton } from "@/components/action-button"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
     Sheet,
@@ -11,8 +12,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import UserCard from "@/components/user-card"
 import { useAuth } from "@/features/auth/use-auth"
 import { AddMembersForm } from "@/features/chats/components/add-members-form"
+import RoleToggle from "@/features/chats/components/role-toggle"
 import { deleteChat, deleteMember, exitGroup } from "@/features/chats/requests"
-import { cn } from "@/lib/utils"
 import type { Chat } from "@bchat/types"
 import {
     Delete02Icon,
@@ -107,21 +108,15 @@ export function ChatSettings({
                     >
                         {chat.members.map((member) => (
                             <UserCard key={member.id} user={member}>
-                                {isMember && (
-                                    <span
-                                        className={cn("text-muted-foreground", {
-                                            "text-green-600":
-                                                member.chatRole === "admin",
-                                            "text-yellow-500":
-                                                member.chatRole === "owner",
-                                        })}
-                                    >
-                                        {member.chatRole}
-                                    </span>
+                                {isOwner && member.chatRole !== "owner" && (
+                                    <RoleToggle
+                                        member={member}
+                                        channelId={chat.id}
+                                    />
                                 )}
                                 {(isAdmin || isOwner) &&
                                     member.chatRole !== "owner" &&
-                                    (isAdmin ||
+                                    (!isAdmin ||
                                         member.chatRole !== "admin") && (
                                         <ActionButton
                                             action={() =>
@@ -133,16 +128,25 @@ export function ChatSettings({
                                             requireAreYouSure
                                             areYouSureDescription={`Delete member : ${member.name}`}
                                             triggerElement={
-                                                <Button
-                                                    variant={"destructive"}
-                                                    className={"w-full"}
-                                                >
+                                                <Button variant={"destructive"}>
                                                     <HugeiconsIcon
                                                         icon={Delete02Icon}
                                                     />
                                                 </Button>
                                             }
                                         ></ActionButton>
+                                    )}
+                                {(isMember || isAdmin) &&
+                                    member.chatRole !== "member" && (
+                                        <Badge
+                                            variant={
+                                                member.chatRole === "owner"
+                                                    ? "destructive"
+                                                    : "default"
+                                            }
+                                        >
+                                            {member.chatRole}
+                                        </Badge>
                                     )}
                             </UserCard>
                         ))}
