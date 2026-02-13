@@ -18,8 +18,13 @@ export async function fetchUsers(name: string | undefined) {
     return res.data as OtherUser[]
 }
 
-export async function fetchPendingRequests() {
-    const res = await api.get("/friendships/pending")
+export async function fetchReceivedRequests() {
+    const res = await api.get("/friendships/requests/received")
+    return res.data as FriendshipRequest[]
+}
+
+export async function fetchSentRequests() {
+    const res = await api.get("/friendships/requests/sent")
     return res.data as FriendshipRequest[]
 }
 

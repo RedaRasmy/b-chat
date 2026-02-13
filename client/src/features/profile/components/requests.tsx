@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import UserCard from "@/components/user-card"
 import {
     acceptFriendship,
-    fetchPendingRequests,
+    fetchReceivedRequests,
     rejectFriendship,
 } from "@/features/friendships/requests"
 import { UserCheck01Icon, UserRemove01Icon } from "@hugeicons/core-free-icons"
@@ -13,7 +13,7 @@ export default function Requests() {
     const queryClient = useQueryClient()
     const { data, isLoading } = useQuery({
         queryKey: ["requests"],
-        queryFn: fetchPendingRequests,
+        queryFn: fetchReceivedRequests,
     })
 
     const acceptMutation = useMutation({

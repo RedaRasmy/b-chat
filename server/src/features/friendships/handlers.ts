@@ -5,13 +5,39 @@ import { friendships } from "@bchat/database/tables"
 import { Friend } from "@bchat/types"
 import { and, eq, isNull, or } from "drizzle-orm"
 
-export const getPending = makeSimpleEndpoint(async (req, res, next) => {
+export const getReceivedRequests = makeSimpleEndpoint(
+    async (req, res, next) => {
+        const user = req.user!
+
+        try {
+            const data = await db.query.friendships.findMany({
+                where: (fr, { eq, and }) =>
+                    and(eq(fr.status, "pending"), eq(fr.receiverId, user.id)),
+                with: {
+                    requester: {
+                        columns: {
+                            id: true,
+                            name: true,
+                            avatar: true,
+                            role: true,
+                        },
+                    },
+                },
+            })
+            res.json(data)
+        } catch (err) {
+            next(err)
+        }
+    },
+)
+
+export const getSentRequests = makeSimpleEndpoint(async (req, res, next) => {
     const user = req.user!
 
     try {
         const data = await db.query.friendships.findMany({
             where: (fr, { eq, and }) =>
-                and(eq(fr.status, "pending"), eq(fr.receiverId, user.id)),
+                and(eq(fr.status, "pending"), eq(fr.requesterId, user.id)),
             with: {
                 requester: {
                     columns: {
