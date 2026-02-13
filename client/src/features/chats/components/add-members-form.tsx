@@ -58,7 +58,7 @@ export function AddMembersForm({
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger
                 render={
-                    <Button variant="outline" className={"w-full"}>
+                    <Button variant="outline" className={"w-full"} size={"lg"}>
                         <HugeiconsIcon icon={PlusSignIcon} />
                         Add Members
                     </Button>

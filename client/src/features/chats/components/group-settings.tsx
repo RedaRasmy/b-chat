@@ -2,6 +2,15 @@ import { ActionButton } from "@/components/action-button"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+import { Field, FieldError } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import {
     Sheet,
     SheetContent,
     SheetHeader,
@@ -14,8 +23,13 @@ import { useUser } from "@/features/auth/use-user"
 import { AddMembersForm } from "@/features/chats/components/add-members-form"
 import { DeleteChat } from "@/features/chats/components/delete-chat"
 import RoleToggle from "@/features/chats/components/role-toggle"
-import { deleteMember, exitGroup } from "@/features/chats/requests"
+import { deleteMember, exitGroup, updateGroup } from "@/features/chats/requests"
+import {
+    UpdateGroupSchema,
+    type UpdateGroupData,
+} from "@bchat/shared/validation"
 import type { GroupChat } from "@bchat/types"
+import { zodResolver } from "@hookform/resolvers/zod"
 import {
     Delete02Icon,
     Logout02Icon,
@@ -23,12 +37,20 @@ import {
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useForm, Controller } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 
 export function GroupSettings({ chat }: { chat: GroupChat }) {
     const queryClient = useQueryClient()
     const navigate = useNavigate()
     const user = useUser()
+
+    const form = useForm<UpdateGroupData>({
+        resolver: zodResolver(UpdateGroupSchema),
+        defaultValues: {
+            name: chat.name,
+        },
+    })
 
     const isOwner = !!chat.members.find(
         (mem) => mem.id === user.id && mem.chatRole === "owner",
@@ -57,6 +79,21 @@ export function GroupSettings({ chat }: { chat: GroupChat }) {
             })
         },
     })
+
+    const updateMutation = useMutation({
+        mutationFn: updateGroup,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["chats"],
+            })
+        },
+    })
+    function onSubmit(data: UpdateGroupData) {
+        updateMutation.mutate({
+            id: chat.id,
+            data,
+        })
+    }
 
     return (
         <Sheet>
@@ -133,9 +170,64 @@ export function GroupSettings({ chat }: { chat: GroupChat }) {
                     <TabsContent
                         value="settings"
                         className={
-                            "space-y-1.5 overflow-auto h-full px-1 pt-1 pb-13"
+                            "space-y-2 overflow-auto h-full px-1 pt-1 pb-13"
                         }
                     >
+                        {isOwner && (
+                            <Card className="">
+                                <CardHeader>
+                                    <CardTitle>Group Name</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <form
+                                        id="update-group"
+                                        onSubmit={form.handleSubmit(onSubmit)}
+                                    >
+                                        <Controller
+                                            name="name"
+                                            control={form.control}
+                                            render={({ field, fieldState }) => (
+                                                <Field
+                                                    data-invalid={
+                                                        fieldState.invalid
+                                                    }
+                                                >
+                                                    <Input
+                                                        {...field}
+                                                        id="name"
+                                                        aria-invalid={
+                                                            fieldState.invalid
+                                                        }
+                                                        placeholder=""
+                                                        autoComplete="off"
+                                                        type="text"
+                                                        className="max-w-100"
+                                                    />
+                                                    {fieldState.invalid && (
+                                                        <FieldError
+                                                            errors={[
+                                                                fieldState.error,
+                                                            ]}
+                                                        />
+                                                    )}
+                                                </Field>
+                                            )}
+                                        />
+                                    </form>
+                                </CardContent>
+                                <CardFooter>
+                                    <Field orientation="horizontal">
+                                        <Button
+                                            type="submit"
+                                            disabled={updateMutation.isPending}
+                                            form="update-group"
+                                        >
+                                            Update
+                                        </Button>
+                                    </Field>
+                                </CardFooter>
+                            </Card>
+                        )}
                         {(isAdmin || isOwner) && (
                             <AddMembersForm
                                 channelId={chat.id}
@@ -150,6 +242,7 @@ export function GroupSettings({ chat }: { chat: GroupChat }) {
                                     <Button
                                         variant={"destructive"}
                                         className={"w-full"}
+                                        size={"lg"}
                                     >
                                         <HugeiconsIcon icon={Logout02Icon} />
                                         Exit Group
@@ -162,6 +255,7 @@ export function GroupSettings({ chat }: { chat: GroupChat }) {
                                 <Button
                                     variant={"destructive"}
                                     className={"w-full"}
+                                    size={"lg"}
                                 >
                                     <HugeiconsIcon icon={Delete02Icon} />
                                     Delete Chat

@@ -20,6 +20,10 @@ export const UpdateGroupSchema = z.object({
         .max(20, "Name length must be between 3 and 20"),
 })
 
+export type UpdateGroupData = {
+    name: string
+}
+
 export type DMFormData = z.infer<typeof InsertDMSchema>
 export type GroupFormData = z.infer<typeof InsertGroupSchema>
 

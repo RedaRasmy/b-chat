@@ -3,6 +3,7 @@ import type {
     DMFormData,
     GroupFormData,
     InsertMembersData,
+    UpdateGroupData,
 } from "@bchat/shared/validation"
 import type { Channel, Channels, ChatMessage, DM, Group } from "@bchat/types"
 
@@ -14,6 +15,16 @@ export async function createDM(data: DMFormData) {
 export async function createGroup(data: GroupFormData) {
     const res = await api.post("/channels/groups", data)
     return res.data as Group
+}
+
+export async function updateGroup({
+    id,
+    data,
+}: {
+    id: string
+    data: UpdateGroupData
+}) {
+    return await api.patch("/channels/groups/" + id, data)
 }
 
 export async function createMembers({
