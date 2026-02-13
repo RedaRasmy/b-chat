@@ -169,6 +169,13 @@ export const accept = makeParamsEndpoint(["id"], async (req, res, next) => {
         const friendship = await db.query.friendships.findFirst({
             where: (fr, { eq, and }) =>
                 and(eq(fr.id, id), eq(fr.receiverId, user.id)),
+            with: {
+                receiver: {
+                    columns: {
+                        name: true,
+                    },
+                },
+            },
         })
 
         if (!friendship) {
@@ -188,6 +195,10 @@ export const accept = makeParamsEndpoint(["id"], async (req, res, next) => {
                 acceptedAt: new Date(Date.now()),
             })
             .returning()
+
+        io.to(`user:${friendship.requesterId}`).emit("request_accepted", {
+            userName: friendship.receiver.name,
+        })
 
         res.json(newFriendship)
     } catch (err) {
