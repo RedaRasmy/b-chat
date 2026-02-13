@@ -1,13 +1,21 @@
 import PageHeader from "@/components/page-header"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import UserCard from "@/components/user-card"
-import { fetchUsers, requestFriendship } from "@/features/friendships/requests"
+import ChatButton from "@/features/chats/components/chat-button"
+import AcceptButton from "@/features/friendships/components/accept-button"
+import CancelButton from "@/features/friendships/components/cancel-button"
+import RejectButton from "@/features/friendships/components/reject-button"
+import RequestButton from "@/features/friendships/components/request-button"
+import UnfriendButton from "@/features/friendships/components/unfriend-button"
+import {
+    fetchFriends,
+    fetchReceivedRequests,
+    fetchSentRequests,
+    fetchUsers,
+} from "@/features/friendships/requests"
 import { cn } from "@/lib/utils"
 import LoadingPage from "@/pages/loading"
-import { UserAdd01Icon } from "@hugeicons/core-free-icons"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query"
+import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 
 export default function UsersPage() {
@@ -20,8 +28,19 @@ export default function UsersPage() {
         placeholderData: keepPreviousData,
     })
 
-    const mutation = useMutation({
-        mutationFn: requestFriendship,
+    const { data: friends = [] } = useQuery({
+        queryKey: ["friends"],
+        queryFn: fetchFriends,
+    })
+
+    const { data: sentRequests = [] } = useQuery({
+        queryKey: ["sent-requests"],
+        queryFn: fetchSentRequests,
+    })
+
+    const { data: receivedRequests = [] } = useQuery({
+        queryKey: ["requests"],
+        queryFn: fetchReceivedRequests,
     })
 
     return (
@@ -48,19 +67,45 @@ export default function UsersPage() {
                     placeholder="Find users by name"
                 />
                 {data ? (
-                    data.map((user) => (
-                        <UserCard key={user.id} user={user}>
-                            <Button
-                                title="send friend request"
-                                disabled={mutation.isPending}
-                                onClick={() => {
-                                    mutation.mutate(user.id)
-                                }}
-                            >
-                                <HugeiconsIcon icon={UserAdd01Icon} />
-                            </Button>
-                        </UserCard>
-                    ))
+                    data.map((user) => {
+                        const friend = friends.find((f) => f.id === user.id)
+                        const sentReq = sentRequests.find(
+                            (req) => req.receiverId === user.id,
+                        )
+                        const req = receivedRequests.find(
+                            (req) => req.requesterId === user.id,
+                        )
+                        if (friend)
+                            return (
+                                <UserCard key={user.id} user={user}>
+                                    <UnfriendButton
+                                        friendshipId={friend.friendshipId}
+                                    />
+                                    <ChatButton friendId={user.id} />
+                                </UserCard>
+                            )
+                        if (sentReq) {
+                            return (
+                                <UserCard key={user.id} user={user}>
+                                    <CancelButton friendshipId={sentReq.id} />
+                                </UserCard>
+                            )
+                        }
+
+                        if (req) {
+                            return (
+                                <UserCard key={user.id} user={user}>
+                                    <RejectButton friendshipId={req.id} />
+                                    <AcceptButton friendshipId={req.id} />
+                                </UserCard>
+                            )
+                        }
+                        return (
+                            <UserCard key={user.id} user={user}>
+                                <RequestButton userId={user.id} />
+                            </UserCard>
+                        )
+                    })
                 ) : (
                     <LoadingPage />
                 )}

@@ -12,7 +12,7 @@ import DMCard from "@/features/chats/components/dm-card"
 import GroupCard from "@/features/chats/components/group-card"
 import { GroupFormDialog } from "@/features/chats/components/group-form"
 import { fetchChats } from "@/features/chats/requests"
-import { fetchPendingRequests } from "@/features/friendships/requests"
+import { fetchReceivedRequests } from "@/features/friendships/requests"
 import {
     Files01Icon,
     User02Icon,
@@ -30,7 +30,7 @@ export function AppSidebar() {
 
     const { data: requests = [] } = useQuery({
         queryKey: ["requests"],
-        queryFn: fetchPendingRequests,
+        queryFn: fetchReceivedRequests,
     })
     const requestCount = requests.length
 

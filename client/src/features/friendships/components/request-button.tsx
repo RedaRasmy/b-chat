@@ -17,7 +17,6 @@ export default function RequestButton({ userId }: { userId: string }) {
     })
     return (
         <Button
-            title="send friend request"
             disabled={mutation.isPending}
             onClick={() => {
                 mutation.mutate(userId)

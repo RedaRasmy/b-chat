@@ -23,7 +23,6 @@ export default function AcceptButton({
     })
     return (
         <Button
-            title="send friend request"
             disabled={acceptMutation.isPending}
             onClick={() => {
                 acceptMutation.mutate(friendshipId)

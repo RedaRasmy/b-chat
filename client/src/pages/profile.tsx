@@ -2,7 +2,7 @@ import PageHeader from "@/components/page-header"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useAuth } from "@/features/auth/use-auth"
-import { fetchPendingRequests } from "@/features/friendships/requests"
+import { fetchReceivedRequests } from "@/features/friendships/requests"
 import Friends from "@/features/profile/components/friends"
 import MyPosts from "@/features/profile/components/my-posts"
 import Requests from "@/features/profile/components/requests"
@@ -17,7 +17,7 @@ export default function ProfilePage() {
 
     const { data: requests = [] } = useQuery({
         queryKey: ["requests"],
-        queryFn: fetchPendingRequests,
+        queryFn: fetchReceivedRequests,
     })
     const requestCount = requests.length
 
