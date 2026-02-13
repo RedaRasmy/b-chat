@@ -2,16 +2,14 @@ import Avatar from "@/components/avatar"
 import { useUser } from "@/features/auth/use-user"
 import { getChatAvatar, getChatName } from "@/features/chats/utils/chats"
 import { getTime } from "@/features/chats/utils/get-time"
-import type { DMChat, GroupChat } from "@bchat/types"
+import type { DMChat } from "@bchat/types"
 import { Link } from "react-router-dom"
 
-export default function ChatCard({ chat }: { chat: DMChat | GroupChat }) {
+export default function DMCard({ chat }: { chat: DMChat }) {
     const user = useUser()
-
     const chatName = getChatName(chat, user.id)
     const chatAvatar = getChatAvatar(chat, user.id)
-    const status = chat.type === "dm" ? chat.status : undefined
-    const { lastMessage, typingUser } = chat
+    const { lastMessage, typingUser, status } = chat
 
     const time = lastMessage ? getTime(lastMessage.createdAt) : null
 
@@ -44,9 +42,7 @@ export default function ChatCard({ chat }: { chat: DMChat | GroupChat }) {
             </section>
             <span className="text-xs text-muted-foreground text-nowrap overflow-hidden text-ellipsis">
                 {typingUser ? (
-                    <span className="text-primary">
-                        {chat.type === "group" && `${typingUser} is `}typing...
-                    </span>
+                    <span className="text-primary">typing...</span>
                 ) : (
                     lastMessage?.content
                 )}

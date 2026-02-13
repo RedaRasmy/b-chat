@@ -8,7 +8,8 @@ import {
     SidebarGroupContent,
     SidebarSeparator,
 } from "@/components/ui/sidebar"
-import ChatCard from "@/features/chats/components/chat-card"
+import DMCard from "@/features/chats/components/dm-card"
+import GroupCard from "@/features/chats/components/group-card"
 import { GroupFormDialog } from "@/features/chats/components/group-form"
 import { fetchChats } from "@/features/chats/requests"
 import {
@@ -21,10 +22,9 @@ import { useQuery } from "@tanstack/react-query"
 import { Link } from "react-router-dom"
 
 export function AppSidebar() {
-    const { data } = useQuery({
+    const { data = [] } = useQuery({
         queryKey: ["chats"],
         queryFn: fetchChats,
-        // staleTime: Infinity,
     })
 
     return (
@@ -60,10 +60,13 @@ export function AppSidebar() {
                         <GroupFormDialog />
                     </SidebarGroupLabel>
                     <SidebarGroupContent className="grid gap-1 overflow-auto p-2 -mt-2">
-                        {data &&
-                            data.map((chat) => (
-                                <ChatCard key={chat.id} chat={chat} />
-                            ))}
+                        {data.map((chat) =>
+                            chat.type === "dm" ? (
+                                <DMCard key={chat.id} chat={chat} />
+                            ) : (
+                                <GroupCard key={chat.id} chat={chat} />
+                            ),
+                        )}
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
