@@ -1,4 +1,3 @@
-import PageHeader from "@/components/page-header"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Message from "@/features/chats/components/message"
@@ -7,19 +6,13 @@ import LoadingPage from "@/pages/loading"
 import { useParams } from "react-router-dom"
 import { useChatMessages } from "@/features/chats/hooks/use-chat-messages"
 import { useChat } from "@/features/chats/hooks/use-chat"
-import { getChatAvatar, getChatName } from "@/features/chats/utils/chats"
-import Avatar from "@/components/avatar"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { deleteMessage } from "@/features/chats/requests"
 import type { ChatMessage, ClientMessage } from "@bchat/types"
 import { useSocket } from "@/features/chats/use-socket"
-import { GroupSettings } from "@/features/chats/components/group-settings"
-import { cn } from "@/lib/utils"
-import { getTime } from "@/features/chats/utils/get-time"
 import { useUser } from "@/features/auth/use-user"
-import { DeleteChat } from "@/features/chats/components/delete-chat"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { Delete02Icon } from "@hugeicons/core-free-icons"
+import DMHeader from "@/features/chats/components/dm-header"
+import GroupHeader from "@/features/chats/components/group-header"
 
 export default function ChatPage() {
     const params = useParams()
@@ -76,66 +69,13 @@ export default function ChatPage() {
             </div>
         )
 
-    const chatName = getChatName(chat, user.id)
-    const chatAvatar = getChatAvatar(chat, user.id)
-    const lastSeen =
-        chat.type === "dm" && chat.lastSeen && chat.status === "offline"
-            ? "since " + getTime(chat.lastSeen)
-            : null
-
     return (
         <div className="w-full h-screen grid grid-rows-[auto_1fr_auto]">
-            <PageHeader>
-                <div className="flex items-center gap-2">
-                    <Avatar
-                        data={{
-                            id: chat.id,
-                            name: chatName,
-                            avatar: chatAvatar,
-                        }}
-                    />
-                    <div className="flex flex-col -space-y-0.5">
-                        <h1>{chatName}</h1>
-                        {chat.type === "dm" && (
-                            <div
-                                className={cn(
-                                    "text-[0.7rem] text-muted-foreground flex gap-",
-                                    {
-                                        "text-primary":
-                                            chat.status === "online",
-                                    },
-                                )}
-                            >
-                                {chat.status} {lastSeen}
-                            </div>
-                        )}
-                    </div>
-                </div>
-                <div className="flex gap-2 items-center">
-                    {chat.typingUser && (
-                        <div className="text-xs text-muted-foreground">
-                            {chat.type === "group" && (
-                                <span>
-                                    <span className="text-primary">
-                                        {chat.typingUser}
-                                    </span>{" "}
-                                    is
-                                </span>
-                            )}{" "}
-                            typing...
-                        </div>
-                    )}
-                    {chat.type === "dm" ? (
-                        <DeleteChat chatId={chat.id}>
-                            <Button variant={"destructive"}>
-                                <HugeiconsIcon icon={Delete02Icon} />
-                            </Button>
-                        </DeleteChat>
-                    ) : (
-                        <GroupSettings chat={chat} />
-                    )}
-                </div>
-            </PageHeader>
+            {chat.type === "dm" ? (
+                <DMHeader chat={chat} />
+            ) : (
+                <GroupHeader chat={chat} />
+            )}
             <main className="p-3 space-y-2 overflow-y-auto relative">
                 {messages &&
                     messages.map((msg, i) => (
