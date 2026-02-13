@@ -218,6 +218,14 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
             )
         }
 
+        function handleFriendRequest({ userName }: { userName: string }) {
+            queryClient.invalidateQueries({
+                queryKey: ["requests"],
+            })
+            toast.info(`${userName} sent you a friend request`)
+        }
+
+        socket.on("friend_request", handleFriendRequest)
         socket.on("new_message", handleNewMessage)
         socket.on("user_status_changed", statusChangeHandler)
         socket.on("message_delivered", handleDeliveredMessage)
@@ -225,6 +233,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         socket.on("message_deleted", handleDeletedMessage)
 
         return () => {
+            socket.off("friend_request", handleFriendRequest)
             socket.off("new_message", handleNewMessage)
             socket.off("user_status_changed", statusChangeHandler)
             socket.off("message_delivered", handleDeliveredMessage)

@@ -12,6 +12,7 @@ import DMCard from "@/features/chats/components/dm-card"
 import GroupCard from "@/features/chats/components/group-card"
 import { GroupFormDialog } from "@/features/chats/components/group-form"
 import { fetchChats } from "@/features/chats/requests"
+import { fetchPendingRequests } from "@/features/friendships/requests"
 import {
     Files01Icon,
     User02Icon,
@@ -27,26 +28,37 @@ export function AppSidebar() {
         queryFn: fetchChats,
     })
 
+    const { data: requests = [] } = useQuery({
+        queryKey: ["requests"],
+        queryFn: fetchPendingRequests,
+    })
+    const requestCount = requests.length
+
     return (
         <Sidebar>
-            <SidebarHeader>
+            <SidebarHeader className="">
                 <Link
                     to={"/"}
-                    className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-primary"
+                    className="flex relative items-center gap-2 rounded-md px-2 py-1 hover:bg-accent"
                 >
                     <HugeiconsIcon icon={User02Icon} />
                     <span>Profile</span>
+                    {requestCount > 0 && (
+                        <div className="size-4 bg-destructive text-white rounded-full font-mono flex items-center justify-center text-sm">
+                            {requestCount}
+                        </div>
+                    )}
                 </Link>
                 <Link
                     to={"/posts"}
-                    className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-primary"
+                    className="flex relative items-center gap-2 rounded-md px-2 py-1 hover:bg-accent"
                 >
                     <HugeiconsIcon icon={Files01Icon} />
                     <span>Posts</span>
                 </Link>
                 <Link
                     to={"/users"}
-                    className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-primary"
+                    className="flex relative items-center gap-2 rounded-md px-2 py-1 hover:bg-accent"
                 >
                     <HugeiconsIcon icon={UserMultiple03Icon} />
                     <span>Users</span>

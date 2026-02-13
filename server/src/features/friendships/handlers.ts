@@ -1,3 +1,4 @@
+import { io } from "@/server"
 import { makeParamsEndpoint, makeSimpleEndpoint } from "@/utils/wrappers"
 import db from "@bchat/database"
 import { friendships } from "@bchat/database/tables"
@@ -99,17 +100,33 @@ export const getBlocked = makeSimpleEndpoint(async (req, res, next) => {
 export const request = makeParamsEndpoint(
     ["userId"],
     async (req, res, next) => {
-        const user = req.user!
+        const userId = req.user!.id
         const targetId = req.params.userId
 
         try {
+            const user = await db.query.users.findFirst({
+                where: (users, { eq }) => eq(users.id, userId),
+                columns: {
+                    name: true,
+                },
+            })
+            if (!user) {
+                return res.status(403).json({
+                    message: "Your account is deleted",
+                })
+            }
+
             const [friendship] = await db
                 .insert(friendships)
                 .values({
-                    requesterId: user.id,
+                    requesterId: userId,
                     receiverId: targetId,
                 })
                 .returning()
+
+            io.to(`user:${targetId}`).emit("friend_request", {
+                userName: user.name,
+            })
 
             res.status(201).json(friendship)
         } catch (err) {
