@@ -13,10 +13,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { deleteMessage } from "@/features/chats/requests"
 import type { ChatMessage, ClientMessage } from "@bchat/types"
 import { useSocket } from "@/features/chats/use-socket"
-import { ChatSettings } from "@/features/chats/components/chat-settings"
+import { GroupSettings } from "@/features/chats/components/group-settings"
 import { cn } from "@/lib/utils"
 import { getTime } from "@/features/chats/utils/get-time"
 import { useUser } from "@/features/auth/use-user"
+import { DeleteChat } from "@/features/chats/components/delete-chat-button"
+import { HugeiconsIcon } from "@hugeicons/react"
+import { Delete02Icon } from "@hugeicons/core-free-icons"
 
 export default function ChatPage() {
     const params = useParams()
@@ -122,7 +125,15 @@ export default function ChatPage() {
                             typing...
                         </div>
                     )}
-                    <ChatSettings chat={chat} chatName={chatName} />
+                    {chat.type === "dm" ? (
+                        <DeleteChat chatId={chat.id}>
+                            <Button variant={"destructive"}>
+                                <HugeiconsIcon icon={Delete02Icon} />
+                            </Button>
+                        </DeleteChat>
+                    ) : (
+                        <GroupSettings chat={chat} />
+                    )}
                 </div>
             </PageHeader>
             <main className="p-3 space-y-2 overflow-y-auto relative">

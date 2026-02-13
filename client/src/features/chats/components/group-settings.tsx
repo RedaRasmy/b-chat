@@ -12,9 +12,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import UserCard from "@/components/user-card"
 import { useUser } from "@/features/auth/use-user"
 import { AddMembersForm } from "@/features/chats/components/add-members-form"
+import { DeleteChat } from "@/features/chats/components/delete-chat-button"
 import RoleToggle from "@/features/chats/components/role-toggle"
-import { deleteChat, deleteMember, exitGroup } from "@/features/chats/requests"
-import type { Chat } from "@bchat/types"
+import { deleteMember, exitGroup } from "@/features/chats/requests"
+import type { GroupChat } from "@bchat/types"
 import {
     Delete02Icon,
     Logout02Icon,
@@ -24,19 +25,11 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
 
-export function ChatSettings({
-    chat,
-    chatName,
-}: {
-    chat: Chat
-    chatName: string
-}) {
+export function GroupSettings({ chat }: { chat: GroupChat }) {
     const queryClient = useQueryClient()
     const navigate = useNavigate()
     const user = useUser()
 
-    const isDM = chat.type === "dm"
-    const isGroup = chat.type === "group"
     const isOwner = !!chat.members.find(
         (mem) => mem.id === user.id && mem.chatRole === "owner",
     )
@@ -46,15 +39,15 @@ export function ChatSettings({
     )
     const isMember = !isOwner && !isAdmin
 
-    const deleteMutation = useMutation({
-        mutationFn: deleteChat,
-        onSuccess: () => {
-            navigate("/")
-            queryClient.invalidateQueries({
-                queryKey: ["chats"],
-            })
-        },
-    })
+    // const deleteMutation = useMutation({
+    //     mutationFn: deleteChat,
+    //     onSuccess: () => {
+    //         navigate("/")
+    //         queryClient.invalidateQueries({
+    //             queryKey: ["chats"],
+    //         })
+    //     },
+    // })
 
     const banMutation = useMutation({
         mutationFn: deleteMember,
@@ -86,7 +79,7 @@ export function ChatSettings({
             />
             <SheetContent className={"-space-y-4 pb-5"}>
                 <SheetHeader>
-                    <SheetTitle className={"text-xl"}>{chatName}</SheetTitle>
+                    <SheetTitle className={"text-xl"}>{chat.name}</SheetTitle>
                 </SheetHeader>
                 <Tabs
                     defaultValue="members"
@@ -159,7 +152,7 @@ export function ChatSettings({
                                 members={chat.members.map((m) => m.id)}
                             />
                         )}
-                        {!isOwner && isGroup && (
+                        {!isOwner && (
                             <ActionButton
                                 action={() => exitMutation.mutate(chat.id)}
                                 requireAreYouSure
@@ -174,20 +167,16 @@ export function ChatSettings({
                                 }
                             ></ActionButton>
                         )}
-                        {(isDM || isOwner) && (
-                            <ActionButton
-                                action={() => deleteMutation.mutate(chat.id)}
-                                requireAreYouSure
-                                triggerElement={
-                                    <Button
-                                        variant={"destructive"}
-                                        className={"w-full"}
-                                    >
-                                        <HugeiconsIcon icon={Delete02Icon} />
-                                        Delete Chat
-                                    </Button>
-                                }
-                            ></ActionButton>
+                        {isOwner && (
+                            <DeleteChat chatId={chat.id}>
+                                <Button
+                                    variant={"destructive"}
+                                    className={"w-full"}
+                                >
+                                    <HugeiconsIcon icon={Delete02Icon} />
+                                    Delete Chat
+                                </Button>
+                            </DeleteChat>
                         )}
                     </TabsContent>
                 </Tabs>
