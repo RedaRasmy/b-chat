@@ -11,3 +11,5 @@ interface AuthContextType {
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined)
+
+export const UserContext = createContext<Profile | null>(null)

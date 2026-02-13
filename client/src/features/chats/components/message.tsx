@@ -14,6 +14,7 @@ import {
     DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { getTime } from "@/features/chats/utils/get-time"
@@ -103,6 +104,10 @@ export default function Message({
                             <HugeiconsIcon icon={Delete02Icon} />
                             Delete
                         </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                        <DropdownMenuLabel></DropdownMenuLabel>
                     </DropdownMenuGroup>
                 </DropdownMenuContent>
             </DropdownMenu>

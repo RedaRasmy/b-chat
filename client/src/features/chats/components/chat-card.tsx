@@ -1,14 +1,12 @@
 import Avatar from "@/components/avatar"
-import { useAuth } from "@/features/auth/use-auth"
+import { useUser } from "@/features/auth/use-user"
 import { getChatAvatar, getChatName } from "@/features/chats/utils/chats"
 import { getTime } from "@/features/chats/utils/get-time"
 import type { DMChat, GroupChat } from "@bchat/types"
 import { Link } from "react-router-dom"
 
 export default function ChatCard({ chat }: { chat: DMChat | GroupChat }) {
-    const { user } = useAuth()
-
-    if (!user) return
+    const user = useUser()
 
     const chatName = getChatName(chat, user.id)
     const chatAvatar = getChatAvatar(chat, user.id)

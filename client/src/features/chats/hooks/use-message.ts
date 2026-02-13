@@ -1,4 +1,4 @@
-import { useAuth } from "@/features/auth/use-auth"
+import { useUser } from "@/features/auth/use-user"
 import { useSocket } from "@/features/chats/use-socket"
 import type {
     Channels,
@@ -13,7 +13,7 @@ import { useCallback, useState } from "react"
 export function useMessage(channelId: string, members: OtherUser[]) {
     const queryClient = useQueryClient()
     const socket = useSocket()
-    const { user } = useAuth()
+    const user = useUser()
     const [message, setMessage] = useState("")
 
     const handleAck = useCallback(
@@ -84,7 +84,6 @@ export function useMessage(channelId: string, members: OtherUser[]) {
     )
 
     const send = useCallback(() => {
-        if (!user) return
         if (message.length > 0) {
             const sentAt = Date.now()
             const tempId = `temp-${sentAt}`

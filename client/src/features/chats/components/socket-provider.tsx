@@ -1,5 +1,4 @@
 import { SocketContext } from "@/features/chats/socket-context"
-import { useAuth } from "@/features/auth/use-auth"
 import { useEffect, useState, type ReactNode } from "react"
 import { io, Socket } from "socket.io-client"
 import { useQueryClient } from "@tanstack/react-query"
@@ -19,11 +18,12 @@ import { useTyping } from "@/features/chats/hooks/use-typing"
 import { useSidebar } from "@/components/ui/sidebar"
 import { toast } from "sonner"
 import { getChatName } from "@/features/chats/utils/chats"
+import { useUser } from "@/features/auth/use-user"
 
 export default function SocketProvider({ children }: { children: ReactNode }) {
     const [socket] = useState<Socket>(() => {
         const newSocket = io("ws://localhost:3000", {
-            autoConnect: false,
+            // autoConnect: false,
             withCredentials: true,
         })
 
@@ -42,34 +42,23 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         return newSocket
     })
 
-    const { isAuthenticated, user } = useAuth()
+    const user = useUser()
     const queryClient = useQueryClient()
     const params = useParams()
     const currentChannelId = params.id
     const { open } = useSidebar()
+
     useTyping(socket)
 
     useEffect(() => {
-        if (isAuthenticated) {
-            socket.connect()
-        } else {
-            socket.disconnect()
-        }
-
         return () => {
             socket.disconnect()
         }
-    }, [socket, isAuthenticated])
+    }, [socket])
 
     useEffect(() => {
-        if (!user) return
-
         function handleNewMessage(msg: ChatMessage) {
             console.log("new msg :", msg)
-            if (!user) {
-                console.warn("User not defined")
-                return
-            }
 
             queryClient.setQueryData(["chats"], (old: Channels = []) => {
                 if (!old.find((chat) => chat.id === msg.channelId)) {

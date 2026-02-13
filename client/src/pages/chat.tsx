@@ -1,7 +1,6 @@
 import PageHeader from "@/components/page-header"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useAuth } from "@/features/auth/use-auth"
 import Message from "@/features/chats/components/message"
 import { useMessage } from "@/features/chats/hooks/use-message"
 import LoadingPage from "@/pages/loading"
@@ -17,12 +16,12 @@ import { useSocket } from "@/features/chats/use-socket"
 import { ChatSettings } from "@/features/chats/components/chat-settings"
 import { cn } from "@/lib/utils"
 import { getTime } from "@/features/chats/utils/get-time"
+import { useUser } from "@/features/auth/use-user"
 
 export default function ChatPage() {
     const params = useParams()
     const id = params.id!
-    const { user } = useAuth()
-    // const { sendTyping, isTyping, typingUser } = useTyping(id)
+    const user = useUser()
     const { messages, bottomRef } = useChatMessages(id)
     const { chat, isLoading, members } = useChat(id)
     const { message, setMessage, send, retry } = useMessage(
@@ -58,8 +57,6 @@ export default function ChatPage() {
     }
 
     function sendTyping() {
-        if (!user) return
-
         socket.emit("send_typing", {
             channelId: id,
             userName: user.name,
@@ -67,7 +64,7 @@ export default function ChatPage() {
         })
     }
 
-    if (isLoading || !user) return <LoadingPage />
+    if (isLoading) return <LoadingPage />
 
     if (!chat)
         return (

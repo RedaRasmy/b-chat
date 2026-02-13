@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/sheet"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import UserCard from "@/components/user-card"
-import { useAuth } from "@/features/auth/use-auth"
+import { useUser } from "@/features/auth/use-user"
 import { AddMembersForm } from "@/features/chats/components/add-members-form"
 import RoleToggle from "@/features/chats/components/role-toggle"
 import { deleteChat, deleteMember, exitGroup } from "@/features/chats/requests"
@@ -33,21 +33,17 @@ export function ChatSettings({
 }) {
     const queryClient = useQueryClient()
     const navigate = useNavigate()
-    const { user } = useAuth()
+    const user = useUser()
 
     const isDM = chat.type === "dm"
     const isGroup = chat.type === "group"
-    const isOwner = user
-        ? !!chat.members.find(
-              (mem) => mem.id === user.id && mem.chatRole === "owner",
-          )
-        : false
+    const isOwner = !!chat.members.find(
+        (mem) => mem.id === user.id && mem.chatRole === "owner",
+    )
 
-    const isAdmin = user
-        ? !!chat.members.find(
-              (mem) => mem.id === user.id && mem.chatRole === "admin",
-          )
-        : false
+    const isAdmin = !!chat.members.find(
+        (mem) => mem.id === user.id && mem.chatRole === "admin",
+    )
     const isMember = !isOwner && !isAdmin
 
     const deleteMutation = useMutation({

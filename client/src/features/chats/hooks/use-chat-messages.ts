@@ -1,4 +1,4 @@
-import { useAuth } from "@/features/auth/use-auth"
+import { useUser } from "@/features/auth/use-user"
 import { fetchMessages } from "@/features/chats/requests"
 import { useSocket } from "@/features/chats/use-socket"
 import type { SeeChatData } from "@bchat/shared/validation"
@@ -10,7 +10,7 @@ export function useChatMessages(channelId: string) {
     const queryClient = useQueryClient()
     const bottomRef = useRef<HTMLDivElement>(null)
     const socket = useSocket()
-    const { user } = useAuth()
+    const user = useUser()
 
     const { data: messages = [] } = useQuery({
         queryKey: ["messages", channelId],
@@ -36,7 +36,6 @@ export function useChatMessages(channelId: string) {
     }, [socket, channelId, messages])
 
     useEffect(() => {
-        if (!user) return
         queryClient.setQueryData(["chats"], (old: Channels = []) =>
             old.map((channel) => {
                 if (channel.id !== channelId) return channel

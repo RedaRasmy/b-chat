@@ -1,19 +1,19 @@
-import { useAuth } from "@/features/auth/use-auth"
 import type { Channels, TypingData } from "@bchat/types"
 import { useEffect, useRef } from "react"
 import { useQueryClient } from "@tanstack/react-query"
 import { Socket } from "socket.io-client"
+import { useUser } from "@/features/auth/use-user"
 
 export function useTyping(socket: Socket) {
     const typingTimeoutsRef = useRef<Map<string, number>>(new Map())
-    const { user } = useAuth()
+    const user = useUser()
     const queryClient = useQueryClient()
 
     useEffect(() => {
         const timeouts = typingTimeoutsRef.current
 
         function typingHandler({ channelId, userId, userName }: TypingData) {
-            if (!user || userId === user.id) return
+            if (user.id === userId) return
 
             if (typingTimeoutsRef.current.has(channelId)) {
                 clearTimeout(typingTimeoutsRef.current.get(channelId))

@@ -1,6 +1,6 @@
 import { ActionButton } from "@/components/action-button"
 import { Button } from "@/components/ui/button"
-import { useAuth } from "@/features/auth/use-auth"
+import { useUser } from "@/features/auth/use-user"
 import Post from "@/features/posts/components/post"
 import { PostForm } from "@/features/posts/components/post-form"
 import { deletePost, updatePost } from "@/features/posts/requests"
@@ -10,7 +10,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
 export default function MyPosts() {
-    const { user } = useAuth()
+    const user = useUser()
     const queryClient = useQueryClient()
     const { data, isLoading } = useQuery({
         queryKey: ["posts", "me"],
@@ -35,8 +35,9 @@ export default function MyPosts() {
         },
     })
 
-    if (isLoading || !data || !user) return null
-    if (data?.length === 0)
+    if (isLoading || !data) return null
+
+    if (data.length === 0)
         return (
             <div className="text-center flex items-center h-full justify-center font-semibold text-xl">
                 <h1 className="max-w-50 lg:max-w-100">
