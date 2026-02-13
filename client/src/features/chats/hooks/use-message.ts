@@ -8,13 +8,12 @@ import type {
     SendMessageData,
 } from "@bchat/types"
 import { useQueryClient } from "@tanstack/react-query"
-import { useCallback, useState } from "react"
+import { useCallback } from "react"
 
 export function useMessage(channelId: string, members: OtherUser[]) {
     const queryClient = useQueryClient()
     const socket = useSocket()
     const user = useUser()
-    const [message, setMessage] = useState("")
 
     const handleAck = useCallback(
         (tempMessage: ClientMessage, res: MessageAck) => {
@@ -83,14 +82,14 @@ export function useMessage(channelId: string, members: OtherUser[]) {
         [channelId, queryClient],
     )
 
-    const send = useCallback(() => {
-        if (message.length > 0) {
+    const send = useCallback(
+        (msg: string) => {
             const sentAt = Date.now()
             const tempId = `temp-${sentAt}`
 
             const tempMessage: ClientMessage = {
                 id: tempId,
-                content: message,
+                content: msg,
                 createdAt: new Date(),
                 senderId: user.id,
                 channelId: channelId,
@@ -114,7 +113,7 @@ export function useMessage(channelId: string, members: OtherUser[]) {
                 "send_message",
                 {
                     channelId: channelId,
-                    content: message,
+                    content: msg,
                     tempId,
                 } satisfies SendMessageData,
                 (res: MessageAck) => {
@@ -132,9 +131,9 @@ export function useMessage(channelId: string, members: OtherUser[]) {
                         : chat,
                 ),
             )
-            setMessage("")
-        }
-    }, [channelId, handleAck, message, socket, user, queryClient, members])
+        },
+        [channelId, handleAck, socket, user, queryClient, members],
+    )
 
     const retry = useCallback(
         (message: ClientMessage) => {
@@ -177,8 +176,6 @@ export function useMessage(channelId: string, members: OtherUser[]) {
     )
 
     return {
-        message,
-        setMessage,
         send,
         retry,
     }

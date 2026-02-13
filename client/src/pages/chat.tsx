@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import Message from "@/features/chats/components/message"
 import { useMessage } from "@/features/chats/hooks/use-message"
 import LoadingPage from "@/pages/loading"
@@ -13,6 +11,7 @@ import { useSocket } from "@/features/chats/use-socket"
 import { useUser } from "@/features/auth/use-user"
 import DMHeader from "@/features/chats/components/dm-header"
 import GroupHeader from "@/features/chats/components/group-header"
+import ChatFooter from "@/features/chats/components/chat-footer"
 
 export default function ChatPage() {
     const params = useParams()
@@ -20,10 +19,7 @@ export default function ChatPage() {
     const user = useUser()
     const { messages, bottomRef } = useChatMessages(id)
     const { chat, isLoading, members } = useChat(id)
-    const { message, setMessage, send, retry } = useMessage(
-        id,
-        Array.from(members.values()),
-    )
+    const { send, retry } = useMessage(id, Array.from(members.values()))
     const socket = useSocket()
 
     const deleteMutation = useMutation({
@@ -77,34 +73,19 @@ export default function ChatPage() {
                 <GroupHeader chat={chat} />
             )}
             <main className="p-3 space-y-2 overflow-y-auto relative">
-                {messages &&
-                    messages.map((msg, i) => (
-                        <Message
-                            onDelete={handleDelete}
-                            key={i}
-                            message={msg}
-                            isUser={msg.senderId === user.id}
-                            sender={members.get(msg.senderId)!}
-                            onRetry={retry}
-                        />
-                    ))}
+                {messages.map((msg, i) => (
+                    <Message
+                        onDelete={handleDelete}
+                        key={i}
+                        message={msg}
+                        isUser={msg.senderId === user.id}
+                        sender={members.get(msg.senderId)!}
+                        onRetry={retry}
+                    />
+                ))}
                 <div ref={bottomRef} />
             </main>
-            <footer className="bg- h-12 p-2 border-t flex items-center justify-center gap-1">
-                <Input
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    className="max-w-150"
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                            send()
-                        } else {
-                            sendTyping()
-                        }
-                    }}
-                />
-                <Button onClick={send}> Send</Button>
-            </footer>
+            <ChatFooter onSend={send} onType={sendTyping} />
         </div>
     )
 }
