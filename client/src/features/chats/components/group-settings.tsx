@@ -19,16 +19,15 @@ import {
 } from "@/components/ui/sheet"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import UserCard from "@/components/user-card"
-import { useUser } from "@/features/auth/use-user"
 import { AddMembersForm } from "@/features/chats/components/add-members-form"
 import { DeleteChat } from "@/features/chats/components/delete-chat"
 import RoleToggle from "@/features/chats/components/role-toggle"
+import { useGroup } from "@/features/chats/hooks/use-group"
 import { deleteMember, exitGroup, updateGroup } from "@/features/chats/requests"
 import {
     UpdateGroupSchema,
     type UpdateGroupData,
 } from "@bchat/shared/validation"
-import type { GroupChat } from "@bchat/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import {
     Delete02Icon,
@@ -40,10 +39,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useForm, Controller } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 
-export function GroupSettings({ chat }: { chat: GroupChat }) {
+export function GroupSettings() {
+    const { chat, isAdmin, isMember, isOwner } = useGroup()
     const queryClient = useQueryClient()
     const navigate = useNavigate()
-    const user = useUser()
 
     const form = useForm<UpdateGroupData>({
         resolver: zodResolver(UpdateGroupSchema),
@@ -51,15 +50,6 @@ export function GroupSettings({ chat }: { chat: GroupChat }) {
             name: chat.name,
         },
     })
-
-    const isOwner = !!chat.members.find(
-        (mem) => mem.id === user.id && mem.chatRole === "owner",
-    )
-
-    const isAdmin = !!chat.members.find(
-        (mem) => mem.id === user.id && mem.chatRole === "admin",
-    )
-    const isMember = !isOwner && !isAdmin
 
     const banMutation = useMutation({
         mutationFn: deleteMember,

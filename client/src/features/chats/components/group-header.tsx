@@ -1,9 +1,10 @@
 import Avatar from "@/components/avatar"
 import PageHeader from "@/components/page-header"
 import { GroupSettings } from "@/features/chats/components/group-settings"
-import type { GroupChat } from "@bchat/types"
+import { useGroup } from "@/features/chats/hooks/use-group"
 
-export default function GroupHeader({ chat }: { chat: GroupChat }) {
+export default function GroupHeader() {
+    const { chat } = useGroup()
     const { name, avatar, typingUser, id } = chat
     return (
         <PageHeader>
@@ -30,7 +31,7 @@ export default function GroupHeader({ chat }: { chat: GroupChat }) {
                     </div>
                 )}
 
-                <GroupSettings chat={chat} />
+                <GroupSettings />
             </div>
         </PageHeader>
     )

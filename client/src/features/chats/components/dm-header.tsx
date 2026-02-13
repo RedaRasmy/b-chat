@@ -1,25 +1,24 @@
 import Avatar from "@/components/avatar"
 import PageHeader from "@/components/page-header"
 import { Button } from "@/components/ui/button"
-import { useUser } from "@/features/auth/use-user"
 import { DeleteChat } from "@/features/chats/components/delete-chat"
-import { getChatAvatar, getChatName } from "@/features/chats/utils/chats"
+import { useDM } from "@/features/chats/hooks/use-dm"
 import { getTime } from "@/features/chats/utils/get-time"
 import { cn } from "@/lib/utils"
-import type { DMChat } from "@bchat/types"
 import { Delete02Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 
-export default function DMHeader({ chat }: { chat: DMChat }) {
-    const user = useUser()
-    const name = getChatName(chat, user.id)
-    const avatar = getChatAvatar(chat, user.id)
+export default function DMHeader() {
+    const { friend, chat } = useDM()
+    const name = friend.name
+    const avatar = friend.avatar
     const lastSeen =
         chat.lastSeen && chat.status === "offline"
             ? "since " + getTime(chat.lastSeen)
             : null
 
-    const status = `${chat.status} ${lastSeen}`
+    const status =
+        chat.status === "online" ? "online" : `${chat.status} ${lastSeen}`
 
     return (
         <PageHeader>
@@ -33,7 +32,6 @@ export default function DMHeader({ chat }: { chat: DMChat }) {
                 />
                 <div className="flex flex-col -space-y-0.5">
                     <h1>{name}</h1>
-
                     <div
                         className={cn(
                             "text-[0.7rem] text-muted-foreground flex gap-",

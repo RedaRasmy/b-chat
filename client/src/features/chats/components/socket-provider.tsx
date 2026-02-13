@@ -14,7 +14,7 @@ import type {
     ChatSeenData,
     MessageDeliveredData,
 } from "@bchat/shared/validation"
-import { useTyping } from "@/features/chats/hooks/use-typing"
+import { useTypingListener } from "@/features/chats/hooks/use-typing"
 import { useSidebar } from "@/components/ui/sidebar"
 import { toast } from "sonner"
 import { getChatName } from "@/features/chats/utils/chats"
@@ -48,7 +48,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
     const currentChannelId = params.id
     const { open } = useSidebar()
 
-    useTyping(socket)
+    useTypingListener(socket)
 
     useEffect(() => {
         return () => {

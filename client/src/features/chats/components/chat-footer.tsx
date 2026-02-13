@@ -1,22 +1,33 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { useUser } from "@/features/auth/use-user"
+import { useChat } from "@/features/chats/hooks/use-chat"
+import { useMessage } from "@/features/chats/hooks/use-message"
+import { useSocket } from "@/features/chats/use-socket"
 import { useState } from "react"
 
-export default function ChatFooter({
-    onSend,
-    onType,
-}: {
-    onSend: (msg: string) => void
-    onType: () => void
-}) {
+export default function ChatFooter() {
     const [message, setMessage] = useState("")
+    const socket = useSocket()
+    const { send } = useMessage()
+    const user = useUser()
+    const { chat } = useChat()
 
     function handleSend() {
         if (message.length > 0) {
-            onSend(message)
+            send(message)
             setMessage("")
         }
     }
+
+    function sendTyping() {
+        socket.emit("send_typing", {
+            channelId: chat.id,
+            userName: user.name,
+            userId: user.id,
+        })
+    }
+
     return (
         <footer className="bg- h-12 p-2 border-t flex items-center justify-center gap-1">
             <Input
@@ -27,7 +38,7 @@ export default function ChatFooter({
                     if (e.key === "Enter") {
                         handleSend()
                     } else {
-                        onType()
+                        sendTyping()
                     }
                 }}
             />

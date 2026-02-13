@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import { Socket } from "socket.io-client"
 import { useUser } from "@/features/auth/use-user"
 
-export function useTyping(socket: Socket) {
+export function useTypingListener(socket: Socket) {
     const typingTimeoutsRef = useRef<Map<string, number>>(new Map())
     const user = useUser()
     const queryClient = useQueryClient()

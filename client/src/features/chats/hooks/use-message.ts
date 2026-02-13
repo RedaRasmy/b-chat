@@ -1,19 +1,23 @@
 import { useUser } from "@/features/auth/use-user"
+import { useChat } from "@/features/chats/hooks/use-chat"
+import { deleteMessage } from "@/features/chats/requests"
 import { useSocket } from "@/features/chats/use-socket"
 import type {
     Channels,
     ClientMessage,
     MessageAck,
-    OtherUser,
     SendMessageData,
 } from "@bchat/types"
-import { useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useCallback } from "react"
 
-export function useMessage(channelId: string, members: OtherUser[]) {
+export function useMessage() {
     const queryClient = useQueryClient()
     const socket = useSocket()
     const user = useUser()
+    const {
+        chat: { id: channelId, members },
+    } = useChat()
 
     const handleAck = useCallback(
         (tempMessage: ClientMessage, res: MessageAck) => {
@@ -175,8 +179,35 @@ export function useMessage(channelId: string, members: OtherUser[]) {
         [channelId, handleAck, queryClient, socket],
     )
 
+    const deleteMutation = useMutation({
+        mutationFn: deleteMessage,
+        onError: (error) => {
+            console.error(error)
+            queryClient.setQueryData(
+                ["messages", channelId],
+                (old: ClientMessage[] = []) =>
+                    old.map((msg) => ({ ...msg, status: undefined })),
+            )
+        },
+    })
+
+    const remove = useCallback(
+        (id: string) => {
+            queryClient.setQueryData(
+                ["messages", channelId],
+                (old: ClientMessage[] = []) =>
+                    old.map((msg) =>
+                        msg.id === id ? { ...msg, status: "sending" } : msg,
+                    ),
+            )
+            deleteMutation.mutate(id)
+        },
+        [deleteMutation, queryClient, channelId],
+    )
+
     return {
         send,
         retry,
+        remove,
     }
 }

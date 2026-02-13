@@ -1,91 +1,55 @@
-import Message from "@/features/chats/components/message"
-import { useMessage } from "@/features/chats/hooks/use-message"
+import { ChatContext } from "@/features/chats/chat-context"
+import DMChat from "@/features/chats/components/dm-chat"
+import { DMProvider } from "@/features/chats/components/dm-provider"
+import GroupChat from "@/features/chats/components/group-chat"
+import { GroupProvider } from "@/features/chats/components/group-provider"
+import { fetchChats } from "@/features/chats/requests"
 import LoadingPage from "@/pages/loading"
-import { useParams } from "react-router-dom"
-import { useChatMessages } from "@/features/chats/hooks/use-chat-messages"
-import { useChat } from "@/features/chats/hooks/use-chat"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { deleteMessage } from "@/features/chats/requests"
-import type { ChatMessage, ClientMessage } from "@bchat/types"
-import { useSocket } from "@/features/chats/use-socket"
-import { useUser } from "@/features/auth/use-user"
-import DMHeader from "@/features/chats/components/dm-header"
-import GroupHeader from "@/features/chats/components/group-header"
-import ChatFooter from "@/features/chats/components/chat-footer"
+import { useQuery } from "@tanstack/react-query"
+import { Navigate, useParams } from "react-router-dom"
+import { toast } from "sonner"
 
 export default function ChatPage() {
-    const params = useParams()
-    const id = params.id!
-    const user = useUser()
-    const { messages, bottomRef } = useChatMessages(id)
-    const { chat, isLoading, members } = useChat(id)
-    const { send, retry } = useMessage(id, Array.from(members.values()))
-    const socket = useSocket()
+    const channelId = useParams().id
 
-    const deleteMutation = useMutation({
-        mutationFn: deleteMessage,
-        // onSuccess: () => {
-        //     console.log("deleted")
-        // },
-        onError: (error) => {
-            queryClient.setQueryData(
-                ["messages", id],
-                (old: ClientMessage[] = []) =>
-                    old.map((msg) =>
-                        msg.id === id ? { ...msg, status: undefined } : msg,
-                    ),
-            )
-            console.error(error)
-        },
-    })
-    const queryClient = useQueryClient()
-    function handleDelete(id: string) {
-        queryClient.setQueryData(["messages", id], (old: ChatMessage[] = []) =>
-            old.map((msg) =>
-                msg.id === id ? { ...msg, status: "sending" } : msg,
-            ),
+    if (!channelId) {
+        throw new Error(
+            "ChatProvider must be used within ChatPage in chats/:id route",
         )
-        deleteMutation.mutate(id)
     }
-
-    function sendTyping() {
-        socket.emit("send_typing", {
-            channelId: id,
-            userName: user.name,
-            userId: user.id,
-        })
-    }
+    const { data: chats, isLoading } = useQuery({
+        queryKey: ["chats"],
+        queryFn: fetchChats,
+        staleTime: Infinity,
+    })
 
     if (isLoading) return <LoadingPage />
 
-    if (!chat)
-        return (
-            <div className="h-screen w-full text-3xl flex items-center justify-center">
-                Chat Not Found!
-            </div>
-        )
+    const chat = chats ? chats.find((c) => c.id === channelId) : undefined
+
+    if (!chat) {
+        toast.error("Chat not found!")
+        return <Navigate to={"/"} />
+    }
+
+    const members = new Map(chat.members.map((m) => [m.id, m]))
 
     return (
-        <div className="w-full h-screen grid grid-rows-[auto_1fr_auto]">
+        <ChatContext.Provider
+            value={{
+                chat,
+                members,
+            }}
+        >
             {chat.type === "dm" ? (
-                <DMHeader chat={chat} />
+                <DMProvider chat={chat}>
+                    <DMChat />
+                </DMProvider>
             ) : (
-                <GroupHeader chat={chat} />
+                <GroupProvider chat={chat} members={members}>
+                    <GroupChat />
+                </GroupProvider>
             )}
-            <main className="p-3 space-y-2 overflow-y-auto relative">
-                {messages.map((msg, i) => (
-                    <Message
-                        onDelete={handleDelete}
-                        key={i}
-                        message={msg}
-                        isUser={msg.senderId === user.id}
-                        sender={members.get(msg.senderId)!}
-                        onRetry={retry}
-                    />
-                ))}
-                <div ref={bottomRef} />
-            </main>
-            <ChatFooter onSend={send} onType={sendTyping} />
-        </div>
+        </ChatContext.Provider>
     )
 }
