@@ -38,7 +38,7 @@ export function AppSidebar() {
         <Sidebar>
             <SidebarHeader className="">
                 <Link
-                    to={"/"}
+                    to={requestCount ? "/?tab=requests" : "/"}
                     className="flex relative items-center gap-2 rounded-md px-2 py-1 hover:bg-accent"
                 >
                     <HugeiconsIcon icon={User02Icon} />
