@@ -2,6 +2,7 @@ import { getFriendsIds } from "@/queries/get-friends"
 import { getUserSocket } from "@/server"
 import {
     makeBodyEndpoint,
+    makeIdBodyEndpoint,
     makeParamsEndpoint,
     makeSimpleEndpoint,
 } from "@/utils/wrappers"
@@ -14,7 +15,11 @@ import {
     members,
     messages,
 } from "@bchat/database/tables"
-import { InsertDMSchema, InsertGroupSchema } from "@bchat/shared/validation"
+import {
+    InsertDMSchema,
+    InsertGroupSchema,
+    UpdateGroupSchema,
+} from "@bchat/shared/validation"
 import { Channels, ChatMember, ChatMessage, OtherUser } from "@bchat/types"
 import { asc, desc, eq } from "drizzle-orm"
 
@@ -293,6 +298,53 @@ export const deleteChannel = makeParamsEndpoint(
             // delete if the user is a : DM member OR Group owner
 
             await db.delete(channels).where(eq(channels.id, id))
+
+            res.sendStatus(204)
+        } catch (err) {
+            next(err)
+        }
+    },
+)
+
+export const updateGroup = makeIdBodyEndpoint(
+    UpdateGroupSchema,
+    async (req, res, next) => {
+        const id = req.params.id
+        const user = req.user!
+        const { name } = req.body
+
+        try {
+            const channel = await db.query.channels.findFirst({
+                where: (channels, { eq }) => eq(channels.id, id),
+                with: {
+                    members: {
+                        columns: {
+                            userId: true,
+                            role: true,
+                        },
+                    },
+                },
+            })
+            if (!channel) {
+                return res.status(404).json({
+                    message: "Channel not found",
+                })
+            }
+
+            const member = channel.members.find((mem) => mem.userId === user.id)
+
+            if (!member || member.role !== "owner" || channel.type === "dm") {
+                return res.status(403).json({
+                    message: "Action not allowed",
+                })
+            }
+
+            await db
+                .update(groups)
+                .set({
+                    name,
+                })
+                .where(eq(groups.channelId, id))
 
             res.sendStatus(204)
         } catch (err) {

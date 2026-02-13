@@ -12,6 +12,14 @@ export const InsertGroupSchema = z.object({
     members: z.array(z.uuid()),
 })
 
+export const UpdateGroupSchema = z.object({
+    name: z
+        .string()
+        .min(1, "Group name is required")
+        .min(3, "Name length must be between 3 and 20")
+        .max(20, "Name length must be between 3 and 20"),
+})
+
 export type DMFormData = z.infer<typeof InsertDMSchema>
 export type GroupFormData = z.infer<typeof InsertGroupSchema>
 

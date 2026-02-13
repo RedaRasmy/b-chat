@@ -17,7 +17,7 @@ import { GroupSettings } from "@/features/chats/components/group-settings"
 import { cn } from "@/lib/utils"
 import { getTime } from "@/features/chats/utils/get-time"
 import { useUser } from "@/features/auth/use-user"
-import { DeleteChat } from "@/features/chats/components/delete-chat-button"
+import { DeleteChat } from "@/features/chats/components/delete-chat"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Delete02Icon } from "@hugeicons/core-free-icons"
 

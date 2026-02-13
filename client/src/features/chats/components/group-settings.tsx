@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import UserCard from "@/components/user-card"
 import { useUser } from "@/features/auth/use-user"
 import { AddMembersForm } from "@/features/chats/components/add-members-form"
-import { DeleteChat } from "@/features/chats/components/delete-chat-button"
+import { DeleteChat } from "@/features/chats/components/delete-chat"
 import RoleToggle from "@/features/chats/components/role-toggle"
 import { deleteMember, exitGroup } from "@/features/chats/requests"
 import type { GroupChat } from "@bchat/types"
@@ -38,16 +38,6 @@ export function GroupSettings({ chat }: { chat: GroupChat }) {
         (mem) => mem.id === user.id && mem.chatRole === "admin",
     )
     const isMember = !isOwner && !isAdmin
-
-    // const deleteMutation = useMutation({
-    //     mutationFn: deleteChat,
-    //     onSuccess: () => {
-    //         navigate("/")
-    //         queryClient.invalidateQueries({
-    //             queryKey: ["chats"],
-    //         })
-    //     },
-    // })
 
     const banMutation = useMutation({
         mutationFn: deleteMember,

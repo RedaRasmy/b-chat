@@ -7,12 +7,12 @@ import type {
 import type { Channel, Channels, ChatMessage, DM, Group } from "@bchat/types"
 
 export async function createDM(data: DMFormData) {
-    const res = await api.post("/channels/dm", data)
+    const res = await api.post("/channels/dms", data)
     return res.data as DM
 }
 
 export async function createGroup(data: GroupFormData) {
-    const res = await api.post("/channels/group", data)
+    const res = await api.post("/channels/groups", data)
     return res.data as Group
 }
 

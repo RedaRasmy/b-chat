@@ -105,10 +105,14 @@ export default function Message({
                             Delete
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuGroup>
-                        <DropdownMenuLabel></DropdownMenuLabel>
-                    </DropdownMenuGroup>
+                    {(isSeen || isDelivered) && (
+                        <DropdownMenuGroup>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuLabel className={"text-end"}>
+                                {isSeen ? "seen" : "delivered"}{" "}
+                            </DropdownMenuLabel>
+                        </DropdownMenuGroup>
+                    )}
                 </DropdownMenuContent>
             </DropdownMenu>
         </div>

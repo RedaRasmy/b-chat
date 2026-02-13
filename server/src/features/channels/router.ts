@@ -4,15 +4,17 @@ import {
     getMessages,
     createGroup,
     deleteChannel,
+    updateGroup,
 } from "@/features/channels/handlers"
 import { Router } from "express"
 
 const router = Router()
 
-router.post("/dm", createDM)
-router.post("/group", createGroup)
+router.post("/dms", createDM)
+router.post("/groups", createGroup)
 router.get("/", getChannels)
 router.get("/:id/messages", getMessages)
 router.delete("/:id", deleteChannel)
+router.patch("/groups/:id", updateGroup)
 
 export const channelsRouter = router
