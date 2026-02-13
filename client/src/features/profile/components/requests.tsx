@@ -1,40 +1,13 @@
-import { Button } from "@/components/ui/button"
 import UserCard from "@/components/user-card"
-import {
-    acceptFriendship,
-    fetchReceivedRequests,
-    rejectFriendship,
-} from "@/features/friendships/requests"
-import { UserCheck01Icon, UserRemove01Icon } from "@hugeicons/core-free-icons"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import AcceptButton from "@/features/friendships/components/accept-button"
+import RejectButton from "@/features/friendships/components/reject-button"
+import { fetchReceivedRequests } from "@/features/friendships/requests"
+import { useQuery } from "@tanstack/react-query"
 
 export default function Requests() {
-    const queryClient = useQueryClient()
     const { data, isLoading } = useQuery({
         queryKey: ["requests"],
         queryFn: fetchReceivedRequests,
-    })
-
-    const acceptMutation = useMutation({
-        mutationFn: acceptFriendship,
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["requests"],
-            })
-            queryClient.invalidateQueries({
-                queryKey: ["friends"],
-            })
-        },
-    })
-
-    const rejectMutation = useMutation({
-        mutationFn: rejectFriendship,
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["requests"],
-            })
-        },
     })
 
     if (isLoading || !data) return null
@@ -52,26 +25,8 @@ export default function Requests() {
             <div className="max-w-200 w-full flex flex-col gap-4">
                 {data.map((request) => (
                     <UserCard user={request.requester} key={request.id}>
-                        <Button
-                            disabled={rejectMutation.isPending}
-                            onClick={() => {
-                                rejectMutation.mutate(request.id)
-                            }}
-                            variant={"destructive"}
-                        >
-                            <HugeiconsIcon icon={UserRemove01Icon} />
-                            reject
-                        </Button>
-                        <Button
-                            title="send friend request"
-                            disabled={acceptMutation.isPending}
-                            onClick={() => {
-                                acceptMutation.mutate(request.id)
-                            }}
-                        >
-                            <HugeiconsIcon icon={UserCheck01Icon} />
-                            accept
-                        </Button>
+                        <RejectButton friendshipId={request.id} />
+                        <AcceptButton friendshipId={request.id} />
                     </UserCard>
                 ))}
             </div>
