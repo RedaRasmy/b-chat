@@ -15,6 +15,8 @@ import { deleteMessage } from "@/features/chats/requests"
 import type { ChatMessage, ClientMessage } from "@bchat/types"
 import { useSocket } from "@/features/chats/use-socket"
 import { ChatSettings } from "@/features/chats/components/chat-settings"
+import { cn } from "@/lib/utils"
+import { getTime } from "@/features/chats/utils/get-time"
 
 export default function ChatPage() {
     const params = useParams()
@@ -76,6 +78,10 @@ export default function ChatPage() {
 
     const chatName = getChatName(chat, user.id)
     const chatAvatar = getChatAvatar(chat, user.id)
+    const lastSeen =
+        chat.type === "dm" && chat.lastSeen && chat.status === "offline"
+            ? "since " + getTime(chat.lastSeen)
+            : null
 
     return (
         <div className="w-full h-screen grid grid-rows-[auto_1fr_auto]">
@@ -88,16 +94,22 @@ export default function ChatPage() {
                             avatar: chatAvatar,
                         }}
                     />
-                    <h1>{chatName}</h1>
-                    {/* {friend && (
-                        <span
-                            className={cn("text-xs text-muted-foreground ", {
-                                "text-primary": friend.status === "online",
-                            })}
-                        >
-                            {friend.status}
-                        </span>
-                    )} */}
+                    <div className="flex flex-col -space-y-0.5">
+                        <h1>{chatName}</h1>
+                        {chat.type === "dm" && (
+                            <div
+                                className={cn(
+                                    "text-[0.7rem] text-muted-foreground flex gap-",
+                                    {
+                                        "text-primary":
+                                            chat.status === "online",
+                                    },
+                                )}
+                            >
+                                {chat.status} {lastSeen}
+                            </div>
+                        )}
+                    </div>
                 </div>
                 <div className="flex gap-2 items-center">
                     {chat.typingUser && (
