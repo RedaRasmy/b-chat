@@ -19,7 +19,7 @@ export default function ChatButton({ friendId }: { friendId: string }) {
             queryClient.invalidateQueries({
                 queryKey: ["chats"],
             })
-            navigate("chats/" + data.channelId)
+            navigate("/chats/" + data.channelId)
         },
         onError: (error) => {
             console.error(error.message)
@@ -33,7 +33,7 @@ export default function ChatButton({ friendId }: { friendId: string }) {
                 c.type === "dm" && c.members.find((mem) => mem.id === friendId),
         )
         if (existing) {
-            navigate("chats/" + existing.id)
+            navigate("/chats/" + existing.id)
         } else {
             mutation.mutate({
                 friendId,
