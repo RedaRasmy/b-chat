@@ -20,3 +20,5 @@ export const hasPermission = (
     const userPermissions = rolePermissions[role]
     return userPermissions.includes(permission)
 }
+
+export * from "./groups"

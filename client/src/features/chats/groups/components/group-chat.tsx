@@ -1,12 +1,12 @@
 import GroupHeader from "@/features/chats/groups/components/group-header"
 import ChatFooter from "@/features/chats/components/chat-footer"
-import ChatBody from "@/features/chats/components/chat-body"
+import GroupBody from "@/features/chats/groups/components/group-body"
 
 export default function GroupChat() {
     return (
         <div className="w-full h-screen grid grid-rows-[auto_1fr_auto]">
             <GroupHeader />
-            <ChatBody />
+            <GroupBody />
             <ChatFooter />
         </div>
     )

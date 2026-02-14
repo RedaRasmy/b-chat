@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import type { ClientMessage, OtherUser } from "@bchat/types"
+import type { ChatMember, ClientMessage } from "@bchat/types"
 import {
     Delete02Icon,
     Refresh01Icon,
@@ -18,8 +18,9 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { getTime } from "@/features/chats/utils/get-time"
+import { useGroup } from "@/features/chats/groups/use-group"
 
-export default function Message({
+export default function GroupMessage({
     message,
     isUser,
     sender,
@@ -28,13 +29,18 @@ export default function Message({
 }: {
     message: ClientMessage
     isUser: boolean
-    sender: OtherUser
+    sender: ChatMember
     onRetry: (message: ClientMessage) => void
     onDelete: (messageId: string) => void
 }) {
     const isRetry = isUser && message.status === "failed"
     const isSeen = message.receipts.every((rec) => rec.seenAt)
     const isDelivered = message.receipts.every((rec) => rec.deliveredAt)
+
+    const { isAdmin, isOwner } = useGroup()
+    const targetRole = sender.chatRole
+
+    const canDelete = isUser || isOwner || (isAdmin && targetRole === "member")
 
     return (
         <div
@@ -51,7 +57,7 @@ export default function Message({
                     <HugeiconsIcon icon={Refresh01Icon} />
                 </Button>
             )}
-            <DropdownMenu disabled={!isUser}>
+            <DropdownMenu disabled={!canDelete}>
                 <DropdownMenuTrigger
                     render={
                         <button
@@ -105,7 +111,7 @@ export default function Message({
                             Delete
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
-                    {(isSeen || isDelivered) && (
+                    {(isSeen || isDelivered) && isUser && (
                         <DropdownMenuGroup>
                             <DropdownMenuSeparator />
                             <DropdownMenuLabel className={"text-end"}>

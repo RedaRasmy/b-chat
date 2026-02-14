@@ -1,10 +1,10 @@
 import { useUser } from "@/features/auth/use-user"
-import Message from "@/features/chats/components/message"
+import DMMessage from "@/features/chats/dm/components/dm-message"
 import { useChat } from "@/features/chats/hooks/use-chat"
 import { useChatMessages } from "@/features/chats/hooks/use-chat-messages"
 import { useMessage } from "@/features/chats/hooks/use-message"
 
-export default function ChatBody() {
+export default function DMBody() {
     const user = useUser()
     const { members, chat } = useChat()
     const { messages, bottomRef } = useChatMessages(chat.id)
@@ -13,7 +13,7 @@ export default function ChatBody() {
     return (
         <main className="p-3 space-y-2 overflow-y-auto relative">
             {messages.map((msg) => (
-                <Message
+                <DMMessage
                     onDelete={remove}
                     key={msg.id}
                     message={msg}
