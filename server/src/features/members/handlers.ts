@@ -1,3 +1,4 @@
+import { io } from "@/server"
 import { makeParamsBodyEndpoint, makeParamsEndpoint } from "@/utils/wrappers"
 import db from "@bchat/database"
 import { IMember, members } from "@bchat/database/tables"
@@ -57,6 +58,8 @@ export const addMembers = makeParamsBodyEndpoint(
                 }))
 
             await db.insert(members).values(values)
+
+            io.to(`channel:${channelId}`).emit("new_members")
 
             res.sendStatus(204)
         } catch (err) {

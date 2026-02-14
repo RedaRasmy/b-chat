@@ -23,7 +23,6 @@ import { useUser } from "@/features/auth/use-user"
 export default function SocketProvider({ children }: { children: ReactNode }) {
     const [socket] = useState<Socket>(() => {
         const newSocket = io("ws://localhost:3000", {
-            // autoConnect: false,
             withCredentials: true,
         })
 
@@ -234,7 +233,13 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
             })
             toast.info(`${userName} accepted your friend request`)
         }
+        function handleNewMembers() {
+            queryClient.invalidateQueries({
+                queryKey: ["chats"],
+            })
+        }
 
+        socket.on("new_members", handleNewMembers)
         socket.on("request_accepted", handleRequestAccepted)
         socket.on("friend_request", handleFriendRequest)
         socket.on("new_message", handleNewMessage)
@@ -244,6 +249,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         socket.on("message_deleted", handleDeletedMessage)
 
         return () => {
+            socket.off("new_members", handleNewMembers)
             socket.off("request_accepted", handleRequestAccepted)
             socket.off("friend_request", handleFriendRequest)
             socket.off("new_message", handleNewMessage)
