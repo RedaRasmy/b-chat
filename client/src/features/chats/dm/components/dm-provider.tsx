@@ -1,5 +1,5 @@
 import { useUser } from "@/features/auth/use-user"
-import { DMContext } from "@/features/chats/dm-context"
+import { DMContext } from "@/features/chats/dm/dm-context"
 import type { DMChat, OtherUser } from "@bchat/types"
 import type { ReactNode } from "react"
 

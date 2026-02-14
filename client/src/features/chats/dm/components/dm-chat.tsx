@@ -1,4 +1,4 @@
-import DMHeader from "@/features/chats/components/dm-header"
+import DMHeader from "@/features/chats/dm/components/dm-header"
 import ChatFooter from "@/features/chats/components/chat-footer"
 import ChatBody from "@/features/chats/components/chat-body"
 

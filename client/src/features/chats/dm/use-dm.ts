@@ -1,4 +1,4 @@
-import { DMContext } from "@/features/chats/dm-context"
+import { DMContext } from "@/features/chats/dm/dm-context"
 import { useContext } from "react"
 
 export function useDM() {

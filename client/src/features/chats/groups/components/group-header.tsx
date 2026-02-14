@@ -1,7 +1,7 @@
 import Avatar from "@/components/avatar"
 import PageHeader from "@/components/page-header"
-import { GroupSettings } from "@/features/chats/components/group-settings"
-import { useGroup } from "@/features/chats/hooks/use-group"
+import { GroupSettings } from "@/features/chats/groups/components/group-settings"
+import { useGroup } from "@/features/chats/groups/use-group"
 
 export default function GroupHeader() {
     const { chat } = useGroup()

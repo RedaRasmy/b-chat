@@ -1,4 +1,4 @@
-import GroupHeader from "@/features/chats/components/group-header"
+import GroupHeader from "@/features/chats/groups/components/group-header"
 import ChatFooter from "@/features/chats/components/chat-footer"
 import ChatBody from "@/features/chats/components/chat-body"
 

@@ -19,10 +19,10 @@ import {
 } from "@/components/ui/sheet"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import UserCard from "@/components/user-card"
-import { AddMembersForm } from "@/features/chats/components/add-members-form"
+import { AddMembersForm } from "@/features/chats/groups/components/add-members-form"
 import { DeleteChat } from "@/features/chats/components/delete-chat"
-import RoleToggle from "@/features/chats/components/role-toggle"
-import { useGroup } from "@/features/chats/hooks/use-group"
+import RoleToggle from "@/features/chats/groups/components/role-toggle"
+import { useGroup } from "@/features/chats/groups/use-group"
 import { deleteMember, exitGroup, updateGroup } from "@/features/chats/requests"
 import {
     UpdateGroupSchema,

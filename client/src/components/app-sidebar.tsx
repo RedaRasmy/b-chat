@@ -8,9 +8,9 @@ import {
     SidebarGroupContent,
     SidebarSeparator,
 } from "@/components/ui/sidebar"
-import DMCard from "@/features/chats/components/dm-card"
-import GroupCard from "@/features/chats/components/group-card"
-import { GroupFormDialog } from "@/features/chats/components/group-form"
+import DMCard from "@/features/chats/dm/components/dm-card"
+import GroupCard from "@/features/chats/groups/components/group-card"
+import { GroupFormDialog } from "@/features/chats/groups/components/group-form"
 import { fetchChats } from "@/features/chats/requests"
 import { fetchReceivedRequests } from "@/features/friendships/requests"
 import {

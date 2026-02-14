@@ -1,4 +1,4 @@
-import { GroupContext } from "@/features/chats/group-context"
+import { GroupContext } from "@/features/chats/groups/group-context"
 import { useContext } from "react"
 
 export function useGroup() {
