@@ -17,5 +17,6 @@ export type ChatMember = Prettify<
     OtherUser & {
         joinedAt: Member["joinedAt"]
         chatRole: Member["role"]
+        status: Member["status"]
     }
 >

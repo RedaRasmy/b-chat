@@ -112,50 +112,62 @@ export function GroupSettings() {
                             "space-y-1.5 overflow-auto h-full px-1 pt-1 pb-13"
                         }
                     >
-                        {chat.members.map((member) => (
-                            <UserCard key={member.id} user={member}>
-                                {isOwner && member.chatRole !== "owner" && (
-                                    <RoleToggle
-                                        member={member}
-                                        channelId={chat.id}
-                                    />
-                                )}
-                                {(isAdmin || isOwner) &&
-                                    member.chatRole !== "owner" &&
-                                    (!isAdmin ||
-                                        member.chatRole !== "admin") && (
-                                        <ActionButton
-                                            action={() =>
-                                                banMutation.mutate({
-                                                    channelId: chat.id,
-                                                    userId: member.id,
-                                                })
-                                            }
-                                            requireAreYouSure
-                                            areYouSureDescription={`Delete member : ${member.name}`}
-                                            triggerElement={
-                                                <Button variant={"destructive"}>
-                                                    <HugeiconsIcon
-                                                        icon={Delete02Icon}
-                                                    />
-                                                </Button>
-                                            }
-                                        ></ActionButton>
+                        {chat.members
+                            .filter((mem) => mem.status === "active")
+                            .map((member) => (
+                                <UserCard
+                                    key={member.id}
+                                    user={{
+                                        id: member.id,
+                                        avatar: member.avatar,
+                                        name: member.name,
+                                        role: member.role,
+                                    }}
+                                >
+                                    {isOwner && member.chatRole !== "owner" && (
+                                        <RoleToggle
+                                            member={member}
+                                            channelId={chat.id}
+                                        />
                                     )}
-                                {(isMember || isAdmin) &&
-                                    member.chatRole !== "member" && (
-                                        <Badge
-                                            variant={
-                                                member.chatRole === "owner"
-                                                    ? "destructive"
-                                                    : "default"
-                                            }
-                                        >
-                                            {member.chatRole}
-                                        </Badge>
-                                    )}
-                            </UserCard>
-                        ))}
+                                    {(isAdmin || isOwner) &&
+                                        member.chatRole !== "owner" &&
+                                        (!isAdmin ||
+                                            member.chatRole !== "admin") && (
+                                            <ActionButton
+                                                action={() =>
+                                                    banMutation.mutate({
+                                                        channelId: chat.id,
+                                                        userId: member.id,
+                                                    })
+                                                }
+                                                requireAreYouSure
+                                                areYouSureDescription={`Delete member : ${member.name}`}
+                                                triggerElement={
+                                                    <Button
+                                                        variant={"destructive"}
+                                                    >
+                                                        <HugeiconsIcon
+                                                            icon={Delete02Icon}
+                                                        />
+                                                    </Button>
+                                                }
+                                            ></ActionButton>
+                                        )}
+                                    {(isMember || isAdmin) &&
+                                        member.chatRole !== "member" && (
+                                            <Badge
+                                                variant={
+                                                    member.chatRole === "owner"
+                                                        ? "destructive"
+                                                        : "default"
+                                                }
+                                            >
+                                                {member.chatRole}
+                                            </Badge>
+                                        )}
+                                </UserCard>
+                            ))}
                     </TabsContent>
                     <TabsContent
                         value="settings"
@@ -221,7 +233,9 @@ export function GroupSettings() {
                         {(isAdmin || isOwner) && (
                             <AddMembersForm
                                 channelId={chat.id}
-                                members={chat.members.map((m) => m.id)}
+                                members={chat.members
+                                    .filter((mem) => mem.status === "active")
+                                    .map((m) => m.id)}
                             />
                         )}
                         {!isOwner && (

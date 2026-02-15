@@ -181,13 +181,14 @@ export const getChannels = makeSimpleEndpoint(async (req, res, next) => {
         const finalData: Channels = channels.map(({ channel }) => {
             const lastMessage = channel.messages[0] ?? null
             const members = channel.members.map(
-                ({ user: u, joinedAt, role }): ChatMember => ({
+                ({ user: u, joinedAt, role, status }): ChatMember => ({
                     id: u.id,
                     name: u.name,
                     role: u.role,
                     avatar: u.avatar,
                     joinedAt,
                     chatRole: role,
+                    status,
                 }),
             )
             if (channel.type === "dm") {
