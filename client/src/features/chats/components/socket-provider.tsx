@@ -221,18 +221,29 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         }
 
         function handleNewMembers() {
+            console.log("new members")
             queryClient.invalidateQueries({
                 queryKey: ["chats"],
             })
         }
         function handleMemberLeft(data: { userId: string; userName: string }) {
-            console.log("user left : ", data)
+            console.log("member left : ", data)
+            queryClient.invalidateQueries({
+                queryKey: ["chats"],
+            })
+        }
+        function handleMemberDeleted(data: {
+            userId: string
+            userName: string
+        }) {
+            console.log("member deleted : ", data)
             queryClient.invalidateQueries({
                 queryKey: ["chats"],
             })
         }
 
         socket.on("member_left", handleMemberLeft)
+        socket.on("member_deleted", handleMemberDeleted)
         socket.on("new_members", handleNewMembers)
         socket.on("request_accepted", handleRequestAccepted)
         socket.on("friend_request", handleFriendRequest)
@@ -244,6 +255,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
 
         return () => {
             socket.off("member_left", handleMemberLeft)
+            socket.off("member_deleted", handleMemberDeleted)
             socket.off("new_members", handleNewMembers)
             socket.off("request_accepted", handleRequestAccepted)
             socket.off("friend_request", handleFriendRequest)

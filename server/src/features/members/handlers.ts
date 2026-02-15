@@ -184,7 +184,15 @@ export const deleteMember = makeEndpoint(
             const channel = await db.query.channels.findFirst({
                 where: (chs, { eq }) => eq(chs.id, channelId),
                 with: {
-                    members: true,
+                    members: {
+                        with: {
+                            user: {
+                                columns: {
+                                    name: true,
+                                },
+                            },
+                        },
+                    },
                 },
             })
 
@@ -226,6 +234,11 @@ export const deleteMember = makeEndpoint(
                         eq(members.userId, userId),
                     ),
                 )
+
+            io.to(`channel:${channelId}`).emit("member_deleted", {
+                userId: member.userId,
+                userName: member.user.name,
+            })
 
             const socket = getUserSocket(userId)
 
@@ -301,7 +314,7 @@ export const exitChannel = makeEndpoint(
             if (socket) {
                 socket.leave(`channel:${channelId}`)
             }
-            
+
             io.to(`channel:${channelId}`).emit("member_left", {
                 userId: member.userId,
                 userName: member.user.name,
