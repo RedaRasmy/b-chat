@@ -21,8 +21,8 @@ export default function Friends() {
         )
 
     return (
-        <div className={"flex-1 flex flex-col p-3 xl:p-5 items-center"}>
-            <div className="max-w-200 w-full flex flex-col gap-4">
+        <div className={"flex-1 flex flex-col px-0.5 lg:px-2 items-center"}>
+            <div className="max-w-200 w-full flex flex-col gap-2 lg:gap-3">
                 {data.map((friend) => (
                     <FriendCard friend={friend} key={friend.id}>
                         <UnfriendButton friendshipId={friend.friendshipId} />

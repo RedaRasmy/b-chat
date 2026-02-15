@@ -14,18 +14,13 @@ export default function UserCard({
     className?: string
 }) {
     return (
-        <Card
-            className={cn(className, "py-2", {
-                // "border-primary border ": user.role === "admin",
-            })}
-        >
-            <CardContent className="flex justify-between items-center text-center">
-                <div className="flex items-center gap-3">
+        <Card className={cn(className, "py-1.5 lg:py-3", {})}>
+            <CardContent className="flex gap-1 justify-between items-center text-center px-2 lg:px-4">
+                <div className="grid grid-cols-[auto_1fr] items-center gap-3">
                     <Avatar data={user} className="size-10" />
-                    <h1 className="text-lg">{user.name}</h1>
-                    {/* {user.role === "admin" && (
-                        <span className="text-xs text-primary">(admin)</span>
-                    )} */}
+                    <h1 className="text-lg overflow-hidden text-ellipsis text-nowrap">
+                        {user.name}
+                    </h1>
                 </div>
                 <div className="flex gap-1 items-center">{children}</div>
             </CardContent>

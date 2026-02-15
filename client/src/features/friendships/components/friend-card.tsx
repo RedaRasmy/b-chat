@@ -18,12 +18,14 @@ export default function FriendCard({
             })}
         >
             <CardContent className="flex justify-between items-center">
-                <div className="flex items-center gap-3">
+                <div className="grid grid-cols-[auto_1fr] items-center gap-3">
                     <Avatar data={friend} className="size-10" />
-                    <h1 className="text-lg">{friend.name}</h1>
-                    {friend.role === "admin" && (
-                        <span className="text-xs text-primary">(admin)</span>
-                    )}
+                    <h1
+                        title={friend.name}
+                        className="text-lg overflow-hidden text-nowrap text-ellipsis"
+                    >
+                        {friend.name}
+                    </h1>
                 </div>
                 <div className="flex gap-1">{children}</div>
             </CardContent>
