@@ -83,7 +83,8 @@ io.on("connection", async (socket) => {
         .where(eq(users.id, user.id))
 
     const channels = await db.query.members.findMany({
-        where: (members, { eq }) => eq(members.userId, user.id),
+        where: (members, { eq, and }) =>
+            and(eq(members.userId, user.id), eq(members.status, "active")),
         columns: { channelId: true },
     })
 
@@ -121,6 +122,12 @@ io.on("connection", async (socket) => {
                 },
             })
             if (!channel) throw new Error("Channel not found")
+
+            const member = channel.members.find((mem) => mem.userId === user.id)
+
+            if (!member || member.status === "removed") {
+                throw new Error("You are not a member")
+            }
 
             const recipients = channel.members.filter(
                 (m) => m.userId !== user.id,
@@ -189,6 +196,7 @@ io.on("connection", async (socket) => {
                     and(
                         eq(members.channelId, channelId),
                         eq(members.userId, user.id),
+                        eq(members.status, "active"),
                     ),
                 columns: { channelId: true },
             })
@@ -225,6 +233,7 @@ io.on("connection", async (socket) => {
                     and(
                         eq(members.channelId, channelId),
                         eq(members.userId, user.id),
+                        eq(members.status, "active"),
                     ),
                 columns: { channelId: true },
             })

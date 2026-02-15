@@ -1,4 +1,4 @@
-import { io } from "@/server"
+import { getUserSocket, io } from "@/server"
 import { makeEndpoint } from "@/utils/make-endpoint"
 import db from "@bchat/database"
 import { IMember, members } from "@bchat/database/tables"
@@ -227,6 +227,12 @@ export const deleteMember = makeEndpoint(
                     ),
                 )
 
+            const socket = getUserSocket(userId)
+
+            if (socket) {
+                socket.leave(`channel:${channelId}`)
+            }
+
             res.sendStatus(204)
         } catch (err) {
             next(err)
@@ -281,6 +287,12 @@ export const exitChannel = makeEndpoint(
                         eq(members.userId, user.id),
                     ),
                 )
+
+            const socket = getUserSocket(user.id)
+
+            if (socket) {
+                socket.leave(`channel:${channelId}`)
+            }
 
             res.sendStatus(204)
         } catch (err) {
