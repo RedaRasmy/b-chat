@@ -38,9 +38,12 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useForm, Controller } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
+import { sortMembers } from "@/features/chats/utils/sort-members"
+import { useUser } from "@/features/auth/use-user"
 
 export function GroupSettings() {
     const { chat, isAdmin, isMember, isOwner } = useGroup()
+    const { id } = useUser()
     const queryClient = useQueryClient()
     const navigate = useNavigate()
 
@@ -114,6 +117,7 @@ export function GroupSettings() {
                     >
                         {chat.members
                             .filter((mem) => mem.status === "active")
+                            .sort(sortMembers(id))
                             .map((member) => (
                                 <UserCard
                                     key={member.id}
