@@ -254,7 +254,15 @@ export const exitChannel = makeEndpoint(
                 where: (chs, { eq, and }) =>
                     and(eq(chs.id, channelId), eq(chs.type, "group")),
                 with: {
-                    members: true,
+                    members: {
+                        with: {
+                            user: {
+                                columns: {
+                                    name: true,
+                                },
+                            },
+                        },
+                    },
                 },
             })
             if (!channel) {
@@ -293,6 +301,11 @@ export const exitChannel = makeEndpoint(
             if (socket) {
                 socket.leave(`channel:${channelId}`)
             }
+            
+            io.to(`channel:${channelId}`).emit("member_left", {
+                userId: member.userId,
+                userName: member.user.name,
+            })
 
             res.sendStatus(204)
         } catch (err) {

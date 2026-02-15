@@ -219,12 +219,20 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
             })
             toast.info(`${userName} accepted your friend request`)
         }
+
         function handleNewMembers() {
             queryClient.invalidateQueries({
                 queryKey: ["chats"],
             })
         }
+        function handleMemberLeft(data: { userId: string; userName: string }) {
+            console.log("user left : ", data)
+            queryClient.invalidateQueries({
+                queryKey: ["chats"],
+            })
+        }
 
+        socket.on("member_left", handleMemberLeft)
         socket.on("new_members", handleNewMembers)
         socket.on("request_accepted", handleRequestAccepted)
         socket.on("friend_request", handleFriendRequest)
@@ -235,6 +243,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         socket.on("message_deleted", handleDeletedMessage)
 
         return () => {
+            socket.off("member_left", handleMemberLeft)
             socket.off("new_members", handleNewMembers)
             socket.off("request_accepted", handleRequestAccepted)
             socket.off("friend_request", handleFriendRequest)
