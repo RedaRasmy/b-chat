@@ -11,6 +11,7 @@ import { users } from "./users"
 import { InferInsertModel, InferSelectModel, relations } from "drizzle-orm"
 
 export const chatRole = pgEnum("chat_role", ["owner", "admin", "member"])
+export const memberStatus = pgEnum("member_status", ["active", "removed"])
 
 export const members = pgTable(
     "members",
@@ -23,6 +24,8 @@ export const members = pgTable(
             .references(() => users.id, { onDelete: "cascade" }),
         joinedAt: timestamp("joined_at").notNull().defaultNow(),
         role: chatRole().default("member").notNull(),
+        status: memberStatus().default("active").notNull(),
+        leftAt: timestamp("left_at"),
     },
     (table) => [
         primaryKey({ columns: [table.channelId, table.userId] }),

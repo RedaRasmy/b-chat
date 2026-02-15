@@ -1,16 +1,21 @@
 import { io } from "@/server"
-import { makeParamsBodyEndpoint, makeParamsEndpoint } from "@/utils/wrappers"
+import { makeEndpoint } from "@/utils/make-endpoint"
 import db from "@bchat/database"
 import { IMember, members } from "@bchat/database/tables"
 import {
     InsertMembersSchema,
     UpdateMemberSchema,
 } from "@bchat/shared/validation"
-import { and, eq } from "drizzle-orm"
+import { and, eq, inArray } from "drizzle-orm"
+import z from "zod"
 
-export const addMembers = makeParamsBodyEndpoint(
-    ["channelId"],
-    InsertMembersSchema,
+export const addMembers = makeEndpoint(
+    {
+        params: z.object({
+            channelId: z.uuid(),
+        }),
+        body: InsertMembersSchema,
+    },
     async (req, res, next) => {
         const user = req.user!
         const channelId = req.params.channelId
@@ -23,6 +28,7 @@ export const addMembers = makeParamsBodyEndpoint(
                         columns: {
                             userId: true,
                             role: true,
+                            status: true,
                         },
                     },
                 },
@@ -35,7 +41,7 @@ export const addMembers = makeParamsBodyEndpoint(
             }
 
             const member = channel.members.find(
-                (member) => (member.userId = user.id),
+                (member) => member.userId === user.id,
             )
 
             if (
@@ -47,17 +53,38 @@ export const addMembers = makeParamsBodyEndpoint(
                     message: "Action not allowed",
                 })
             }
+            const existingMemberIds = new Set(
+                channel.members.map((m) => m.userId),
+            )
+            const oldMembers = channel.members
+                .filter(
+                    (mem) =>
+                        data.includes(mem.userId) && mem.status === "removed",
+                )
+                .map((m) => m.userId)
+            const newMembers = data.filter((id) => !existingMemberIds.has(id))
 
-            const memberIds = channel.members.map((mem) => mem.userId)
-
-            const values: IMember[] = data
-                .filter((id) => !memberIds.includes(id))
-                .map((id) => ({
+            if (newMembers.length > 0) {
+                const values: IMember[] = newMembers.map((id) => ({
                     channelId,
                     userId: id,
                 }))
+                await db.insert(members).values(values)
+            }
 
-            await db.insert(members).values(values)
+            if (oldMembers.length > 0) {
+                await db
+                    .update(members)
+                    .set({
+                        status: "active",
+                    })
+                    .where(
+                        and(
+                            eq(members.channelId, channelId),
+                            inArray(members.userId, oldMembers),
+                        ),
+                    )
+            }
 
             io.to(`channel:${channelId}`).emit("new_members")
 
@@ -68,9 +95,14 @@ export const addMembers = makeParamsBodyEndpoint(
     },
 )
 
-export const updateMember = makeParamsBodyEndpoint(
-    ["channelId", "userId"],
-    UpdateMemberSchema,
+export const updateMember = makeEndpoint(
+    {
+        params: z.object({
+            channelId: z.uuid(),
+            userId: z.uuid(),
+        }),
+        body: UpdateMemberSchema,
+    },
     async (req, res, next) => {
         const user = req.user!
         const { channelId, userId } = req.params
@@ -84,6 +116,8 @@ export const updateMember = makeParamsBodyEndpoint(
                             userId: true,
                             role: true,
                         },
+                        where: (members, { eq }) =>
+                            eq(members.status, "active"),
                     },
                 },
             })
@@ -95,8 +129,17 @@ export const updateMember = makeParamsBodyEndpoint(
             }
 
             const member = channel.members.find(
-                (member) => (member.userId = user.id),
+                (member) => member.userId === user.id,
             )
+            const targetMember = channel.members.find(
+                (member) => member.userId === userId,
+            )
+
+            if (!targetMember) {
+                return res.status(404).json({
+                    message: "Member not found",
+                })
+            }
 
             if (
                 !member ||
@@ -127,35 +170,45 @@ export const updateMember = makeParamsBodyEndpoint(
     },
 )
 
-export const deleteMember = makeParamsEndpoint(
-    ["channelId", "userId"],
+export const deleteMember = makeEndpoint(
+    {
+        params: z.object({
+            channelId: z.uuid(),
+            userId: z.uuid(),
+        }),
+    },
     async (req, res, next) => {
         const { channelId, userId } = req.params
         const user = req.user!
         try {
-            const [m1, m2] = await db.query.members.findMany({
-                where: (members, { eq, and, or }) =>
-                    and(
-                        eq(members.channelId, channelId),
-                        or(
-                            eq(members.userId, user.id),
-                            eq(members.userId, userId),
-                        ),
-                    ),
+            const channel = await db.query.channels.findFirst({
+                where: (chs, { eq }) => eq(chs.id, channelId),
+                with: {
+                    members: true,
+                },
             })
 
-            if (!m1 || !m2) {
+            if (!channel || channel.type === "dm") {
                 return res.status(404).json({
-                    message: "Channel not found",
+                    message: "Group not found",
                 })
             }
-            const member = m1.userId === user.id ? m1 : m2
-            const targetMember = m1.userId === userId ? m1 : m2
+            const member = channel.members.find((mem) => mem.userId === user.id)
+            const targetMember = channel.members.find(
+                (mem) => mem.userId === userId,
+            )
+
+            if (!targetMember || targetMember.status !== "active") {
+                return res.status(404).json({
+                    message: "Member not found",
+                })
+            }
 
             if (
+                !member ||
                 member.role === "member" ||
-                targetMember.role === "owner" ||
-                (member.role === "admin" && targetMember.role === "admin")
+                (member.role === "admin" && targetMember.role === "admin") ||
+                targetMember.role === "owner"
             ) {
                 return res.status(403).json({
                     message: "Action not allowed",
@@ -163,7 +216,10 @@ export const deleteMember = makeParamsEndpoint(
             }
 
             await db
-                .delete(members)
+                .update(members)
+                .set({
+                    status: "removed",
+                })
                 .where(
                     and(
                         eq(members.channelId, channelId),
@@ -178,14 +234,47 @@ export const deleteMember = makeParamsEndpoint(
     },
 )
 
-export const exitChannel = makeParamsEndpoint(
-    ["channelId"],
+export const exitChannel = makeEndpoint(
+    {
+        params: z.object({
+            channelId: z.uuid(),
+        }),
+    },
     async (req, res, next) => {
         const { channelId } = req.params
         const user = req.user!
         try {
+            const channel = await db.query.channels.findFirst({
+                where: (chs, { eq, and }) =>
+                    and(eq(chs.id, channelId), eq(chs.type, "group")),
+                with: {
+                    members: true,
+                },
+            })
+            if (!channel) {
+                return res.status(404).json({
+                    message: "Group not found",
+                })
+            }
+            const member = channel.members.find((mem) => mem.userId === user.id)
+
+            if (!member) {
+                return res.status(400).json({
+                    message: "You are not a group member",
+                })
+            }
+
+            if (member.role === "owner") {
+                return res.status(403).json({
+                    message: "Group owner can't exit the group",
+                })
+            }
+
             await db
-                .delete(members)
+                .update(members)
+                .set({
+                    status: "removed",
+                })
                 .where(
                     and(
                         eq(members.channelId, channelId),
