@@ -7,6 +7,7 @@ import {
     SidebarGroupLabel,
     SidebarGroupContent,
     SidebarSeparator,
+    useSidebar,
 } from "@/components/ui/sidebar"
 import DMCard from "@/features/chats/dm/components/dm-card"
 import GroupCard from "@/features/chats/groups/components/group-card"
@@ -41,11 +42,13 @@ export function AppSidebar() {
         if (a.lastMessage.createdAt > b.lastMessage.createdAt) return -1
         return 1
     })
+    const { setOpenMobile } = useSidebar()
 
     return (
         <Sidebar>
             <SidebarHeader className="">
                 <Link
+                    onClick={() => setOpenMobile(false)}
                     to={requestCount ? "/?tab=requests" : "/"}
                     className="flex relative items-center gap-2 rounded-md px-2 py-1 hover:bg-accent"
                 >
@@ -58,6 +61,7 @@ export function AppSidebar() {
                     )}
                 </Link>
                 <Link
+                    onClick={() => setOpenMobile(false)}
                     to={"/posts"}
                     className="flex relative items-center gap-2 rounded-md px-2 py-1 hover:bg-accent"
                 >
@@ -65,6 +69,7 @@ export function AppSidebar() {
                     <span>Posts</span>
                 </Link>
                 <Link
+                    onClick={() => setOpenMobile(false)}
                     to={"/users"}
                     className="flex relative items-center gap-2 rounded-md px-2 py-1 hover:bg-accent"
                 >
@@ -80,13 +85,18 @@ export function AppSidebar() {
                         <GroupFormDialog />
                     </SidebarGroupLabel>
                     <SidebarGroupContent className="grid gap-1 overflow-auto p-2 -mt-2">
-                        {chats.map((chat) =>
-                            chat.type === "dm" ? (
-                                <DMCard key={chat.id} chat={chat} />
-                            ) : (
-                                <GroupCard key={chat.id} chat={chat} />
-                            ),
-                        )}
+                        {chats.map((chat) => (
+                            <div
+                                key={chat.id}
+                                onClick={() => setOpenMobile(false)}
+                            >
+                                {chat.type === "dm" ? (
+                                    <DMCard chat={chat} />
+                                ) : (
+                                    <GroupCard chat={chat} />
+                                )}
+                            </div>
+                        ))}
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
