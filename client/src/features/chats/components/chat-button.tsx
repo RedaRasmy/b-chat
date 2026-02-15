@@ -5,7 +5,13 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
 
-export default function ChatButton({ friendId }: { friendId: string }) {
+export default function ChatButton({
+    friendId,
+    className,
+}: {
+    friendId: string
+    className?: string
+}) {
     const navigate = useNavigate()
     const { data, isLoading } = useQuery({
         queryKey: ["chats"],
@@ -45,6 +51,7 @@ export default function ChatButton({ friendId }: { friendId: string }) {
         <Button
             disabled={isLoading || mutation.isPending || !data}
             onClick={handleClick}
+            className={className}
         >
             <HugeiconsIcon icon={Message01Icon} />
             chat

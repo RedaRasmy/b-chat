@@ -6,8 +6,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 export default function RejectButton({
     friendshipId,
+    className
 }: {
     friendshipId: string
+    className?: string
 }) {
     const queryClient = useQueryClient()
     const rejectMutation = useMutation({
@@ -25,6 +27,7 @@ export default function RejectButton({
                 rejectMutation.mutate(friendshipId)
             }}
             variant={"destructive"}
+            className={className}
         >
             <HugeiconsIcon icon={UserRemove01Icon} />
             reject

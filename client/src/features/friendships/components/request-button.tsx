@@ -4,7 +4,7 @@ import { UserAdd01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
-export default function RequestButton({ userId }: { userId: string }) {
+export default function RequestButton({ userId ,className}: { userId: string ,className?:string}) {
     const queryClient = useQueryClient()
 
     const mutation = useMutation({
@@ -21,6 +21,7 @@ export default function RequestButton({ userId }: { userId: string }) {
             onClick={() => {
                 mutation.mutate(userId)
             }}
+            className={className}
         >
             <HugeiconsIcon icon={UserAdd01Icon} />
             add friend

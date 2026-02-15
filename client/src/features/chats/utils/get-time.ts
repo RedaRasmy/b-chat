@@ -13,5 +13,5 @@ export function getTime(date: Date | string | number) {
         return format(date, "EEEE")
     }
 
-    return format(date, "d/M/yyyy") // "12/1/2026"
+    return format(date, "d/M/yyyy")
 }

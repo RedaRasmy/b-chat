@@ -6,7 +6,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 export default function AcceptButton({
     friendshipId,
+    className
 }: {
+    className?: string
     friendshipId: string
 }) {
     const queryClient = useQueryClient()
@@ -27,6 +29,7 @@ export default function AcceptButton({
             onClick={() => {
                 acceptMutation.mutate(friendshipId)
             }}
+            className={className}
         >
             <HugeiconsIcon icon={UserCheck01Icon} />
             accept

@@ -6,8 +6,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 export default function UnfriendButton({
     friendshipId,
+    className,
 }: {
     friendshipId: string
+    className?: string
 }) {
     const queryClient = useQueryClient()
     const unfriendMutation = useMutation({
@@ -25,6 +27,7 @@ export default function UnfriendButton({
                 unfriendMutation.mutate(friendshipId)
             }}
             variant={"destructive"}
+            className={className}
         >
             <HugeiconsIcon icon={UserMinus01Icon} />
             unfriend

@@ -7,12 +7,38 @@ import { useGroup } from "@/features/chats/groups/use-group"
 import { useChat } from "@/features/chats/hooks/use-chat"
 import { deleteMember } from "@/features/chats/requests"
 import type { ChatMember } from "@bchat/types"
-import { Delete02Icon } from "@hugeicons/core-free-icons"
+import {
+    Delete02Icon,
+    MoreVerticalSquare01Icon,
+} from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useUser } from "@/features/auth/use-user"
+import { getTime } from "@/features/chats/utils/get-time"
+import {
+    fetchFriends,
+    fetchReceivedRequests,
+    fetchSentRequests,
+} from "@/features/friendships/requests"
+import UnfriendButton from "@/features/friendships/components/unfriend-button"
+import ChatButton from "@/features/chats/components/chat-button"
+import CancelButton from "@/features/friendships/components/cancel-button"
+import RejectButton from "@/features/friendships/components/reject-button"
+import AcceptButton from "@/features/friendships/components/accept-button"
+import RequestButton from "@/features/friendships/components/request-button"
 
 export default function Member({ member }: { member: ChatMember }) {
     const { isOwner, isAdmin, isMember } = useGroup()
+    const { id } = useUser()
     const { chat } = useChat()
     const queryClient = useQueryClient()
 
@@ -24,6 +50,29 @@ export default function Member({ member }: { member: ChatMember }) {
             })
         },
     })
+
+    const isUser = member.id === id
+
+    const { data: friends = [] } = useQuery({
+        queryKey: ["friends"],
+        queryFn: fetchFriends,
+    })
+
+    const { data: sentRequests = [] } = useQuery({
+        queryKey: ["sent-requests"],
+        queryFn: fetchSentRequests,
+    })
+
+    const { data: receivedRequests = [] } = useQuery({
+        queryKey: ["requests"],
+        queryFn: fetchReceivedRequests,
+    })
+
+    const friend = friends.find((f) => f.id === member.id)
+    const sentReq = sentRequests.find((req) => req.receiverId === member.id)
+    const req = receivedRequests.find((req) => req.requesterId === member.id)
+
+    const isNew = !friend && !sentReq && !req
 
     return (
         <UserCard
@@ -51,7 +100,7 @@ export default function Member({ member }: { member: ChatMember }) {
                         requireAreYouSure
                         areYouSureDescription={`Delete member : ${member.name}`}
                         triggerElement={
-                            <Button variant={"destructive"}>
+                            <Button variant={"destructive"} size={"icon"}>
                                 <HugeiconsIcon icon={Delete02Icon} />
                             </Button>
                         }
@@ -65,6 +114,95 @@ export default function Member({ member }: { member: ChatMember }) {
                 >
                     {member.chatRole}
                 </Badge>
+            )}
+            {!isUser && (
+                <DropdownMenu>
+                    <DropdownMenuTrigger
+                        render={
+                            <Button variant="outline" size={"icon"}>
+                                <HugeiconsIcon
+                                    icon={MoreVerticalSquare01Icon}
+                                />
+                            </Button>
+                        }
+                    ></DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <DropdownMenuGroup>
+                            <DropdownMenuLabel>{member.name}</DropdownMenuLabel>
+                            {friend && (
+                                <div className="grid gap-0.5">
+                                    <DropdownMenuItem
+                                        render={
+                                            <ChatButton
+                                                friendId={member.id}
+                                                className="w-full"
+                                            />
+                                        }
+                                    ></DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        variant="destructive"
+                                        render={
+                                            <UnfriendButton
+                                                friendshipId={
+                                                    friend.friendshipId
+                                                }
+                                                className="w-full"
+                                            />
+                                        }
+                                    ></DropdownMenuItem>
+                                </div>
+                            )}
+
+                            {sentReq && (
+                                <DropdownMenuItem
+                                    render={
+                                        <CancelButton
+                                            friendshipId={sentReq.id}
+                                            className="w-full"
+                                        />
+                                    }
+                                />
+                            )}
+                            {req && (
+                                <div className="grid gap-0.5">
+                                    <DropdownMenuItem
+                                        render={
+                                            <AcceptButton
+                                                friendshipId={req.id}
+                                                className="w-full"
+                                            />
+                                        }
+                                    />
+                                    <DropdownMenuItem
+                                        render={
+                                            <RejectButton
+                                                friendshipId={req.id}
+                                                className="w-full"
+                                            />
+                                        }
+                                    />
+                                </div>
+                            )}
+
+                            {isNew && (
+                                <DropdownMenuItem
+                                    render={
+                                        <RequestButton
+                                            className={"w-full"}
+                                            userId={member.id}
+                                        />
+                                    }
+                                />
+                            )}
+                        </DropdownMenuGroup>
+                        <DropdownMenuGroup>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuLabel>
+                                joined {getTime(member.joinedAt)}
+                            </DropdownMenuLabel>
+                        </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             )}
         </UserCard>
     )

@@ -108,7 +108,7 @@ export function GroupSettings() {
                             .filter((mem) => mem.status === "active")
                             .sort(sortMembers(id))
                             .map((member) => (
-                                <Member member={member} />
+                                <Member key={member.id} member={member} />
                             ))}
                     </TabsContent>
                     <TabsContent

@@ -6,8 +6,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 export default function CancelButton({
     friendshipId,
+    className
 }: {
     friendshipId: string
+    className?: string
 }) {
     const queryClient = useQueryClient()
 
@@ -26,6 +28,7 @@ export default function CancelButton({
                 mutation.mutate(friendshipId)
             }}
             variant={"outline"}
+            className={className}
         >
             <HugeiconsIcon icon={UserTime01Icon} />
             pending
