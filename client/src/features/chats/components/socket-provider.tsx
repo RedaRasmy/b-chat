@@ -1,7 +1,7 @@
 import { SocketContext } from "@/features/chats/socket-context"
 import { useEffect, useState, type ReactNode } from "react"
 import { io, Socket } from "socket.io-client"
-import { useQueryClient } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useParams } from "react-router-dom"
 import type {
     Channels,
@@ -19,6 +19,7 @@ import { useSidebar } from "@/components/ui/sidebar"
 import { toast } from "sonner"
 import { getChatName } from "@/features/chats/utils/chats"
 import { useUser } from "@/features/auth/use-user"
+import { fetchChats } from "@/features/chats/requests"
 
 export default function SocketProvider({ children }: { children: ReactNode }) {
     const [socket] = useState<Socket>(() => {
@@ -55,42 +56,27 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         }
     }, [socket])
 
+    const { data: chats = [] } = useQuery({
+        queryKey: ["chats"],
+        queryFn: fetchChats,
+    })
+
     useEffect(() => {
         function handleNewMessage(msg: ChatMessage) {
             console.log("new msg :", msg)
 
-            queryClient.setQueryData(["chats"], (old: Channels = []) => {
-                if (!old.find((chat) => chat.id === msg.channelId)) {
-                    console.log("invalidate chats")
-                    queryClient.invalidateQueries({
-                        queryKey: ["chats"],
-                    })
-                    return old
-                }
-                return old.map((chat) => {
-                    if (chat.id !== msg.channelId) return chat
-                    const isChatOpen = chat.id === currentChannelId
-                    if (!open && !isChatOpen) {
-                        toast.info(
-                            `new message from ${getChatName(chat, user.id)}`,
-                            {
-                                description: msg.content,
-                            },
-                        )
-                    }
-                    return {
-                        ...chat,
-                        lastMessage: {
-                            ...msg,
-                            receipts: msg.receipts.map((rec) =>
-                                rec.userId === user.id && isChatOpen
-                                    ? { ...rec, seenAt: new Date() }
-                                    : rec,
-                            ),
-                        },
-                    }
-                })
+            queryClient.invalidateQueries({
+                queryKey: ["chats"],
             })
+
+            const isChatOpen = msg.channelId === currentChannelId
+            const chat = chats.find((c) => c.id === msg.channelId)
+
+            if (!open && !isChatOpen && chat) {
+                toast.info(`new message from ${getChatName(chat, user.id)}`, {
+                    description: msg.content,
+                })
+            }
 
             if (msg.senderId !== user.id) {
                 queryClient.setQueryData(
@@ -258,7 +244,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
             socket.off("chat_seen", handleSeenChat)
             socket.off("message_deleted", handleDeletedMessage)
         }
-    }, [socket, queryClient, currentChannelId, user, open])
+    }, [socket, queryClient, currentChannelId, user, open, chats])
 
     return (
         <SocketContext.Provider

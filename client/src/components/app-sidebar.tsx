@@ -34,6 +34,14 @@ export function AppSidebar() {
     })
     const requestCount = requests.length
 
+    const chats = data.sort((a, b) => {
+        if (!a.lastMessage) return 1
+        if (!b.lastMessage) return -1
+
+        if (a.lastMessage.createdAt > b.lastMessage.createdAt) return -1
+        return 1
+    })
+
     return (
         <Sidebar>
             <SidebarHeader className="">
@@ -72,7 +80,7 @@ export function AppSidebar() {
                         <GroupFormDialog />
                     </SidebarGroupLabel>
                     <SidebarGroupContent className="grid gap-1 overflow-auto p-2 -mt-2">
-                        {data.map((chat) =>
+                        {chats.map((chat) =>
                             chat.type === "dm" ? (
                                 <DMCard key={chat.id} chat={chat} />
                             ) : (
