@@ -12,8 +12,8 @@ export const LoginSchema = z.object({
 export const NameSchema = z
     .string()
     .min(1, "Name is required")
-    .min(3, "Name must be between 3 and 30 characters")
-    .max(30, "Name must be between 3 and 30 characters")
+    .min(3, "Name must be between 3 and 15 characters")
+    .max(15, "Name must be between 3 and 15 characters")
 
 export const RegisterSchema = z.object({
     name: NameSchema,
