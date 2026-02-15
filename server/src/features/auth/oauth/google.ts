@@ -92,6 +92,9 @@ export const googleCallback = makeSimpleEndpoint(async (req, res, next) => {
 
         res.redirect(`${process.env.FRONTEND_URL}/profile`)
     } catch (err) {
-        next(err)
+        console.error("Google OAuth error:", err)
+        return res.redirect(
+            `${process.env.FRONTEND_URL}/auth/login?error=google_auth_failed`,
+        )
     }
 })

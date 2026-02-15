@@ -118,6 +118,9 @@ export const githubCallback = makeSimpleEndpoint(async (req, res, next) => {
 
         res.redirect(`${process.env.FRONTEND_URL}`)
     } catch (err) {
-        next(err)
+        console.error("GitHub OAuth error:", err)
+        return res.redirect(
+            `${process.env.FRONTEND_URL}/auth/login?error=github_auth_failed`,
+        )
     }
 })
