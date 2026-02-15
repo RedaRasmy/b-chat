@@ -7,6 +7,7 @@ import type {
     Channels,
     ChatMessage,
     Friend,
+    Member,
     MessageDeletedData,
     StatusChangeData,
 } from "@bchat/types"
@@ -241,7 +242,19 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
                 queryKey: ["chats"],
             })
         }
+        function handleRoleChanged(data: {
+            userId: string
+            userName: string
+            oldRole: Member["role"]
+            newRole: Member["role"]
+        }) {
+            console.log("role changed : ", data)
+            queryClient.invalidateQueries({
+                queryKey: ["chats"],
+            })
+        }
 
+        socket.on("role_changed", handleRoleChanged)
         socket.on("member_left", handleMemberLeft)
         socket.on("member_deleted", handleMemberDeleted)
         socket.on("new_members", handleNewMembers)
@@ -254,6 +267,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         socket.on("message_deleted", handleDeletedMessage)
 
         return () => {
+            socket.off("role_changed", handleRoleChanged)
             socket.off("member_left", handleMemberLeft)
             socket.off("member_deleted", handleMemberDeleted)
             socket.off("new_members", handleNewMembers)

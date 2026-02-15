@@ -118,6 +118,13 @@ export const updateMember = makeEndpoint(
                         },
                         where: (members, { eq }) =>
                             eq(members.status, "active"),
+                        with: {
+                            user: {
+                                columns: {
+                                    name: true,
+                                },
+                            },
+                        },
                     },
                 },
             })
@@ -162,6 +169,13 @@ export const updateMember = makeEndpoint(
                         eq(members.userId, userId),
                     ),
                 )
+
+            io.to(`channel:${channelId}`).emit("role_changed", {
+                userId: targetMember.userId,
+                userName: targetMember.user.name,
+                oldRole: targetMember.role,
+                newRole: role,
+            })
 
             res.sendStatus(204)
         } catch (err) {
@@ -236,8 +250,8 @@ export const deleteMember = makeEndpoint(
                 )
 
             io.to(`channel:${channelId}`).emit("member_deleted", {
-                userId: member.userId,
-                userName: member.user.name,
+                userId: targetMember.userId,
+                userName: targetMember.user.name,
             })
 
             const socket = getUserSocket(userId)

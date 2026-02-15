@@ -16,4 +16,6 @@ export type {
     DM,
     Group,
     MessageReceipt,
+    Member,
+    IMember,
 } from "@bchat/database/tables"
