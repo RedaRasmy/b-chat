@@ -1,5 +1,4 @@
 import { ActionButton } from "@/components/action-button"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -18,12 +17,10 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import UserCard from "@/components/user-card"
 import { AddMembersForm } from "@/features/chats/groups/components/add-members-form"
 import { DeleteChat } from "@/features/chats/components/delete-chat"
-import RoleToggle from "@/features/chats/groups/components/role-toggle"
 import { useGroup } from "@/features/chats/groups/use-group"
-import { deleteMember, exitGroup, updateGroup } from "@/features/chats/requests"
+import { exitGroup, updateGroup } from "@/features/chats/requests"
 import {
     UpdateGroupSchema,
     type UpdateGroupData,
@@ -40,9 +37,10 @@ import { useForm, Controller } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import { sortMembers } from "@/features/chats/utils/sort-members"
 import { useUser } from "@/features/auth/use-user"
+import Member from "@/features/chats/groups/components/member"
 
 export function GroupSettings() {
-    const { chat, isAdmin, isMember, isOwner } = useGroup()
+    const { chat, isAdmin, isOwner } = useGroup()
     const { id } = useUser()
     const queryClient = useQueryClient()
     const navigate = useNavigate()
@@ -51,15 +49,6 @@ export function GroupSettings() {
         resolver: zodResolver(UpdateGroupSchema),
         defaultValues: {
             name: chat.name,
-        },
-    })
-
-    const banMutation = useMutation({
-        mutationFn: deleteMember,
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["chats"],
-            })
         },
     })
 
@@ -119,58 +108,7 @@ export function GroupSettings() {
                             .filter((mem) => mem.status === "active")
                             .sort(sortMembers(id))
                             .map((member) => (
-                                <UserCard
-                                    key={member.id}
-                                    user={{
-                                        id: member.id,
-                                        avatar: member.avatar,
-                                        name: member.name,
-                                        role: member.role,
-                                    }}
-                                >
-                                    {isOwner && member.chatRole !== "owner" && (
-                                        <RoleToggle
-                                            member={member}
-                                            channelId={chat.id}
-                                        />
-                                    )}
-                                    {(isAdmin || isOwner) &&
-                                        member.chatRole !== "owner" &&
-                                        (!isAdmin ||
-                                            member.chatRole !== "admin") && (
-                                            <ActionButton
-                                                action={() =>
-                                                    banMutation.mutate({
-                                                        channelId: chat.id,
-                                                        userId: member.id,
-                                                    })
-                                                }
-                                                requireAreYouSure
-                                                areYouSureDescription={`Delete member : ${member.name}`}
-                                                triggerElement={
-                                                    <Button
-                                                        variant={"destructive"}
-                                                    >
-                                                        <HugeiconsIcon
-                                                            icon={Delete02Icon}
-                                                        />
-                                                    </Button>
-                                                }
-                                            ></ActionButton>
-                                        )}
-                                    {(isMember || isAdmin) &&
-                                        member.chatRole !== "member" && (
-                                            <Badge
-                                                variant={
-                                                    member.chatRole === "owner"
-                                                        ? "destructive"
-                                                        : "default"
-                                                }
-                                            >
-                                                {member.chatRole}
-                                            </Badge>
-                                        )}
-                                </UserCard>
+                                <Member member={member} />
                             ))}
                     </TabsContent>
                     <TabsContent
