@@ -28,7 +28,9 @@ export default function ChatPage() {
     const chat = chats ? chats.find((c) => c.id === channelId) : undefined
 
     if (!chat) {
-        toast.error("Chat not found!")
+        toast.error("Chat not found!", {
+            richColors: true,
+        })
         return <Navigate to={"/"} />
     }
 

@@ -143,7 +143,8 @@ export const getChannels = makeSimpleEndpoint(async (req, res, next) => {
 
     try {
         const channels = await db.query.members.findMany({
-            where: (members, { eq }) => eq(members.userId, userId),
+            where: (members, { eq, and }) =>
+                and(eq(members.userId, userId), eq(members.status, "active")),
             columns: {},
             with: {
                 channel: {
