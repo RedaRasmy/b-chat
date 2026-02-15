@@ -31,8 +31,10 @@ export default function GroupCard({ chat }: { chat: GroupChat }) {
                     avatar: chat.avatar,
                 }}
             />
-            <section className="flex justify-between gap-2 items-center">
-                <h1 className="text-sm ">{chat.name}</h1>
+            <section className="grid grid-cols-[1fr_auto] gap-2 ">
+                <h1 className="text-sm  text-nowrap overflow-hidden text-ellipsis ">
+                    {chat.name}
+                </h1>
                 <span className="text-[0.65rem] h-full text-muted-foreground ">
                     {time}
                 </span>

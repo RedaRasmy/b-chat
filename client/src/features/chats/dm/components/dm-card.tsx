@@ -26,7 +26,7 @@ export default function DMCard({ chat }: { chat: DMChat }) {
             className="border relative grid gap-2 gap-y-0 grid-cols-[auto_1fr] grid-rows-[auto_1fr] rounded-md items-center justify-between px-2 py-1 cursor-pointer bg-accent"
         >
             <Avatar
-                className="row-span-2 "
+                className="row-span-2"
                 data={{
                     id: chat.id,
                     name: chatName,
@@ -34,8 +34,10 @@ export default function DMCard({ chat }: { chat: DMChat }) {
                     status,
                 }}
             />
-            <section className="flex justify-between gap-2 items-center">
-                <h1 className="text-sm ">{chatName}</h1>
+            <section className="grid grid-cols-[1fr_auto] gap-2 ">
+                <h1 className="text-sm  text-nowrap overflow-hidden text-ellipsis ">
+                    {chatName}
+                </h1>
                 <span className="text-[0.65rem] h-full text-muted-foreground ">
                     {time}
                 </span>

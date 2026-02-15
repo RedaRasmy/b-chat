@@ -17,7 +17,7 @@ export default function FriendCard({
                 "border-primary border": friend.role === "admin",
             })}
         >
-            <CardContent className="flex justify-between items-center">
+            <CardContent className="flex justify-between items-center gap-1">
                 <div className="grid grid-cols-[auto_1fr] items-center gap-3">
                     <Avatar data={friend} className="size-10" />
                     <h1
