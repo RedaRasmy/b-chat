@@ -2,7 +2,6 @@ import { SocketContext } from "@/features/chats/socket-context"
 import { useEffect, useState, type ReactNode } from "react"
 import { io, Socket } from "socket.io-client"
 import { useQueryClient } from "@tanstack/react-query"
-import type { Member } from "@bchat/types"
 import { toast } from "sonner"
 
 export default function SocketProvider({ children }: { children: ReactNode }) {
@@ -52,51 +51,10 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
             toast.info(`${userName} accepted your friend request`)
         }
 
-        function handleNewMembers() {
-            console.log("new members")
-            queryClient.invalidateQueries({
-                queryKey: ["chats"],
-            })
-        }
-        function handleMemberLeft(data: { userId: string; userName: string }) {
-            console.log("member left : ", data)
-            queryClient.invalidateQueries({
-                queryKey: ["chats"],
-            })
-        }
-        function handleMemberDeleted(data: {
-            userId: string
-            userName: string
-        }) {
-            console.log("member deleted : ", data)
-            queryClient.invalidateQueries({
-                queryKey: ["chats"],
-            })
-        }
-        function handleRoleChanged(data: {
-            userId: string
-            userName: string
-            oldRole: Member["role"]
-            newRole: Member["role"]
-        }) {
-            console.log("role changed : ", data)
-            queryClient.invalidateQueries({
-                queryKey: ["chats"],
-            })
-        }
-
-        socket.on("role_changed", handleRoleChanged)
-        socket.on("member_left", handleMemberLeft)
-        socket.on("member_deleted", handleMemberDeleted)
-        socket.on("new_members", handleNewMembers)
         socket.on("request_accepted", handleRequestAccepted)
         socket.on("friend_request", handleFriendRequest)
 
         return () => {
-            socket.off("role_changed", handleRoleChanged)
-            socket.off("member_left", handleMemberLeft)
-            socket.off("member_deleted", handleMemberDeleted)
-            socket.off("new_members", handleNewMembers)
             socket.off("request_accepted", handleRequestAccepted)
             socket.off("friend_request", handleFriendRequest)
         }
