@@ -1,3 +1,4 @@
+import { ActionButton } from "@/components/action-button"
 import { Button } from "@/components/ui/button"
 import { unfriend } from "@/features/friendships/requests"
 import { UserMinus01Icon } from "@hugeicons/core-free-icons"
@@ -21,16 +22,21 @@ export default function UnfriendButton({
         },
     })
     return (
-        <Button
-            disabled={unfriendMutation.isPending}
-            onClick={() => {
+        <ActionButton
+            action={() => {
                 unfriendMutation.mutate(friendshipId)
             }}
-            variant={"destructive"}
-            className={className}
-        >
-            <HugeiconsIcon icon={UserMinus01Icon} />
-            unfriend
-        </Button>
+            requireAreYouSure
+            triggerElement={
+                <Button
+                    disabled={unfriendMutation.isPending}
+                    variant={"destructive"}
+                    className={className}
+                >
+                    <HugeiconsIcon icon={UserMinus01Icon} />
+                    unfriend
+                </Button>
+            }
+        />
     )
 }
