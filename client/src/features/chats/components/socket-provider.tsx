@@ -1,5 +1,5 @@
 import { SocketContext } from "@/features/chats/socket-context"
-import { useEffect, useState, type ReactNode } from "react"
+import { useEffect, useMemo, useState, type ReactNode } from "react"
 import { io, Socket } from "socket.io-client"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useParams } from "react-router-dom"
@@ -62,13 +62,41 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
         queryFn: fetchChats,
     })
 
+    const ids = useMemo(() => chats.map((c) => c.id), [chats])
+
     useEffect(() => {
         function handleNewMessage(msg: ChatMessage) {
             console.log("new msg :", msg)
 
-            queryClient.invalidateQueries({
-                queryKey: ["chats"],
-            })
+            if (ids.includes(msg.channelId)) {
+                queryClient.setQueryData(["chats"], (old: Channels = []) =>
+                    old.map((chat) =>
+                        chat.id === msg.channelId
+                            ? {
+                                  ...chat,
+                                  lastMessage: {
+                                      ...msg,
+                                      receipts:
+                                          chat.id === currentChannelId
+                                              ? msg.receipts.map((r) =>
+                                                    r.userId === user.id
+                                                        ? {
+                                                              ...r,
+                                                              seenAt: new Date(),
+                                                          }
+                                                        : r,
+                                                )
+                                              : msg.receipts,
+                                  },
+                              }
+                            : chat,
+                    ),
+                )
+            } else {
+                queryClient.invalidateQueries({
+                    queryKey: ["chats"],
+                })
+            }
 
             const isChatOpen = msg.channelId === currentChannelId
             const chat = chats.find((c) => c.id === msg.channelId)
@@ -155,12 +183,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
             channelId,
             userId,
         }: ChatSeenData) {
-            console.log("chat is seen", {
-                messageId,
-                seenAt,
-                userId,
-                channelId,
-            })
+            console.log("chat is seen")
             queryClient.setQueryData(
                 ["messages", channelId],
                 (old: ChatMessage[] = []) =>
@@ -283,7 +306,7 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
             socket.off("chat_seen", handleSeenChat)
             socket.off("message_deleted", handleDeletedMessage)
         }
-    }, [socket, queryClient, currentChannelId, user, open, chats])
+    }, [socket, queryClient, currentChannelId, user, open, chats, ids])
 
     return (
         <SocketContext.Provider

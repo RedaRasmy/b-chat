@@ -31,6 +31,8 @@ export type MessageDeliveredData = {
     channelId: string
 }
 
+export type SeeChatData = z.infer<typeof SeeChatSchema>
+
 export type ChatSeenData = {
     messageId: string
     userId: string
