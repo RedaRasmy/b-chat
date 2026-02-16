@@ -100,7 +100,7 @@ export function useMessage() {
                 updatedAt: new Date(),
                 status: "sending",
                 receipts: members
-                    .filter((m) => m.id !== user.id)
+                    .filter((m) => m.id !== user.id && m.status === "active")
                     .map((mem) => ({
                         userId: mem.id,
                         messageId: tempId,
