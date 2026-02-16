@@ -1,4 +1,4 @@
-import { io } from "@/server"
+import { emitToUser } from "@/socket"
 import { makeParamsEndpoint, makeSimpleEndpoint } from "@/utils/wrappers"
 import db from "@bchat/database"
 import { friendships } from "@bchat/database/tables"
@@ -150,7 +150,7 @@ export const request = makeParamsEndpoint(
                 })
                 .returning()
 
-            io.to(`user:${targetId}`).emit("friend_request", {
+            emitToUser(targetId, "friend_request", {
                 userName: user.name,
             })
 
@@ -196,7 +196,7 @@ export const accept = makeParamsEndpoint(["id"], async (req, res, next) => {
             })
             .returning()
 
-        io.to(`user:${friendship.requesterId}`).emit("request_accepted", {
+        emitToUser(friendship.requesterId, "request_accepted", {
             userName: friendship.receiver.name,
         })
 

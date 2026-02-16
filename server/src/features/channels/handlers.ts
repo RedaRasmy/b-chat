@@ -1,5 +1,5 @@
 import { getFriendsIds } from "@/queries/get-friends"
-import { getUserSocket } from "@/server"
+import { getUserSocket } from "@/socket"
 import {
     makeBodyEndpoint,
     makeIdBodyEndpoint,

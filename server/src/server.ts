@@ -1,331 +1,274 @@
 import http from "http"
-import express from "express"
-import cors from "cors"
-import { router } from "./router"
-import cookieParser from "cookie-parser"
-import { notFound } from "@/middlewares/not-found"
-import { errorHandler } from "@/middlewares/error-handler"
-import { Server } from "socket.io"
-import { parseCookie } from "cookie"
-import { verifyAccessToken } from "@/lib/jwt"
-import db from "@bchat/database"
-import { messageReceipts, messages, users } from "@bchat/database/tables"
-import { SendMessageData, MessageReceipt } from "@bchat/types"
-import {
-    InsertMessageSchema,
-    GetMessageSchema,
-    MessageSeenSchema,
-    TypingSchema,
-} from "@bchat/shared/validation"
-import { and, eq, exists, inArray, isNull } from "drizzle-orm"
-import { sleep } from "@/utils/sleep"
-import { getFriendsIds } from "@/queries/get-friends"
+import { createApp } from "@/app"
+import { setupSocketIO } from "@/socket"
+import logger from "@/lib/logger"
 
-const app = express()
+const PORT = process.env.PORT || 3000
 
-app.use(cookieParser())
-app.use(express.json())
-
-// CORS
-
-const allowedOrigins = [process.env.FRONTEND_URL ?? "http://localhost:5173"]
-app.use(
-    cors({
-        origin: allowedOrigins,
-        credentials: true,
-    }),
-)
-
-// Routes
-app.use("/api", router)
-app.use(notFound)
-app.use(errorHandler)
-
+const app = createApp()
 const server = http.createServer(app)
-export const io = new Server(server, {
-    cors: {
-        origin: allowedOrigins,
-        credentials: true,
-    },
+setupSocketIO(server)
+
+server.listen(PORT, () => {
+    logger.info(`Server is running on port ${PORT}`)
 })
 
-io.use(async (socket, next) => {
-    const cookieHeader = socket.handshake.headers.cookie
+// export function getUserSocket(userId: string) {
+//     const sockets = Array.from(io.sockets.sockets.values())
+//     return sockets.find((s) => s.user.id === userId)
+// }
 
-    if (!cookieHeader) {
-        return next(new Error("Authentication required"))
-    }
+// io.on("connection", async (socket) => {
+//     const user = socket.user
+//     console.log("a user connected : ", user)
 
-    const { accessToken } = parseCookie(cookieHeader)
+//     await db
+//         .update(users)
+//         .set({
+//             status: "online",
+//         })
+//         .where(eq(users.id, user.id))
 
-    if (!accessToken) {
-        return next(new Error("Authentication required"))
-    }
+//     const channels = await db.query.members.findMany({
+//         where: (members, { eq, and }) =>
+//             and(eq(members.userId, user.id), eq(members.status, "active")),
+//         columns: { channelId: true },
+//     })
 
-    try {
-        const user = verifyAccessToken(accessToken)
-        socket.user = user
-        next()
-    } catch (err) {
-        return next(new Error("Invalid token"))
-    }
-})
+//     channels.forEach(({ channelId }) => {
+//         socket.join(`channel:${channelId}`)
+//     })
 
-io.on("connection", async (socket) => {
-    const user = socket.user
-    console.log("a user connected : ", user)
+//     const friendIds = await getFriendsIds(user.id)
 
-    await db
-        .update(users)
-        .set({
-            status: "online",
-        })
-        .where(eq(users.id, user.id))
+//     socket.join(`user:${user.id}`)
 
-    const channels = await db.query.members.findMany({
-        where: (members, { eq, and }) =>
-            and(eq(members.userId, user.id), eq(members.status, "active")),
-        columns: { channelId: true },
-    })
+//     friendIds.forEach((friendId) => {
+//         io.to(`user:${friendId}`).emit("user_status_changed", {
+//             userId: user.id,
+//             status: "online",
+//             lastSeen: new Date(),
+//         })
+//     })
 
-    channels.forEach(({ channelId }) => {
-        socket.join(`channel:${channelId}`)
-    })
+//     socket.on("send_message", async (msg: SendMessageData, callback) => {
+//         console.log("received msg :", msg)
+//         const result = InsertMessageSchema.safeParse(msg)
 
-    const friendIds = await getFriendsIds(user.id)
+//         if (!result.success) {
+//             throw new Error("Invalid message data")
+//         }
 
-    socket.join(`user:${user.id}`)
+//         const { content, channelId, tempId } = result.data
 
-    friendIds.forEach((friendId) => {
-        io.to(`user:${friendId}`).emit("user_status_changed", {
-            userId: user.id,
-            status: "online",
-            lastSeen: new Date(),
-        })
-    })
+//         try {
+//             const channel = await db.query.channels.findFirst({
+//                 where: (channels, { eq }) => eq(channels.id, channelId),
+//                 with: {
+//                     members: true,
+//                 },
+//             })
+//             if (!channel) throw new Error("Channel not found")
 
-    socket.on("send_message", async (msg: SendMessageData, callback) => {
-        console.log("received msg :", msg)
-        const result = InsertMessageSchema.safeParse(msg)
+//             const member = channel.members.find((mem) => mem.userId === user.id)
 
-        if (!result.success) {
-            throw new Error("Invalid message data")
-        }
+//             if (!member || member.status === "removed") {
+//                 throw new Error("You are not a member")
+//             }
 
-        const { content, channelId, tempId } = result.data
+//             const recipients = channel.members.filter(
+//                 (m) => m.userId !== user.id,
+//             )
 
-        try {
-            const channel = await db.query.channels.findFirst({
-                where: (channels, { eq }) => eq(channels.id, channelId),
-                with: {
-                    members: true,
-                },
-            })
-            if (!channel) throw new Error("Channel not found")
+//             await db.transaction(async (tx) => {
+//                 const [message] = await tx
+//                     .insert(messages)
+//                     .values({
+//                         channelId,
+//                         content,
+//                         senderId: user.id,
+//                     })
+//                     .returning()
 
-            const member = channel.members.find((mem) => mem.userId === user.id)
+//                 let receipts: MessageReceipt[] = []
+//                 // Note: group with 1 member -> 0 recipients
+//                 if (recipients.length > 0) {
+//                     receipts = await tx
+//                         .insert(messageReceipts)
+//                         .values(
+//                             recipients.map((r) => ({
+//                                 messageId: message.id,
+//                                 userId: r.userId,
+//                             })),
+//                         )
+//                         .returning()
+//                 }
 
-            if (!member || member.status === "removed") {
-                throw new Error("You are not a member")
-            }
+//                 await sleep(200)
 
-            const recipients = channel.members.filter(
-                (m) => m.userId !== user.id,
-            )
+//                 // if (Math.random() > 0.5) {
+//                 //     throw Error("test")
+//                 // }
 
-            await db.transaction(async (tx) => {
-                const [message] = await tx
-                    .insert(messages)
-                    .values({
-                        channelId,
-                        content,
-                        senderId: user.id,
-                    })
-                    .returning()
+//                 io.to(`channel:${msg.channelId}`).emit("new_message", {
+//                     ...message,
+//                     receipts,
+//                 })
 
-                let receipts: MessageReceipt[] = []
-                // Note: group with 1 member -> 0 recipients
-                if (recipients.length > 0) {
-                    receipts = await tx
-                        .insert(messageReceipts)
-                        .values(
-                            recipients.map((r) => ({
-                                messageId: message.id,
-                                userId: r.userId,
-                            })),
-                        )
-                        .returning()
-                }
+//                 callback({
+//                     success: true,
+//                     messageId: message.id,
+//                     tempId,
+//                     channelId,
+//                 })
+//             })
+//         } catch (err) {
+//             console.error(err)
+//             callback({
+//                 success: false,
+//                 tempId,
+//                 channelId,
+//             })
+//         }
+//     })
 
-                await sleep(200)
+//     socket.on("get_message", async (data) => {
+//         console.log("message delivered : ", data)
+//         try {
+//             const { channelId, messageId, senderId } =
+//                 GetMessageSchema.parse(data)
 
-                // if (Math.random() > 0.5) {
-                //     throw Error("test")
-                // }
+//             const channel = await db.query.members.findFirst({
+//                 where: (members, { eq, and }) =>
+//                     and(
+//                         eq(members.channelId, channelId),
+//                         eq(members.userId, user.id),
+//                         eq(members.status, "active"),
+//                     ),
+//                 columns: { channelId: true },
+//             })
 
-                io.to(`channel:${msg.channelId}`).emit("new_message", {
-                    ...message,
-                    receipts,
-                })
+//             if (!channel) throw new Error("Channel not found")
 
-                callback({
-                    success: true,
-                    messageId: message.id,
-                    tempId,
-                    channelId,
-                })
-            })
-        } catch (err) {
-            console.error(err)
-            callback({
-                success: false,
-                tempId,
-                channelId,
-            })
-        }
-    })
+//             await db
+//                 .update(messageReceipts)
+//                 .set({ deliveredAt: new Date() })
+//                 .where(
+//                     and(
+//                         eq(messageReceipts.messageId, messageId),
+//                         eq(messageReceipts.userId, user.id),
+//                     ),
+//                 )
 
-    socket.on("get_message", async (data) => {
-        console.log("message delivered : ", data)
-        try {
-            const { channelId, messageId, senderId } =
-                GetMessageSchema.parse(data)
+//             io.to(`user:${senderId}`).emit("message_delivered", {
+//                 messageId,
+//                 receiverId: user.id,
+//                 deliveredAt: new Date(),
+//                 channelId,
+//             })
+//         } catch (err) {
+//             console.error(err)
+//         }
+//     })
 
-            const channel = await db.query.members.findFirst({
-                where: (members, { eq, and }) =>
-                    and(
-                        eq(members.channelId, channelId),
-                        eq(members.userId, user.id),
-                        eq(members.status, "active"),
-                    ),
-                columns: { channelId: true },
-            })
+//     socket.on("see_chat", async (data) => {
+//         try {
+//             const { channelId } = ChatSeenSchema.parse(data)
 
-            if (!channel) throw new Error("Channel not found")
+//             const channel = await db.query.members.findFirst({
+//                 where: (members, { eq, and }) =>
+//                     and(
+//                         eq(members.channelId, channelId),
+//                         eq(members.userId, user.id),
+//                         eq(members.status, "active"),
+//                     ),
+//                 columns: { channelId: true },
+//             })
 
-            await db
-                .update(messageReceipts)
-                .set({ deliveredAt: new Date() })
-                .where(
-                    and(
-                        eq(messageReceipts.messageId, messageId),
-                        eq(messageReceipts.userId, user.id),
-                    ),
-                )
+//             if (!channel) throw new Error("Channel not found")
 
-            io.to(`user:${senderId}`).emit("message_delivered", {
-                messageId,
-                receiverId: user.id,
-                deliveredAt: new Date(),
-                channelId,
-            })
-        } catch (err) {
-            console.error(err)
-        }
-    })
+//             const unreadMessages = await db.query.messages.findMany({
+//                 where: and(
+//                     eq(messages.channelId, channelId),
+//                     exists(
+//                         db
+//                             .select()
+//                             .from(messageReceipts)
+//                             .where(
+//                                 and(
+//                                     eq(messageReceipts.messageId, messages.id),
+//                                     eq(messageReceipts.userId, user.id),
+//                                     isNull(messageReceipts.seenAt),
+//                                 ),
+//                             ),
+//                     ),
+//                 ),
+//             })
 
-    socket.on("see_chat", async (data) => {
-        try {
-            const { channelId } = MessageSeenSchema.parse(data)
+//             await db
+//                 .update(messageReceipts)
+//                 .set({ seenAt: new Date() })
+//                 .where(
+//                     and(
+//                         inArray(
+//                             messageReceipts.messageId,
+//                             unreadMessages.map((m) => m.id),
+//                         ),
+//                         eq(messageReceipts.userId, user.id),
+//                     ),
+//                 )
 
-            const channel = await db.query.members.findFirst({
-                where: (members, { eq, and }) =>
-                    and(
-                        eq(members.channelId, channelId),
-                        eq(members.userId, user.id),
-                        eq(members.status, "active"),
-                    ),
-                columns: { channelId: true },
-            })
+//             unreadMessages.forEach((msg) => {
+//                 io.to(`user:${msg.senderId}`).emit("chat_seen", {
+//                     messageId: msg.id, // what
+//                     userId: user.id, // who
+//                     seenAt: new Date(), // when
+//                     channelId, // where
+//                 })
+//             })
+//         } catch (error) {
+//             console.error(error)
+//         }
+//     })
 
-            if (!channel) throw new Error("Channel not found")
+//     socket.on("send_typing", (data) => {
+//         try {
+//             const { channelId, userId, userName } = TypingSchema.parse(data)
+//             io.to(`channel:${data.channelId}`).emit("new_typing", {
+//                 channelId,
+//                 userId,
+//                 userName,
+//             })
+//         } catch (err) {
+//             console.error(err)
+//         }
+//     })
 
-            const unreadMessages = await db.query.messages.findMany({
-                where: and(
-                    eq(messages.channelId, channelId),
-                    exists(
-                        db
-                            .select()
-                            .from(messageReceipts)
-                            .where(
-                                and(
-                                    eq(messageReceipts.messageId, messages.id),
-                                    eq(messageReceipts.userId, user.id),
-                                    isNull(messageReceipts.seenAt),
-                                ),
-                            ),
-                    ),
-                ),
-            })
+//     socket.on("disconnect", async () => {
+//         console.log(`User disconnected : `, user)
+//         try {
+//             await db
+//                 .update(users)
+//                 .set({
+//                     status: "offline",
+//                     lastSeen: new Date(),
+//                 })
+//                 .where(eq(users.id, user.id))
 
-            await db
-                .update(messageReceipts)
-                .set({ seenAt: new Date() })
-                .where(
-                    and(
-                        inArray(
-                            messageReceipts.messageId,
-                            unreadMessages.map((m) => m.id),
-                        ),
-                        eq(messageReceipts.userId, user.id),
-                    ),
-                )
+//             friendIds.forEach((id) => {
+//                 io.to(`user:${id}`).emit("user_status_changed", {
+//                     userId: user.id,
+//                     status: "offline",
+//                     lastSeen: new Date(),
+//                 })
+//             })
+//         } catch (err) {
+//             console.error(err)
+//         }
+//     })
+// })
 
-            unreadMessages.forEach((msg) => {
-                io.to(`user:${msg.senderId}`).emit("chat_seen", {
-                    messageId: msg.id, // what
-                    userId: user.id, // who
-                    seenAt: new Date(), // when
-                    channelId, // where
-                })
-            })
-        } catch (error) {
-            console.error(error)
-        }
-    })
-
-    socket.on("send_typing", (data) => {
-        try {
-            const { channelId, userId, userName } = TypingSchema.parse(data)
-            io.to(`channel:${data.channelId}`).emit("new_typing", {
-                channelId,
-                userId,
-                userName,
-            })
-        } catch (err) {
-            console.error(err)
-        }
-    })
-
-    socket.on("disconnect", async () => {
-        console.log(`User disconnected : `, user)
-        try {
-            await db
-                .update(users)
-                .set({
-                    status: "offline",
-                    lastSeen: new Date(),
-                })
-                .where(eq(users.id, user.id))
-
-            friendIds.forEach((id) => {
-                io.to(`user:${id}`).emit("user_status_changed", {
-                    userId: user.id,
-                    status: "offline",
-                    lastSeen: new Date(),
-                })
-            })
-        } catch (err) {
-            console.error(err)
-        }
-    })
-})
-
-server.listen(3000, () => {
-    console.log("Server is running on port 3000")
-})
-
-export function getUserSocket(userId: string) {
-    const sockets = Array.from(io.sockets.sockets.values())
-    return sockets.find((s) => s.user.id === userId)
-}
+// export function getUserSocket(userId: string) {
+//     const sockets = Array.from(io.sockets.sockets.values())
+//     return sockets.find((s) => s.user.id === userId)
+// }

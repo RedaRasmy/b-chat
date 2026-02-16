@@ -1,4 +1,4 @@
-import { io } from "@/server"
+import { emitToChannel } from "@/socket"
 import { makeParamsEndpoint } from "@/utils/wrappers"
 import db from "@bchat/database"
 import { messages } from "@bchat/database/tables"
@@ -46,7 +46,7 @@ export const deleteMessage = makeParamsEndpoint(
 
             await db.delete(messages).where(eq(messages.id, id))
 
-            io.to(`channel:${message.channelId}`).emit("message_deleted", {
+            emitToChannel(message.channelId, "message_deleted", {
                 messageId: message.id,
                 channelId: message.channelId,
             })

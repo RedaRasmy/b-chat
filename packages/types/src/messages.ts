@@ -35,6 +35,7 @@ export type MessageAck =
           success: false
           tempId: string
           channelId: string
+          error?: string
       }
 
 export type ClientMessage = Prettify<

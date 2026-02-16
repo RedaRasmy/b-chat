@@ -1,4 +1,4 @@
-import { getUserSocket, io } from "@/server"
+import { emitToChannel, getUserSocket } from "@/socket"
 import { makeEndpoint } from "@/utils/make-endpoint"
 import db from "@bchat/database"
 import { IMember, members } from "@bchat/database/tables"
@@ -86,7 +86,7 @@ export const addMembers = makeEndpoint(
                     )
             }
 
-            io.to(`channel:${channelId}`).emit("new_members")
+            emitToChannel(channelId, "new_members")
 
             res.sendStatus(204)
         } catch (err) {
@@ -170,7 +170,7 @@ export const updateMember = makeEndpoint(
                     ),
                 )
 
-            io.to(`channel:${channelId}`).emit("role_changed", {
+            emitToChannel(channelId, "role_changed", {
                 userId: targetMember.userId,
                 userName: targetMember.user.name,
                 oldRole: targetMember.role,
@@ -249,7 +249,7 @@ export const deleteMember = makeEndpoint(
                     ),
                 )
 
-            io.to(`channel:${channelId}`).emit("member_deleted", {
+            emitToChannel(channelId, "member_deleted", {
                 userId: targetMember.userId,
                 userName: targetMember.user.name,
             })
@@ -329,7 +329,7 @@ export const exitChannel = makeEndpoint(
                 socket.leave(`channel:${channelId}`)
             }
 
-            io.to(`channel:${channelId}`).emit("member_left", {
+            emitToChannel(channelId, "member_left", {
                 userId: member.userId,
                 userName: member.user.name,
             })

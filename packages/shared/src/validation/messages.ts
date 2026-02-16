@@ -12,7 +12,7 @@ export const GetMessageSchema = z.object({
     senderId: z.uuid(),
 })
 
-export const MessageSeenSchema = z.object({
+export const SeeChatSchema = z.object({
     channelId: z.uuid(),
 })
 
@@ -23,13 +23,13 @@ export const TypingSchema = z.object({
 })
 
 export type GetMessageData = z.infer<typeof GetMessageSchema>
+
 export type MessageDeliveredData = {
     messageId: string
     receiverId: string
     deliveredAt: Date
     channelId: string
 }
-export type SeeChatData = z.infer<typeof MessageSeenSchema>
 
 export type ChatSeenData = {
     messageId: string

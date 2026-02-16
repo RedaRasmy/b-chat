@@ -155,7 +155,12 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
             channelId,
             userId,
         }: ChatSeenData) {
-            console.log("chat is seen")
+            console.log("chat is seen", {
+                messageId,
+                seenAt,
+                userId,
+                channelId,
+            })
             queryClient.setQueryData(
                 ["messages", channelId],
                 (old: ChatMessage[] = []) =>
@@ -163,7 +168,6 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
                         if (msg.id !== messageId) return msg
                         return {
                             ...msg,
-                            seenAt,
                             receipts: msg.receipts
                                 ? msg.receipts.map((rec) =>
                                       rec.userId === userId
