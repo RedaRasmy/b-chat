@@ -1,4 +1,4 @@
-import { getUsers } from "@/features/users/handlers"
+import { getUsers } from "@/features/users/controller"
 import { Router } from "express"
 
 const router = Router()
