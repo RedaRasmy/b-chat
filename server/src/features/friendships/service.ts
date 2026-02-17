@@ -4,7 +4,7 @@ import { friendships } from "@bchat/database/tables"
 import { Friend } from "@bchat/types"
 import { and, eq, isNull, or } from "drizzle-orm"
 
-export class FriendService {
+class FriendService {
     async getFriendsIds(userId: string) {
         const userFriendships = await db.query.friendships.findMany({
             where: (fr, { eq, or }) =>

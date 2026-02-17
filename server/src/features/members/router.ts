@@ -3,7 +3,7 @@ import {
     deleteMember,
     exitChannel,
     updateMember,
-} from "@/features/members/handlers"
+} from "@/features/members/controller"
 import { Router } from "express"
 
 const router = Router()
