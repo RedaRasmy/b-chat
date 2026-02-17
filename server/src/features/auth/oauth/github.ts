@@ -1,13 +1,13 @@
 import { eq } from "drizzle-orm"
 import db from "@bchat/database"
-import { makeSimpleEndpoint } from "@/utils/wrappers"
 import { accessTokenOptions, refreshTokenOptions } from "../options"
 import { refreshTokens, users } from "@bchat/database/tables"
 import { generateAccessToken } from "@/lib/jwt"
 import { generateToken } from "@/utils/generate-token"
 import { MONTH } from "@/utils/periods"
+import { makeEndpoint } from "@/utils/make-endpoint"
 
-export const githubLogin = makeSimpleEndpoint(async (req, res) => {
+export const githubLogin = makeEndpoint(async (req, res) => {
     const params = new URLSearchParams({
         client_id: process.env.GITHUB_CLIENT_ID!,
         redirect_uri: process.env.GITHUB_CALLBACK_URL!,
@@ -19,7 +19,7 @@ export const githubLogin = makeSimpleEndpoint(async (req, res) => {
     res.redirect(githubAuthUrl)
 })
 
-export const githubCallback = makeSimpleEndpoint(async (req, res, next) => {
+export const githubCallback = makeEndpoint(async (req, res, next) => {
     const { code } = req.query
 
     try {

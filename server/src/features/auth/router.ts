@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { register, login, refresh, logout, fetchMe } from "./handlers"
+import { register, login, refresh, logout, fetchMe } from "./controller"
 import { requireAuth } from "@/middlewares/require-auth"
 import { githubCallback, githubLogin } from "./oauth/github"
 import { googleCallback, googleLogin } from "./oauth/google"

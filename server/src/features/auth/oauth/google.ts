@@ -1,13 +1,13 @@
 import { eq } from "drizzle-orm"
 import { accessTokenOptions, refreshTokenOptions } from "../options"
-import { makeSimpleEndpoint } from "@/utils/wrappers"
 import { refreshTokens, users } from "@bchat/database/tables"
 import db from "@bchat/database"
 import { generateAccessToken } from "@/lib/jwt"
 import { generateToken } from "@/utils/generate-token"
 import { MONTH } from "@/utils/periods"
+import { makeEndpoint } from "@/utils/make-endpoint"
 
-export const googleLogin = makeSimpleEndpoint(async (req, res) => {
+export const googleLogin = makeEndpoint(async (req, res) => {
     const params = new URLSearchParams({
         client_id: process.env.GOOGLE_CLIENT_ID!,
         redirect_uri: process.env.GOOGLE_CALLBACK_URL!,
@@ -20,7 +20,7 @@ export const googleLogin = makeSimpleEndpoint(async (req, res) => {
     res.redirect(googleAuthUrl)
 })
 
-export const googleCallback = makeSimpleEndpoint(async (req, res, next) => {
+export const googleCallback = makeEndpoint(async (req, res, next) => {
     const { code } = req.query
 
     try {
