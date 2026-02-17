@@ -145,4 +145,11 @@ export const postService = {
 
         return comment
     },
+
+    async getUserPosts(userId: string) {
+        return await db.query.posts.findMany({
+            where: (posts, { eq }) => eq(posts.authorId, userId),
+            orderBy: desc(posts.createdAt),
+        })
+    },
 }

@@ -4,7 +4,7 @@ import {
     getMyPosts,
     getProfile,
     updateProfile,
-} from "./handlers"
+} from "./controller"
 
 const router = Router()
 
