@@ -1,8 +1,8 @@
 import { Socket, Server } from "socket.io"
 import { userService } from "@/services/user.service"
-import { channelService } from "@/services/channel.service"
 import { SOCKET_EVENTS } from "../events"
 import logger from "@/lib/logger"
+import { channelService } from "@/features/channels/service"
 
 export async function handleConnection(io: Server, socket: Socket) {
     const user = socket.user
@@ -15,7 +15,7 @@ export async function handleConnection(io: Server, socket: Socket) {
     socket.join(`user:${user.id}`)
 
     // Join channel rooms
-    const channels = await channelService.getUserChannels(user.id)
+    const channels = await channelService.getUserChannelsIds(user.id)
     channels.forEach(({ channelId }) => {
         socket.join(`channel:${channelId}`)
     })

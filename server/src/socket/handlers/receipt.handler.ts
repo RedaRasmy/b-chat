@@ -1,9 +1,9 @@
 import { Socket, Server } from "socket.io"
 import { GetMessageSchema, SeeChatSchema } from "@bchat/shared/validation"
-import { channelService } from "@/services/channel.service"
 import { SOCKET_EVENTS } from "../events"
 import logger from "@/lib/logger"
 import { messageService } from "@/features/messages/service"
+import { channelService } from "@/features/channels/service"
 
 export function handleGetMessage(io: Server, socket: Socket) {
     return async (data: any) => {

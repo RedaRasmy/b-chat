@@ -1,10 +1,10 @@
 import { Socket, Server } from "socket.io"
 import { MessageAck, SendMessageData } from "@bchat/types"
 import { InsertMessageSchema } from "@bchat/shared/validation"
-import { channelService } from "@/services/channel.service"
 import { sleep } from "@/utils/sleep"
 import { SOCKET_EVENTS } from "../events"
 import { messageService } from "@/features/messages/service"
+import { channelService } from "@/features/channels/service"
 
 export function handleSendMessage(io: Server, socket: Socket) {
     return async (
