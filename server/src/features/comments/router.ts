@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { updateComment, deleteComment } from "@/features/comments/handlers"
+import { updateComment, deleteComment } from "@/features/comments/controller"
 
 const router = Router()
 
