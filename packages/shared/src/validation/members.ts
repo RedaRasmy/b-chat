@@ -21,4 +21,7 @@ export type MemberDeletedData = {
     userName: string
 }
 
-export type MemberLeftData = MemberDeletedData
+export type MemberLeftData = {
+    userId: string
+    userName: string
+}

@@ -21,10 +21,10 @@ export function useSocketListener<T extends ServerEvent>(
             handlerRef.current(data)
         }
 
-        socket.on(event as any, stableHandler as any)
+        socket.on(event, stableHandler as any)
 
         return () => {
-            socket.off(event as any, stableHandler as any)
+            socket.off(event, stableHandler as any)
         }
     }, [socket, event])
 }
