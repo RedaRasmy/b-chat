@@ -11,7 +11,7 @@ import {
 } from "@bchat/database/tables"
 import { asc, desc, eq } from "drizzle-orm"
 
-export class ChannelService {
+export const channelService = {
     async updateGroup({
         channelId,
         userId,
@@ -49,7 +49,7 @@ export class ChannelService {
                 name,
             })
             .where(eq(groups.channelId, channelId))
-    }
+    },
 
     async deleteChannel(channelId: string, userId: string) {
         const channel = await db.query.channels.findFirst({
@@ -74,7 +74,7 @@ export class ChannelService {
         }
 
         await db.delete(channels).where(eq(channels.id, channelId))
-    }
+    },
 
     async getChannelMessages(channelId: string, userId: string) {
         const member = await db.query.members.findFirst({
@@ -99,7 +99,7 @@ export class ChannelService {
         if (!member) throw new NotFoundError("Channel not found")
 
         return member.channel.messages
-    }
+    },
     async createDM(userId: string, friendId: string) {
         const friendsIds = await friendService.getFriendsIds(userId)
         if (!friendsIds.includes(friendId)) {
@@ -130,7 +130,7 @@ export class ChannelService {
 
             return dm
         })
-    }
+    },
 
     async createGroup({
         name,
@@ -177,7 +177,7 @@ export class ChannelService {
                 members: validMembers,
             }
         })
-    }
+    },
 
     async getUserChannels(userId: string) {
         return await db.query.members.findMany({
@@ -216,7 +216,7 @@ export class ChannelService {
                 },
             },
         })
-    }
+    },
 
     async getUserChannelsIds(userId: string) {
         return await db.query.members.findMany({
@@ -224,7 +224,7 @@ export class ChannelService {
                 and(eq(members.userId, userId), eq(members.status, "active")),
             columns: { channelId: true },
         })
-    }
+    },
 
     async getChannelWithMembers(channelId: string) {
         return await db.query.channels.findFirst({
@@ -235,7 +235,7 @@ export class ChannelService {
                 },
             },
         })
-    }
+    },
 
     async verifyUserInChannel(channelId: string, userId: string) {
         return await db.query.members.findFirst({
@@ -247,7 +247,5 @@ export class ChannelService {
                 ),
             columns: { channelId: true },
         })
-    }
+    },
 }
-
-export const channelService = new ChannelService()

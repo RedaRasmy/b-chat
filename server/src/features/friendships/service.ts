@@ -4,7 +4,7 @@ import { friendships } from "@bchat/database/tables"
 import { Friend } from "@bchat/types"
 import { and, eq, isNull, or } from "drizzle-orm"
 
-class FriendService {
+export const friendService = {
     async getFriendsIds(userId: string) {
         const userFriendships = await db.query.friendships.findMany({
             where: (fr, { eq, or }) =>
@@ -17,7 +17,7 @@ class FriendService {
         return userFriendships.map((fr) =>
             fr.requesterId === userId ? fr.receiverId : fr.requesterId,
         )
-    }
+    },
 
     async request(userId: string, targetId: string) {
         const [friendship] = await db
@@ -29,7 +29,7 @@ class FriendService {
             .returning()
 
         return friendship
-    }
+    },
 
     async accept(userId: string, friendshipId: string) {
         const friendship = await db.query.friendships.findFirst({
@@ -64,7 +64,7 @@ class FriendService {
             userName: friendship.receiver.name,
             friendship: newFriendship,
         }
-    }
+    },
 
     async getBlocked(userId: string) {
         return await db.query.friendships.findMany({
@@ -75,7 +75,7 @@ class FriendService {
                     eq(fr.blockedBy, userId),
                 ),
         })
-    }
+    },
 
     async getFriends(userId: string) {
         const data = await db.query.friendships.findMany({
@@ -118,7 +118,7 @@ class FriendService {
             }
         })
         return friends
-    }
+    },
 
     async block(userId: string, friendshipId: string) {
         const friendship = await db.query.friendships.findFirst({
@@ -146,7 +146,7 @@ class FriendService {
             .returning()
 
         return newFriendship
-    }
+    },
 
     async remove(userId: string, friendshipId: string) {
         const result = await db.delete(friendships).where(
@@ -167,7 +167,7 @@ class FriendService {
         if (result.rowCount === 0) {
             throw new ForbiddenError("Action not allowed")
         }
-    }
+    },
 
     async getSentRequests(userId: string) {
         return await db.query.friendships.findMany({
@@ -184,7 +184,7 @@ class FriendService {
                 },
             },
         })
-    }
+    },
 
     async getReceivedRequests(userId: string) {
         return await db.query.friendships.findMany({
@@ -201,7 +201,5 @@ class FriendService {
                 },
             },
         })
-    }
+    },
 }
-
-export const friendService = new FriendService()

@@ -5,7 +5,7 @@ import { canDeleteMessage } from "@bchat/shared/permissions"
 import { ChatMessage } from "@bchat/types"
 import { and, eq, exists, inArray, isNull } from "drizzle-orm"
 
-export class MessageService {
+export const messageService = {
     async deleteMessageWithAuth(messageId: string, userId: string) {
         const message = await db.query.messages.findFirst({
             where: eq(messages.id, messageId),
@@ -46,11 +46,11 @@ export class MessageService {
             messageId: message.id,
             channelId: message.channelId,
         }
-    }
+    },
 
     async deleteMessage(messageId: string) {
         await db.delete(messages).where(eq(messages.id, messageId))
-    }
+    },
 
     async createMessage({
         channelId,
@@ -88,7 +88,7 @@ export class MessageService {
 
             return { ...message, receipts } satisfies ChatMessage
         })
-    }
+    },
 
     async markAsDelivered(messageId: string, userId: string) {
         return await db
@@ -100,7 +100,7 @@ export class MessageService {
                     eq(messageReceipts.userId, userId),
                 ),
             )
-    }
+    },
 
     async getUnreadMessages(channelId: string, userId: string) {
         return await db.query.messages.findMany({
@@ -120,7 +120,7 @@ export class MessageService {
                 ),
             ),
         })
-    }
+    },
 
     async markMessagesAsSeen(messageIds: string[], userId: string) {
         return await db
@@ -132,7 +132,5 @@ export class MessageService {
                     eq(messageReceipts.userId, userId),
                 ),
             )
-    }
+    },
 }
-
-export const messageService = new MessageService()

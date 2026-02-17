@@ -5,7 +5,7 @@ import { Member, members } from "@bchat/database/tables"
 import { IMember } from "@bchat/types"
 import { and, eq, inArray } from "drizzle-orm"
 
-class MemberService {
+export const memberService = {
     async createMember({
         userId,
         channelId,
@@ -58,7 +58,7 @@ class MemberService {
                     ),
                 )
         }
-    }
+    },
 
     async updateMember({
         userId,
@@ -124,7 +124,7 @@ class MemberService {
         return {
             oldMember: targetMember,
         }
-    }
+    },
 
     async getGroupMembersWithNames(channelId: string) {
         return await db.query.channels.findFirst({
@@ -142,7 +142,7 @@ class MemberService {
                 },
             },
         })
-    }
+    },
 
     async deleteMember({
         userId,
@@ -189,7 +189,7 @@ class MemberService {
             )
 
         return targetMember
-    }
+    },
 
     async exitGroup(userId: string, channelId: string) {
         const group = await this.getGroupMembersWithNames(channelId)
@@ -219,7 +219,5 @@ class MemberService {
             )
 
         return member
-    }
+    },
 }
-
-export const memberService = new MemberService()

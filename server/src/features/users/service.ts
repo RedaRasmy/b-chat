@@ -3,7 +3,7 @@ import db from "@bchat/database"
 import { users } from "@bchat/database/tables"
 import { eq } from "drizzle-orm"
 
-export class UserService {
+export const userService = {
     async updateStatus(userId: string, status: "online" | "offline") {
         return await db
             .update(users)
@@ -12,7 +12,7 @@ export class UserService {
                 ...(status === "offline" && { lastSeen: new Date() }),
             })
             .where(eq(users.id, userId))
-    }
+    },
 
     async getUsers({ userId, search }: { userId: string; search?: string }) {
         return await db.query.users.findMany({
@@ -33,7 +33,7 @@ export class UserService {
             },
             limit: 20,
         })
-    }
+    },
 
     async getUserName(userId: string) {
         const user = await db.query.users.findFirst({
@@ -46,7 +46,5 @@ export class UserService {
             throw new NotFoundError("User not found")
         }
         return user.name
-    }
+    },
 }
-
-export const userService = new UserService()
