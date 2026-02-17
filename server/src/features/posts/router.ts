@@ -7,7 +7,7 @@ import {
     getPostComments,
     getPosts,
     updatePost,
-} from "./handlers"
+} from "./controller"
 
 const router = Router()
 
