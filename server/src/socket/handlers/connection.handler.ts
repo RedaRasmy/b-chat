@@ -2,8 +2,8 @@ import { Socket, Server } from "socket.io"
 import { SOCKET_EVENTS } from "../events"
 import logger from "@/lib/logger"
 import { channelService } from "@/features/channels/service"
-import { getFriendsIds } from "@/queries/get-friends"
 import { userService } from "@/features/users/service"
+import { friendService } from "@/features/friendships/service"
 
 export async function handleConnection(io: Server, socket: Socket) {
     const user = socket.user
@@ -18,7 +18,7 @@ export async function handleConnection(io: Server, socket: Socket) {
         socket.join(`channel:${channelId}`)
     })
 
-    const friendIds = await getFriendsIds(user.id)
+    const friendIds = await friendService.getFriendsIds(user.id)
     friendIds.forEach((friendId) => {
         io.to(`user:${friendId}`).emit(SOCKET_EVENTS.USER_STATUS_CHANGED, {
             userId: user.id,
@@ -35,7 +35,7 @@ export async function handleDisconnection(io: Server, socket: Socket) {
     try {
         await userService.updateStatus(user.id, "offline")
 
-        const friendIds = await getFriendsIds(user.id)
+        const friendIds = await friendService.getFriendsIds(user.id)
         friendIds.forEach((friendId) => {
             io.to(`user:${friendId}`).emit(SOCKET_EVENTS.USER_STATUS_CHANGED, {
                 userId: user.id,

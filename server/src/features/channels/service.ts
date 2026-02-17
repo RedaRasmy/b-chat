@@ -1,5 +1,5 @@
 import { ForbiddenError, NotFoundError } from "@/errors"
-import { getFriendsIds } from "@/queries/get-friends"
+import { friendService } from "@/features/friendships/service"
 import db from "@bchat/database"
 import {
     channels,
@@ -101,7 +101,7 @@ export class ChannelService {
         return member.channel.messages
     }
     async createDM(userId: string, friendId: string) {
-        const friendsIds = await getFriendsIds(userId)
+        const friendsIds = await friendService.getFriendsIds(userId)
         if (!friendsIds.includes(friendId)) {
             throw new ForbiddenError("You are not friends")
         }
@@ -141,7 +141,7 @@ export class ChannelService {
         membersIds: string[]
         userId: string
     }) {
-        const friends = await getFriendsIds(userId)
+        const friends = await friendService.getFriendsIds(userId)
 
         const validMembers = membersIds.filter((id) => friends.includes(id))
 

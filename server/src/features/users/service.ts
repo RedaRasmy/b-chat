@@ -1,3 +1,4 @@
+import { NotFoundError } from "@/errors"
 import db from "@bchat/database"
 import { users } from "@bchat/database/tables"
 import { eq } from "drizzle-orm"
@@ -32,6 +33,19 @@ export class UserService {
             },
             limit: 20,
         })
+    }
+
+    async getUserName(userId: string) {
+        const user = await db.query.users.findFirst({
+            where: (users, { eq }) => eq(users.id, userId),
+            columns: {
+                name: true,
+            },
+        })
+        if (!user) {
+            throw new NotFoundError("User not found")
+        }
+        return user.name
     }
 }
 

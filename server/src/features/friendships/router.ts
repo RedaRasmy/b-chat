@@ -7,7 +7,7 @@ import {
     block,
     request,
     remove,
-} from "@/features/friendships/handlers"
+} from "@/features/friendships/controller"
 import { Router } from "express"
 
 const router = Router()

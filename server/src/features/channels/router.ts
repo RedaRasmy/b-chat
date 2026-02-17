@@ -5,7 +5,7 @@ import {
     createGroup,
     deleteChannel,
     updateGroup,
-} from "@/features/channels/handlers"
+} from "@/features/channels/controller"
 import { Router } from "express"
 
 const router = Router()
