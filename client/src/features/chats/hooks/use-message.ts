@@ -2,12 +2,7 @@ import { useUser } from "@/features/auth/use-user"
 import { useChat } from "@/features/chats/hooks/use-chat"
 import { deleteMessage } from "@/features/chats/requests"
 import { useSocket } from "@/features/chats/use-socket"
-import type {
-    Channels,
-    ClientMessage,
-    MessageAck,
-    SendMessageData,
-} from "@bchat/types"
+import type { Channels, ClientMessage, MessageAck } from "@bchat/types"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useCallback } from "react"
 
@@ -119,8 +114,8 @@ export function useMessage() {
                     channelId: channelId,
                     content: msg,
                     tempId,
-                } satisfies SendMessageData,
-                (res: MessageAck) => {
+                },
+                (res) => {
                     handleAck(tempMessage, res)
                 },
             )
@@ -170,8 +165,8 @@ export function useMessage() {
                     tempId: message.id,
                     channelId: message.channelId,
                     content: message.content,
-                } satisfies SendMessageData,
-                (res: MessageAck) => {
+                },
+                (res) => {
                     handleAck(message, res)
                 },
             )

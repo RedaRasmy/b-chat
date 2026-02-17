@@ -1,11 +1,10 @@
-import { Socket, Server } from "socket.io"
 import { GetMessageSchema, SeeChatSchema } from "@bchat/shared/validation"
-import { SOCKET_EVENTS } from "../events"
 import logger from "@/lib/logger"
 import { messageService } from "@/features/messages/service"
 import { channelService } from "@/features/channels/service"
+import { TypedServer, TypedSocket } from "@/socket"
 
-export function handleGetMessage(io: Server, socket: Socket) {
+export function handleGetMessage(io: TypedServer, socket: TypedSocket) {
     return async (data: any) => {
         logger.info("Message delivered:", data)
 
@@ -24,7 +23,7 @@ export function handleGetMessage(io: Server, socket: Socket) {
 
             await messageService.markAsDelivered(messageId, user.id)
 
-            io.to(`user:${senderId}`).emit(SOCKET_EVENTS.MESSAGE_DELIVERED, {
+            io.to(`user:${senderId}`).emit("message_delivered", {
                 messageId,
                 receiverId: user.id,
                 deliveredAt: new Date(),
@@ -36,7 +35,7 @@ export function handleGetMessage(io: Server, socket: Socket) {
     }
 }
 
-export function handleSeeChat(io: Server, socket: Socket) {
+export function handleSeeChat(io: TypedServer, socket: TypedSocket) {
     return async (data: any) => {
         try {
             const { channelId } = SeeChatSchema.parse(data)
@@ -62,15 +61,12 @@ export function handleSeeChat(io: Server, socket: Socket) {
                 )
 
                 unreadMessages.forEach((msg) => {
-                    io.to(`user:${msg.senderId}`).emit(
-                        SOCKET_EVENTS.CHAT_SEEN,
-                        {
-                            messageId: msg.id,
-                            userId: user.id,
-                            seenAt: new Date(),
-                            channelId,
-                        },
-                    )
+                    io.to(`user:${msg.senderId}`).emit("chat_seen", {
+                        messageId: msg.id,
+                        userId: user.id,
+                        seenAt: new Date(),
+                        channelId,
+                    })
                 })
             }
         } catch (error) {

@@ -1,5 +1,5 @@
 import { useSocket } from "@/features/chats/use-socket"
-import type { Channels, Friend, StatusChangeData } from "@bchat/types"
+import type { Channels, Friend, StatusChangedData } from "@bchat/types"
 import { useQueryClient } from "@tanstack/react-query"
 import { useEffect } from "react"
 
@@ -8,7 +8,7 @@ export default function usePresenceListener() {
     const queryClient = useQueryClient()
 
     useEffect(() => {
-        function statusChangeHandler(data: StatusChangeData) {
+        function statusChangeHandler(data: StatusChangedData) {
             console.log("user-status changed : ", data)
             queryClient.setQueryData(["friends"], (old: Friend[] = []) => {
                 return old.map((friend) => {

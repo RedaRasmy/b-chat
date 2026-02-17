@@ -1,9 +1,15 @@
 import { SocketContext } from "@/features/chats/socket-context"
 import { useEffect, useState, type ReactNode } from "react"
 import { io, Socket } from "socket.io-client"
+import type {
+    ServerToClientEvents,
+    ClientToServerEvents,
+} from "@bchat/shared/events"
+
+export type ClientSocket = Socket<ServerToClientEvents, ClientToServerEvents>
 
 export default function SocketProvider({ children }: { children: ReactNode }) {
-    const [socket] = useState<Socket>(() => {
+    const [socket] = useState<ClientSocket>(() => {
         const newSocket = io("ws://localhost:3000", {
             withCredentials: true,
         })

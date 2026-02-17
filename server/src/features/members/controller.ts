@@ -25,7 +25,7 @@ export const addMembers = makeEndpoint(
                 membersIds,
             })
 
-            emitToChannel(channelId, "new_members")
+            emitToChannel(channelId, "new_members", null)
 
             res.sendStatus(204)
         } catch (err) {

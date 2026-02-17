@@ -7,18 +7,12 @@ export type ChatMessage = Prettify<
     }
 >
 
-export type SendMessageData = {
-    channelId: string
-    content: string
-    tempId: string
-}
-
 export type MessageDeletedData = {
     channelId: string
     messageId: string
 }
 
-export type TypingData = {
+export type NewTypingData = {
     channelId: string
     userName: string
     userId: string
@@ -43,3 +37,17 @@ export type ClientMessage = Prettify<
         status?: "sending" | "failed" | "sent"
     }
 >
+
+export type MessageDeliveredData = {
+    messageId: string
+    receiverId: string
+    deliveredAt: Date
+    channelId: string
+}
+
+export type ChatSeenData = {
+    messageId: string
+    userId: string
+    seenAt: Date
+    channelId: string
+}

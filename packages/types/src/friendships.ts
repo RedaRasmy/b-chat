@@ -14,3 +14,6 @@ export type Friend = Prettify<
             friendshipId: Friendship["id"]
         }
 >
+
+export type FriendRequestData = { userName: string }
+export type RequestAcceptedData = { userName: string }

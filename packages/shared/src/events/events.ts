@@ -3,7 +3,7 @@ export const CLIENT_EVENTS = {
     GET_MESSAGE: "get_message",
     SEE_CHAT: "see_chat",
     SEND_TYPING: "send_typing",
-}
+} as const
 
 export const SERVER_EVENTS = {
     NEW_MESSAGE: "new_message",
@@ -25,11 +25,8 @@ export const SOCKET_EVENTS = {
     ...SERVER_EVENTS,
 } as const
 
-export type Events = typeof SOCKET_EVENTS
-export type Event = Events[keyof Events]
-
-export type ServerEvents = typeof SERVER_EVENTS
+type ServerEvents = typeof SERVER_EVENTS
 export type ServerEvent = ServerEvents[keyof ServerEvents]
 
-export type ClientEvents = typeof CLIENT_EVENTS
+type ClientEvents = typeof CLIENT_EVENTS
 export type ClientEvent = ClientEvents[keyof ClientEvents]

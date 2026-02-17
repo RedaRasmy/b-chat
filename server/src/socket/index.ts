@@ -1,8 +1,7 @@
 import { Server as HTTPServer } from "http"
-import { Server as SocketIOServer } from "socket.io"
+import { Server as SocketIOServer, Socket } from "socket.io"
 import { allowedOrigins } from "../app"
 import { socketAuthMiddleware } from "./middlewares/auth"
-import { CLIENT_EVENTS, ServerEvent, SOCKET_EVENTS } from "./events"
 import {
     handleConnection,
     handleDisconnection,
@@ -10,8 +9,21 @@ import {
 import { handleSendMessage } from "./handlers/message.handler"
 import { handleGetMessage, handleSeeChat } from "./handlers/receipt.handler"
 import { handleTyping } from "./handlers/typing.handler"
+import {
+    CLIENT_EVENTS,
+    ClientToServerEvents,
+    ServerEvent,
+    ServerPayloads,
+    ServerToClientEvents,
+} from "@bchat/shared/events"
 
-let io: SocketIOServer
+export type TypedServer = SocketIOServer<
+    ClientToServerEvents,
+    ServerToClientEvents
+>
+export type TypedSocket = Socket<ClientToServerEvents, ServerToClientEvents>
+
+let io: TypedServer
 
 export function setupSocketIO(server: HTTPServer) {
     io = new SocketIOServer(server, {
@@ -26,10 +38,10 @@ export function setupSocketIO(server: HTTPServer) {
     io.on("connection", async (socket) => {
         await handleConnection(io, socket)
 
-        socket.on(CLIENT_EVENTS.SEND_MESSAGE, handleSendMessage(io, socket))
-        socket.on(CLIENT_EVENTS.GET_MESSAGE, handleGetMessage(io, socket))
-        socket.on(CLIENT_EVENTS.SEE_CHAT, handleSeeChat(io, socket))
-        socket.on(CLIENT_EVENTS.SEND_TYPING, handleTyping(io, socket))
+        socket.on("send_message", handleSendMessage(io, socket))
+        socket.on("get_message", handleGetMessage(io, socket))
+        socket.on("see_chat", handleSeeChat(io, socket))
+        socket.on("send_typing", handleTyping(io, socket))
         socket.on("disconnect", () => handleDisconnection(io, socket))
     })
 
@@ -48,14 +60,22 @@ export function getUserSocket(userId: string) {
     return sockets.find((s) => s.user.id === userId)
 }
 
-export function emitToUser(userId: string, event: ServerEvent, data?: any) {
-    getIO().to(`user:${userId}`).emit(event, data)
+function getTypedIO() {
+    return getIO() as any
 }
 
-export function emitToChannel(
-    channelId: string,
-    event: ServerEvent,
-    data?: any,
+export function emitToUser<T extends ServerEvent>(
+    userId: string,
+    event: T,
+    data: ServerPayloads[T],
 ) {
-    getIO().to(`channel:${channelId}`).emit(event, data)
+    getTypedIO().to(`user:${userId}`).emit(event, data)
+}
+
+export function emitToChannel<T extends ServerEvent>(
+    channelId: string,
+    event: T,
+    data: ServerPayloads[T],
+) {
+    getTypedIO().to(`channel:${channelId}`).emit(event, data)
 }

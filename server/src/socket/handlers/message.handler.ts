@@ -1,19 +1,15 @@
-import { Socket, Server } from "socket.io"
-import { MessageAck, SendMessageData } from "@bchat/types"
-import { InsertMessageSchema } from "@bchat/shared/validation"
+import { MessageAck } from "@bchat/types"
+import { SendMessageSchema } from "@bchat/shared/validation"
 import { sleep } from "@/utils/sleep"
-import { SOCKET_EVENTS } from "../events"
 import { messageService } from "@/features/messages/service"
 import { channelService } from "@/features/channels/service"
+import { TypedServer, TypedSocket } from "@/socket"
 
-export function handleSendMessage(io: Server, socket: Socket) {
-    return async (
-        msg: SendMessageData,
-        callback: (response: MessageAck) => void,
-    ) => {
+export function handleSendMessage(io: TypedServer, socket: TypedSocket) {
+    return async (msg: any, callback: (response: MessageAck) => void) => {
         console.log("Received message:", msg)
 
-        const result = InsertMessageSchema.safeParse(msg)
+        const result = SendMessageSchema.safeParse(msg)
         if (!result.success) {
             return callback({
                 success: false,
@@ -52,10 +48,7 @@ export function handleSendMessage(io: Server, socket: Socket) {
                 recipientIds: recipients.map((r) => r.userId),
             })
 
-            io.to(`channel:${channelId}`).emit(
-                SOCKET_EVENTS.NEW_MESSAGE,
-                message,
-            )
+            io.to(`channel:${channelId}`).emit("new_message", message)
 
             callback({
                 success: true,

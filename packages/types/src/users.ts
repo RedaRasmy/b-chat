@@ -5,7 +5,7 @@ export type OtherUser = Pick<User, "id" | "name" | "avatar" | "role">
 
 export type Profile = Omit<User, "status" | "lastSeen">
 
-export type StatusChangeData = {
+export type StatusChangedData = {
     userId: User["id"]
     status: User["status"]
     lastSeen: User["lastSeen"]

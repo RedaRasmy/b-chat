@@ -1,4 +1,4 @@
-import type { Channels, TypingData } from "@bchat/types"
+import type { Channels, NewTypingData } from "@bchat/types"
 import { useEffect, useRef } from "react"
 import { useQueryClient } from "@tanstack/react-query"
 import { useUser } from "@/features/auth/use-user"
@@ -13,7 +13,7 @@ export function useTypingListener() {
     useEffect(() => {
         const timeouts = typingTimeoutsRef.current
 
-        function typingHandler({ channelId, userId, userName }: TypingData) {
+        function typingHandler({ channelId, userId, userName }: NewTypingData) {
             if (user.id === userId) return
 
             if (typingTimeoutsRef.current.has(channelId)) {

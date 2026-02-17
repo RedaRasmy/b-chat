@@ -1,6 +1,6 @@
 import z from "zod"
 
-export const InsertMessageSchema = z.object({
+export const SendMessageSchema = z.object({
     channelId: z.uuid(),
     tempId: z.string(),
     content: z.string().min(1),
@@ -22,20 +22,12 @@ export const TypingSchema = z.object({
     userName: z.string(),
 })
 
-export type GetMessageData = z.infer<typeof GetMessageSchema>
+export type SendTypingData = z.infer<typeof TypingSchema>
 
-export type MessageDeliveredData = {
-    messageId: string
-    receiverId: string
-    deliveredAt: Date
-    channelId: string
-}
+export type GetMessageData = z.infer<typeof GetMessageSchema>
 
 export type SeeChatData = z.infer<typeof SeeChatSchema>
 
-export type ChatSeenData = {
-    messageId: string
-    userId: string
-    seenAt: Date
-    channelId: string
-}
+export type SendMessageData = z.infer<typeof SendMessageSchema>
+
+

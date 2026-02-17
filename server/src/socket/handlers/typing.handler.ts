@@ -1,10 +1,8 @@
-import { Server, Socket } from "socket.io"
 import { TypingSchema } from "@bchat/shared/validation"
-import { SERVER_EVENTS } from "../events"
 import logger from "@/lib/logger"
-import { TypingData } from "@bchat/types"
+import { TypedServer, TypedSocket } from "@/socket"
 
-export function handleTyping(io: Server, socket: Socket) {
+export function handleTyping(io: TypedServer, socket: TypedSocket) {
     return (data: any) => {
         try {
             const { channelId } = TypingSchema.parse(data)
@@ -16,11 +14,11 @@ export function handleTyping(io: Server, socket: Socket) {
                 return
             }
 
-            io.to(`channel:${channelId}`).emit(SERVER_EVENTS.NEW_TYPING, {
+            io.to(`channel:${channelId}`).emit("new_typing", {
                 channelId,
                 userId: socket.user.id,
                 userName: socket.user.name,
-            } satisfies TypingData)
+            })
         } catch (err) {
             logger.error(err, "Error handling typing:")
         }

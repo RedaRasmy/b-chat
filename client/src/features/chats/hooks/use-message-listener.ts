@@ -4,10 +4,12 @@ import { fetchChats } from "@/features/chats/requests"
 import { useSocket } from "@/features/chats/use-socket"
 import { getChatName } from "@/features/chats/utils/chats"
 import type {
+    Channels,
+    ChatMessage,
     ChatSeenData,
+    MessageDeletedData,
     MessageDeliveredData,
-} from "@bchat/shared/validation"
-import type { Channels, ChatMessage, MessageDeletedData } from "@bchat/types"
+} from "@bchat/types"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { useEffect } from "react"
 import { useParams } from "react-router-dom"
