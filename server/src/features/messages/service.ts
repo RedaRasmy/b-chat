@@ -1,9 +1,57 @@
+import { ForbiddenError, NotFoundError } from "@/errors"
 import db from "@bchat/database"
 import { messages, messageReceipts } from "@bchat/database/tables"
-import { ChatMessage, MessageReceipt } from "@bchat/types"
+import { canDeleteMessage } from "@bchat/shared/permissions"
+import { ChatMessage } from "@bchat/types"
 import { and, eq, exists, inArray, isNull } from "drizzle-orm"
 
 export class MessageService {
+    async deleteMessageWithAuth(messageId: string, userId: string) {
+        const message = await db.query.messages.findFirst({
+            where: eq(messages.id, messageId),
+            with: {
+                channel: {
+                    with: {
+                        members: {
+                            where: (members, { eq }) =>
+                                eq(members.status, "active"),
+                        },
+                    },
+                },
+            },
+        })
+
+        if (!message) {
+            throw new NotFoundError("Message not found")
+        }
+
+        const userMember = message.channel.members.find(
+            (m) => m.userId === userId,
+        )
+        const senderMember = message.channel.members.find(
+            (m) => m.userId === message.senderId,
+        )
+
+        if (
+            !userMember ||
+            !senderMember ||
+            !canDeleteMessage(userMember, senderMember)
+        ) {
+            throw new ForbiddenError("Cannot delete this message")
+        }
+
+        await db.delete(messages).where(eq(messages.id, messageId))
+
+        return {
+            messageId: message.id,
+            channelId: message.channelId,
+        }
+    }
+
+    async deleteMessage(messageId: string) {
+        await db.delete(messages).where(eq(messages.id, messageId))
+    }
+
     async createMessage({
         channelId,
         content,

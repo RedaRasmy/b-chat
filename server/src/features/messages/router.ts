@@ -1,4 +1,4 @@
-import { deleteMessage } from "@/features/messages/handlers"
+import { deleteMessage } from "@/features/messages/controller"
 import { Router } from "express"
 
 const router = Router()
