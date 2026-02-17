@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express"
 import logger from "../lib/logger"
+import { HttpError } from "@/errors"
 
 export const errorHandler = (
     err: Error,
@@ -19,6 +20,11 @@ export const errorHandler = (
         },
         "Unhandled error",
     )
+    if (err instanceof HttpError) {
+        return res.status(err.statusCode).json({
+            message: err.message,
+        })
+    }
 
     if (process.env.NODE_ENV === "production") {
         res.status(500).json({ message: "Internal server error" })
