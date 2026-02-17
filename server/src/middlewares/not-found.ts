@@ -1,7 +1,7 @@
+import { makeEndpoint } from "@/utils/make-endpoint"
 import logger from "../lib/logger"
-import { makeSimpleEndpoint } from "@/utils/wrappers"
 
-export const notFound = makeSimpleEndpoint((req, res, next) => {
+export const notFound = makeEndpoint((req, res, next) => {
     logger.error(
         {
             request: {
