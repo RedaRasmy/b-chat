@@ -199,7 +199,7 @@ export default function LoginPage() {
                                 type="submit"
                                 className="w-full cursor-pointer mt-3"
                                 size="lg"
-                                disabled={form.formState.isSubmitting}
+                                disabled={mutation.isPending}
                             >
                                 Sign in
                             </Button>

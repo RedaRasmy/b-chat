@@ -302,7 +302,7 @@ export default function RegisterPage() {
                                 type="submit"
                                 size="lg"
                                 className="cursor-pointer w-full mt-3"
-                                disabled={form.formState.isSubmitting}
+                                disabled={mutation.isPending}
                             >
                                 Create Account
                             </Button>
