@@ -106,6 +106,7 @@ export default function RegisterPage() {
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
                             className="space-y-4"
+                            noValidate
                         >
                             <p className="text-red-500">{message}</p>
                             {/* Name Field */}

@@ -95,6 +95,7 @@ export default function LoginPage() {
                         <form
                             onSubmit={form.handleSubmit(onSubmit)}
                             className="space-y-4"
+                            noValidate
                         >
                             <p className="text-red-500">{message}</p>
                             {/* Email Field */}
@@ -114,6 +115,7 @@ export default function LoginPage() {
                                             <Input
                                                 {...field}
                                                 id="email"
+                                                type="email"
                                                 aria-invalid={
                                                     fieldState.invalid
                                                 }
