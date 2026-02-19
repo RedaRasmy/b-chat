@@ -20,7 +20,6 @@ import { loginRequest } from "@/features/auth/requests"
 import { LoginSchema } from "@bchat/shared/validation"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
-    ArrowLeft01Icon,
     LockKeyIcon,
     Mail02Icon,
     ViewIcon,
@@ -73,7 +72,7 @@ export default function LoginPage() {
         <div className="w-full h-screen bg-linear-to-br from-primary/10 via-background to-secondary/10 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
                 {/* Back to Home */}
-                <Link to="/">
+                {/* <Link to="/">
                     <Button variant="ghost" className="mb-6">
                         <HugeiconsIcon
                             className="h-4 w-4 mr-2"
@@ -81,7 +80,7 @@ export default function LoginPage() {
                         />
                         Back to Home
                     </Button>
-                </Link>
+                </Link> */}
 
                 <Card className="shadow-xl">
                     <CardHeader className="text-center">

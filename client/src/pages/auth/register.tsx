@@ -22,7 +22,6 @@ import GithubIcon from "@/components/github-icon"
 import GoogleIcon from "@/components/google-icon"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
-    ArrowLeft01Icon,
     LockKeyIcon,
     Mail02Icon,
     User02Icon,
@@ -84,7 +83,7 @@ export default function RegisterPage() {
         <div className="w-full h-screen bg-linear-to-br from-primary/10 via-background to-secondary/10 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
                 {/* Back to Home */}
-                <Link to="/" className="inline-block mb-6">
+                {/* <Link to="/" className="inline-block mb-6">
                     <Button variant="ghost">
                         <HugeiconsIcon
                             className="h-4 w-4 mr-2"
@@ -92,7 +91,7 @@ export default function RegisterPage() {
                         />
                         Back to Home
                     </Button>
-                </Link>
+                </Link> */}
 
                 <Card className="shadow-xl">
                     <CardHeader className="text-center">
