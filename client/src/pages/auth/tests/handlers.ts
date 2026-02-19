@@ -1,6 +1,6 @@
 import { db } from "@/test/mocks/db"
 import { createUser } from "@/test/mocks/factories"
-import type { RegisterCredentials } from "@bchat/types"
+import type { LoginCredentials, RegisterCredentials } from "@bchat/types"
 import { http, HttpResponse } from "msw"
 
 export const authHandlers = [
@@ -16,6 +16,17 @@ export const authHandlers = [
             db.addUser(user)
 
             return HttpResponse.json(user, { status: 201 })
+        },
+    ),
+    http.post<Record<string, string>, LoginCredentials>(
+        "/api/auth/login",
+        async ({ request }) => {
+            const data = await request.clone().json()
+
+            const user = createUser(data)
+            db.addUser(user)
+
+            return HttpResponse.json(user)
         },
     ),
 ]

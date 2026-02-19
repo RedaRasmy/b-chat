@@ -1,43 +1,42 @@
-import RegisterPage from "@/pages/auth/register"
+import LoginPage from "@/pages/auth/login"
 import { server } from "@/test/mocks/server"
 import { renderWithMain, screen, waitFor } from "@/test/utils"
+import type { LoginCredentials } from "@bchat/types"
 import userEvent from "@testing-library/user-event"
 import { http, HttpResponse } from "msw"
 
-async function fillForm({
-    name = "reda",
-    email = "reda@example.com",
-    password = "Password123!",
-    confirmPassword = "Password123!",
-} = {}) {
+async function fillForm(
+    {
+        email = "reda@example.com",
+        password = "Password123!",
+    }: Partial<LoginCredentials> = {
+        email: "reda@example.com",
+        password: "Password123!",
+    },
+) {
     const user = userEvent.setup()
 
-    await user.type(screen.getByLabelText("Name"), name)
     await user.type(screen.getByLabelText("Email"), email)
     await user.type(screen.getByLabelText("Password"), password)
-    await user.type(screen.getByLabelText("Confirm Password"), confirmPassword)
 
     return user
 }
 
-describe("RegisterPage", () => {
+describe("LoginPage", () => {
     describe("rendering", () => {
         it("renders all form fields", () => {
-            renderWithMain(<RegisterPage />)
+            renderWithMain(<LoginPage />)
 
-            expect(screen.getByLabelText("Name")).toBeInTheDocument()
             expect(screen.getByLabelText("Email")).toBeInTheDocument()
             expect(screen.getByLabelText("Password")).toBeInTheDocument()
+
             expect(
-                screen.getByLabelText("Confirm Password"),
-            ).toBeInTheDocument()
-            expect(
-                screen.getByRole("button", { name: /create account/i }),
+                screen.getByRole("button", { name: /sign in/i }),
             ).toBeInTheDocument()
         })
 
         it("renders oauth buttons", () => {
-            renderWithMain(<RegisterPage />)
+            renderWithMain(<LoginPage />)
 
             expect(
                 screen.getByRole("button", { name: /google/i }),
@@ -47,22 +46,18 @@ describe("RegisterPage", () => {
             ).toBeInTheDocument()
         })
 
-        it("renders sign in link", () => {
-            renderWithMain(<RegisterPage />)
+        it("renders sign up link", () => {
+            renderWithMain(<LoginPage />)
 
             expect(
-                screen.getByRole("button", { name: /sign in/i }),
+                screen.getByRole("button", { name: /sign up/i }),
             ).toBeInTheDocument()
         })
 
-        it("password fields are hidden by default", () => {
-            renderWithMain(<RegisterPage />)
+        it("password field is hidden by default", () => {
+            renderWithMain(<LoginPage />)
 
             expect(screen.getByLabelText("Password")).toHaveAttribute(
-                "type",
-                "password",
-            )
-            expect(screen.getByLabelText("Confirm Password")).toHaveAttribute(
                 "type",
                 "password",
             )
@@ -72,15 +67,15 @@ describe("RegisterPage", () => {
     describe("password visibility toggle", () => {
         it("toggles password visibility", async () => {
             const user = userEvent.setup()
-            renderWithMain(<RegisterPage />)
+            renderWithMain(<LoginPage />)
 
             const passwordInput = screen.getByLabelText("Password")
-            const toggleButtons = screen.getAllByRole("button", { name: "" })
+            const toggleButton = screen.getByRole("button", { name: "" })
 
             expect(passwordInput).toHaveAttribute("type", "password")
-            await user.click(toggleButtons[0])
+            await user.click(toggleButton)
             expect(passwordInput).toHaveAttribute("type", "text")
-            await user.click(toggleButtons[0])
+            await user.click(toggleButton)
             expect(passwordInput).toHaveAttribute("type", "password")
         })
     })
@@ -88,15 +83,10 @@ describe("RegisterPage", () => {
     describe("validation", () => {
         it("shows error when submitting empty form", async () => {
             const user = userEvent.setup()
-            renderWithMain(<RegisterPage />)
+            renderWithMain(<LoginPage />)
 
-            await user.click(
-                screen.getByRole("button", { name: /create account/i }),
-            )
+            await user.click(screen.getByRole("button", { name: /sign in/i }))
 
-            expect(
-                await screen.findByText(/name is required/i),
-            ).toBeInTheDocument()
             expect(
                 await screen.findByText(/email is required/i),
             ).toBeInTheDocument()
@@ -107,12 +97,15 @@ describe("RegisterPage", () => {
 
         it("shows error for invalid email", async () => {
             const user = userEvent.setup()
-            renderWithMain(<RegisterPage />)
+            renderWithMain(<LoginPage />)
 
-            expect(screen.getByLabelText("Email")).toHaveAttribute("type","email")
+            expect(screen.getByLabelText("Email")).toHaveAttribute(
+                "type",
+                "email",
+            )
 
             await user.click(
-                screen.getByRole("button", { name: /create account/i }),
+                screen.getByRole("button", { name: /sign in/i }),
             )
 
             await user.type(screen.getByLabelText("Email"), "notanemail")
@@ -122,27 +115,13 @@ describe("RegisterPage", () => {
             ).toBeInTheDocument()
         })
 
-        it("shows error when passwords don't match", async () => {
-            renderWithMain(<RegisterPage />)
-
-            await fillForm({ confirmPassword: "DifferentPassword" })
-            const user = userEvent.setup()
-            await user.click(
-                screen.getByRole("button", { name: /create account/i }),
-            )
-
-            expect(
-                await screen.findByText(/passwords don't match/i),
-            ).toBeInTheDocument()
-        })
-
         it("shows error for weak password", async () => {
-            renderWithMain(<RegisterPage />)
+            renderWithMain(<LoginPage />)
 
-            await fillForm({ password: "123", confirmPassword: "123" })
+            await fillForm({ password: "123" })
             const user = userEvent.setup()
             await user.click(
-                screen.getByRole("button", { name: /create account/i }),
+                screen.getByRole("button", { name: /sign in/i }),
             )
 
             expect(
@@ -154,55 +133,55 @@ describe("RegisterPage", () => {
     describe("form submission", () => {
         it("disables submit button while submitting", async () => {
             server.use(
-                http.post("/api/auth/register", async () => {
+                http.post("/api/auth/login", async () => {
                     await new Promise((resolve) => setTimeout(resolve, 100))
                     return HttpResponse.json({ message: "ok" })
                 }),
             )
 
-            renderWithMain(<RegisterPage />)
+            renderWithMain(<LoginPage />)
             await fillForm()
 
             const user = userEvent.setup()
             await user.click(
-                screen.getByRole("button", { name: /create account/i }),
+                screen.getByRole("button", { name: /sign in/i }),
             )
 
             expect(
-                screen.getByRole("button", { name: /create account/i }),
+                screen.getByRole("button", { name: /sign in/i }),
             ).toBeDisabled()
         })
 
-        it("shows server error message on failed registration", async () => {
+        it("shows server error message on failed login", async () => {
             server.use(
-                http.post("/api/auth/register", () =>
+                http.post("/api/auth/login", () =>
                     HttpResponse.json(
-                        { message: "Email already in use" },
-                        { status: 409 },
+                        { message: "Invalid credentials" },
+                        { status: 400 },
                     ),
                 ),
             )
 
-            renderWithMain(<RegisterPage />)
+            renderWithMain(<LoginPage />)
             await fillForm()
 
             const user = userEvent.setup()
             await user.click(
-                screen.getByRole("button", { name: /create account/i }),
+                screen.getByRole("button", { name: /sign in/i }),
             )
 
             expect(
-                await screen.findByText(/email already in use/i),
+                await screen.findByText(/invalid credentials/i),
             ).toBeInTheDocument()
         })
 
-        it("redirects after successful registration", async () => {
-            renderWithMain(<RegisterPage />)
+        it("redirects after successful login", async () => {
+            renderWithMain(<LoginPage />)
             await fillForm()
 
             const user = userEvent.setup()
             await user.click(
-                screen.getByRole("button", { name: /create account/i }),
+                screen.getByRole("button", { name: /sign in/i }),
             )
 
             await waitFor(() => {
