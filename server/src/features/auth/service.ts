@@ -1,4 +1,4 @@
-import { NotFoundError, UnauthorizedError } from "@/errors"
+import { ConflictError, NotFoundError, UnauthorizedError } from "@/errors"
 import { generateAccessToken } from "@/lib/jwt"
 import { generateToken } from "@/utils/generate-token"
 import { MONTH } from "@/utils/periods"
@@ -17,6 +17,14 @@ export const authService = {
         if (hasAdmin === null) {
             const [userCount] = await db.select({ count: count() }).from(users)
             hasAdmin = userCount.count > 0
+        }
+
+        const exist = await db.query.users.findFirst({
+            where: (users, { eq }) => eq(users.email, email),
+        })
+
+        if (exist) {
+            throw new ConflictError("Email already in use")
         }
 
         const [user] = await db
