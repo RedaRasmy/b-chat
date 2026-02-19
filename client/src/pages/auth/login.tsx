@@ -48,11 +48,7 @@ export default function LoginPage() {
         mutationFn: loginRequest,
         onSuccess: async (user) => {
             setUser(user)
-            if (user.role === "admin") {
-                navigate("/admin")
-            } else {
-                navigate("/profile")
-            }
+            navigate("/")
         },
         onError: (err) => {
             const message =

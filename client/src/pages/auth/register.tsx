@@ -58,11 +58,7 @@ export default function RegisterPage() {
         mutationFn: registerRequest,
         onSuccess: async (user) => {
             setUser(user)
-            if (user.role === "admin") {
-                navigate("/admin")
-            } else {
-                navigate("/profile")
-            }
+            navigate("/")
         },
         onError: (err) => {
             const message =
@@ -119,7 +115,9 @@ export default function RegisterPage() {
                                 name="name"
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Name</FieldLabel>
+                                        <FieldLabel htmlFor="name">
+                                            Name
+                                        </FieldLabel>
                                         <div className="relative">
                                             <HugeiconsIcon
                                                 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4"
@@ -150,7 +148,9 @@ export default function RegisterPage() {
                                 name="email"
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Email</FieldLabel>
+                                        <FieldLabel htmlFor="email">
+                                            Email
+                                        </FieldLabel>
                                         <div className="relative">
                                             <HugeiconsIcon
                                                 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4"
@@ -182,7 +182,9 @@ export default function RegisterPage() {
                                 name="password"
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Password</FieldLabel>
+                                        <FieldLabel htmlFor="password">
+                                            Password
+                                        </FieldLabel>
                                         <div className="relative">
                                             <HugeiconsIcon
                                                 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4"
@@ -241,7 +243,7 @@ export default function RegisterPage() {
                                 name="confirmPassword"
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>
+                                        <FieldLabel htmlFor="confirmPassword">
                                             Confirm Password
                                         </FieldLabel>
                                         <div className="relative">
