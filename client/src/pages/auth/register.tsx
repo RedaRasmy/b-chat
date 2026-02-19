@@ -71,7 +71,7 @@ export default function RegisterPage() {
     })
 
     async function onSubmit(data: z.infer<typeof RegisterSchema>) {
-        mutation.mutateAsync(data)
+        mutation.mutate(data)
     }
 
     const errors = form.formState.errors
