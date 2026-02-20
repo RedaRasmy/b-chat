@@ -25,7 +25,9 @@ export default function ProfilePage() {
         <div className="w-full h-screen grid grid-rows-[auto_1fr]">
             <PageHeader>
                 <h1>Profile</h1>
-                <Button onClick={logout}>Log out</Button>
+                <Button onClick={logout} variant={"destructive"}>
+                    Log out
+                </Button>
             </PageHeader>
             <main className="p-3 space-y-2 overflow-y-auto">
                 <Tabs
