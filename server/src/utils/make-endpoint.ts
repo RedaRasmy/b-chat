@@ -62,7 +62,11 @@ export function makeEndpoint<Params, Query, Body>(
                     details: result.error.issues,
                 })
             }
-            req.query = result.data as any
+            Object.defineProperty(req, "query", {
+                value: result.data,
+                writable: true,
+                configurable: true,
+            })
         }
 
         if (params) {
