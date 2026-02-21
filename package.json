@@ -14,6 +14,7 @@
         "db:generate": "nnpm --filter=@bchat/database generate",
         "db:migrate": "pnpm --filter=@bchat/database migrate",
         "db:studio": "pnpm --filter=@bchat/database studio",
+        "db:seed": "pnpm --filter=@bchat/database seed",
         "cloc": "cloc . --exclude-dir=node_modules,ui",
         "cloc:ts": "cloc . --exclude-dir=node_modules,ui --include-lang=TypeScript"
     },

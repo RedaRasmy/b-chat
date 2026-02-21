@@ -12,7 +12,8 @@
         "push": "npx drizzle-kit push",
         "generate": "npx drizzle-kit generate",
         "migrate": "npx drizzle-kit migrate",
-        "studio": "npx drizzle-kit studio"
+        "studio": "npx drizzle-kit studio",
+        "seed": "tsx src/seed.ts"
     },
     "keywords": [],
     "author": "",
@@ -26,6 +27,7 @@
     "devDependencies": {
         "@types/node": "^25.2.0",
         "@types/pg": "^8.16.0",
+        "bcryptjs": "^3.0.3",
         "drizzle-kit": "^0.31.8",
         "tsx": "^4.21.0",
         "typescript": "~5.9.3"
