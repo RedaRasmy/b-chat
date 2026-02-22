@@ -23,7 +23,7 @@ import {
     type UpdateProfileData,
 } from "@bchat/shared/validation"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import { useEffect } from "react"
 import { Controller, useForm } from "react-hook-form"
 
