@@ -45,6 +45,10 @@ export default function Settings() {
         queryFn: fetchProfile,
     })
 
+    const currentName = data?.name ?? ""
+    const watchedName = form.watch("name")
+    const nameUnchanged = watchedName === currentName
+
     useEffect(() => {
         if (data?.name) {
             form.reset({
@@ -125,7 +129,7 @@ export default function Settings() {
                     <Field orientation="horizontal">
                         <Button
                             type="submit"
-                            disabled={mutation.isPending}
+                            disabled={mutation.isPending || nameUnchanged}
                             form="update-profile"
                         >
                             Submit
