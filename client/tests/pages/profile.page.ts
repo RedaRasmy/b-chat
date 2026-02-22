@@ -32,7 +32,7 @@ export class ProfilePage {
         await this.page.getByRole("button", { name: /log out/i }).click()
     }
 
-    // async toggleSidebar() {
-    //     await this.page.getByRole("button", { name: "" }).click()
-    // }
+    async toggleSidebar() {
+        await this.page.getByRole("button", { name: /toggle sidebar/i }).click()
+    }
 }
