@@ -43,7 +43,9 @@ export default function ChatFooter() {
                 }}
                 aria-label="Message"
             />
-            <Button onClick={handleSend}>Send</Button>
+            <Button onClick={handleSend} disabled={!message}>
+                Send
+            </Button>
         </footer>
     )
 }
