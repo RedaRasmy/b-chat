@@ -1,13 +1,9 @@
-// e2e/friendship.spec.ts
 import { BrowserContext, Page } from "@playwright/test"
 import { test, expect } from "./fixtures"
 import { LoginPage } from "./pages/login.page"
 import { ProfilePage } from "./pages/profile.page"
 import { UsersPage } from "./pages/users.page"
 
-// test.beforeEach(async ({ request }) => {
-//     await request.post("http://localhost:5173/api/test/seed")
-// })
 test.describe.configure({ mode: "serial" })
 
 test.describe("Friendship flow", () => {
@@ -89,5 +85,14 @@ test.describe("Friendship flow", () => {
 
         await profileB.gotoFriends()
         await expect(pageB.getByText("reda")).not.toBeVisible()
+    })
+
+    test("user can cancel request", async () => {
+        await usersA.goto()
+        await usersA.search("ahmed")
+        await usersA.requestFirst()
+        await expect(pageA.getByText("pending")).toBeVisible()
+        await usersA.cancelFirst()
+        await expect(pageA.getByText("add friend")).toBeVisible()
     })
 })
