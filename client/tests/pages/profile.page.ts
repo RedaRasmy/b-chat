@@ -1,8 +1,7 @@
 import { type Page } from "@playwright/test"
+import { BasePage } from "./base.page"
 
-export class ProfilePage {
-    constructor(public page: Page) {}
-
+export class ProfilePage extends BasePage {
     async goto() {
         await this.page.goto("/")
     }
@@ -56,9 +55,5 @@ export class ProfilePage {
 
     async logout() {
         await this.page.getByRole("button", { name: /log out/i }).click()
-    }
-
-    async toggleSidebar() {
-        await this.page.getByRole("button", { name: /toggle sidebar/i }).click()
     }
 }

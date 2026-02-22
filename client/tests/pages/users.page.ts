@@ -1,8 +1,6 @@
-import { type Page } from "@playwright/test"
+import { BasePage } from "./base.page"
 
-export class UsersPage {
-    constructor(public page: Page) {}
-
+export class UsersPage extends BasePage {
     async goto() {
         await this.page.goto("/users")
     }
@@ -49,9 +47,5 @@ export class UsersPage {
 
     async chatWithFirst() {
         await this.page.getByRole("button", { name: /chat/i }).first().click()
-    }
-
-    async toggleSidebar() {
-        await this.page.getByRole("button", { name: /toggle sidebar/i }).click()
     }
 }
