@@ -42,6 +42,18 @@ export class ProfilePage {
             .click()
     }
 
+    async unfriendFirst() {
+        await this.page
+            .getByRole("button", { name: /unfriend/i })
+            .first()
+            .click()
+        await this.page.getByRole("button", { name: /yes/i }).click()
+    }
+
+    async chatWithFirst() {
+        await this.page.getByRole("button", { name: /chat/i }).first().click()
+    }
+
     async logout() {
         await this.page.getByRole("button", { name: /log out/i }).click()
     }

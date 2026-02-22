@@ -44,6 +44,7 @@ export class UsersPage {
             .getByRole("button", { name: /unfriend/i })
             .first()
             .click()
+        await this.page.getByRole("button", { name: /yes/i }).click()
     }
 
     async chatWithFirst() {

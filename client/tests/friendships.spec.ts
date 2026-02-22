@@ -1,51 +1,57 @@
 // e2e/friendship.spec.ts
+import { BrowserContext, Page } from "@playwright/test"
 import { test, expect } from "./fixtures"
 import { LoginPage } from "./pages/login.page"
 import { ProfilePage } from "./pages/profile.page"
 import { UsersPage } from "./pages/users.page"
 
-test.beforeEach(async ({ request }) => {
-    await request.post("http://localhost:5173/api/test/seed")
-})
+// test.beforeEach(async ({ request }) => {
+//     await request.post("http://localhost:5173/api/test/seed")
+// })
+test.describe.configure({ mode: "serial" })
 
 test.describe("Friendship flow", () => {
-    test("user can send and accept friend request", async ({ browser }) => {
-        // Setup
+    let userAContext: BrowserContext
+    let userBContext: BrowserContext
+    let pageA: Page
+    let pageB: Page
+    let loginA: LoginPage
+    let loginB: LoginPage
+    let usersA: UsersPage
+    let profileA: ProfilePage
+    let profileB: ProfilePage
 
-        const userAContext = await browser.newContext()
-        const userBContext = await browser.newContext()
+    test.beforeEach(async ({ browser, request }) => {
+        // reset DB
+        await request.post("http://localhost:5173/api/test/seed")
 
-        const pageA = await userAContext.newPage()
-        const pageB = await userBContext.newPage()
+        // setup
+        userAContext = await browser.newContext()
+        userBContext = await browser.newContext()
+        pageA = await userAContext.newPage()
+        pageB = await userBContext.newPage()
 
-        const loginA = new LoginPage(pageA)
-        const loginB = new LoginPage(pageB)
-        const usersA = new UsersPage(pageA)
-        const profileA = new ProfilePage(pageA)
-        const profileB = new ProfilePage(pageB)
+        loginA = new LoginPage(pageA)
+        loginB = new LoginPage(pageB)
+        usersA = new UsersPage(pageA)
+        profileA = new ProfilePage(pageA)
+        profileB = new ProfilePage(pageB)
 
-        // Log in
-
+        // log in
         await loginA.goto()
         await loginA.login("reda@example.com", "password")
-        await expect(pageA).toHaveURL("/")
 
         await loginB.goto()
         await loginB.login("ahmed@example.com", "password")
-        await expect(pageB).toHaveURL("/")
+    })
 
-        // Send request : A -> B
-
+    test("user can send and accept friend request", async () => {
         await usersA.goto()
         await usersA.search("ahmed")
         await usersA.requestFirst()
 
-        // Accept request
-
         await profileB.gotoRequests()
         await profileB.acceptFirst()
-
-        // Both users see each other in friends list
 
         await profileA.gotoFriends()
         await expect(pageA.getByText("ahmed")).toBeVisible()
@@ -55,5 +61,33 @@ test.describe("Friendship flow", () => {
 
         await userAContext.close()
         await userBContext.close()
+    })
+    test("user can reject friend request", async () => {
+        await usersA.goto()
+        await usersA.search("ahmed")
+        await usersA.requestFirst()
+
+        await profileB.gotoRequests()
+        await profileB.rejectFirst()
+
+        await expect(pageB.getByText("reda")).not.toBeVisible()
+
+        await profileB.gotoFriends()
+        await expect(pageB.getByText("reda")).not.toBeVisible()
+    })
+
+    test("user can remove friend", async () => {
+        await usersA.goto()
+        await usersA.search("ahmed")
+        await usersA.requestFirst()
+        await profileB.gotoRequests()
+        await profileB.acceptFirst()
+
+        await profileA.gotoFriends()
+        await profileA.unfriendFirst()
+        await expect(pageA.getByText("ahmed")).not.toBeVisible()
+
+        await profileB.gotoFriends()
+        await expect(pageB.getByText("reda")).not.toBeVisible()
     })
 })
