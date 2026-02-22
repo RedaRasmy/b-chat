@@ -16,17 +16,14 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useAuth } from "@/features/auth/use-auth"
-import {
-    deleteAccount,
-    fetchProfile,
-    updateProfile,
-} from "@/features/profile/requests"
+import { useUser } from "@/features/auth/use-user"
+import { deleteAccount, updateProfile } from "@/features/profile/requests"
 import {
     UpdateProfileSchema,
     type UpdateProfileData,
 } from "@bchat/shared/validation"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useEffect } from "react"
 import { Controller, useForm } from "react-hook-form"
 
@@ -38,24 +35,16 @@ export default function Settings() {
             name: "",
         },
     })
-    const queryClient = useQueryClient()
 
-    const { data } = useQuery({
-        queryKey: ["profile"],
-        queryFn: fetchProfile,
-    })
-
-    const currentName = data?.name ?? ""
-    const watchedName = form.watch("name")
-    const nameUnchanged = watchedName === currentName
+    const user = useUser()
+    const { refresh } = useAuth()
+    const nameUnchanged = form.watch("name") === user.name
 
     useEffect(() => {
-        if (data?.name) {
-            form.reset({
-                name: data.name,
-            })
-        }
-    }, [data, form])
+        form.reset({
+            name: user.name,
+        })
+    }, [user.name])
 
     const mutation = useMutation({
         mutationFn: updateProfile,
@@ -63,9 +52,7 @@ export default function Settings() {
             console.error(err)
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ["profile"],
-            })
+            refresh()
         },
     })
     const deleteMutation = useMutation({
@@ -78,10 +65,13 @@ export default function Settings() {
         },
     })
 
+    function reset() {
+        form.reset({
+            name: user.name,
+        })
+    }
+
     function onSubmit({ name }: UpdateProfileData) {
-        if (name === "" || name === data?.name) {
-            return
-        }
         mutation.mutate({ name })
     }
 
@@ -126,7 +116,14 @@ export default function Settings() {
                     </form>
                 </CardContent>
                 <CardFooter>
-                    <Field orientation="horizontal">
+                    <Field orientation="horizontal" className="gap-1">
+                        <Button
+                            variant={"outline"}
+                            disabled={nameUnchanged}
+                            onClick={reset}
+                        >
+                            Reset
+                        </Button>
                         <Button
                             type="submit"
                             disabled={mutation.isPending || nameUnchanged}
