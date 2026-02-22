@@ -58,7 +58,7 @@ export default function DMHeader() {
                 )}
 
                 <DeleteChat chatId={chat.id}>
-                    <Button variant={"destructive"}>
+                    <Button variant={"destructive"} aria-label="Delete chat">
                         <HugeiconsIcon icon={Delete02Icon} />
                     </Button>
                 </DeleteChat>

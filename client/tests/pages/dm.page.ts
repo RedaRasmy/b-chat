@@ -1,10 +1,41 @@
-import { Page } from "@playwright/test"
+import { expect } from "@playwright/test"
 import { BasePage } from "./base.page"
 
 export class DMPage extends BasePage {
-    async sendMessage(msg: string) {
-        // await this.page.
+    getMessageInput() {
+        return this.page.getByLabel("message")
     }
 
-    async deleteChat() {}
+    getSendButton() {
+        return this.page.getByRole("button", { name: /send/i })
+    }
+
+    getDeleteButton() {
+        return this.page.getByRole("button", { name: /delete chat/i })
+    }
+
+    getConfirmButton() {
+        return this.page.getByRole("button", { name: /yes/i })
+    }
+
+    async confirm() {
+        await this.getConfirmButton().click()
+    }
+
+    async typeMessage(msg: string) {
+        await this.getMessageInput().fill(msg)
+    }
+
+    async sendMessage(msg: string) {
+        await this.getMessageInput().fill(msg)
+        await this.getSendButton().click()
+        await expect(this.getMessageInput()).toHaveValue("")
+        await expect(this.page.getByText(msg)).toBeVisible()
+    }
+
+    async deleteChat() {
+        await this.getDeleteButton().click()
+        await this.confirm()
+        await expect(this.page).toHaveURL("/")
+    }
 }

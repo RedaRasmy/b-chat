@@ -3,12 +3,14 @@ import { RegisterPage } from "./pages/register.page"
 import { LoginPage } from "./pages/login.page"
 import { ProfilePage } from "./pages/profile.page"
 import { UsersPage } from "./pages/users.page"
+import { DMPage } from "./pages/dm.page"
 
 export const test = base.extend<{
     register: RegisterPage
     login: LoginPage
     profile: ProfilePage
     users: UsersPage
+    dm: DMPage
 }>({
     register: async ({ page }, set) => {
         await set(new RegisterPage(page))
@@ -21,6 +23,9 @@ export const test = base.extend<{
     },
     users: async ({ page }, set) => {
         await set(new UsersPage(page))
+    },
+    dm: async ({ page }, set) => {
+        await set(new DMPage(page))
     },
 })
 

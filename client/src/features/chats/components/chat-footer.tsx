@@ -41,8 +41,9 @@ export default function ChatFooter() {
                         sendTyping()
                     }
                 }}
+                aria-label="Message"
             />
-            <Button onClick={handleSend}> Send</Button>
+            <Button onClick={handleSend}>Send</Button>
         </footer>
     )
 }
