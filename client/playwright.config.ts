@@ -77,5 +77,11 @@ export default defineConfig({
             url: "http://localhost:5173",
             reuseExistingServer: !process.env.CI,
         },
+        // {
+        //     command: "NODE_ENV=test pnpm dev",
+        //     url: "http://localhost:3000",
+        //     cwd: "../server",
+        //     reuseExistingServer: !process.env.CI,
+        // },
     ],
 })

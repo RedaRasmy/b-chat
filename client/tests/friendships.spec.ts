@@ -4,6 +4,10 @@ import { LoginPage } from "./pages/login.page"
 import { ProfilePage } from "./pages/profile.page"
 import { UsersPage } from "./pages/users.page"
 
+test.beforeEach(async ({ request }) => {
+    await request.post("http://localhost:5173/api/test/seed")
+})
+
 test.describe("Friendship flow", () => {
     test("user can send and accept friend request", async ({ browser }) => {
         // Setup

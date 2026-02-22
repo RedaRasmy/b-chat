@@ -7,6 +7,7 @@
     "type": "module",
     "scripts": {
         "dev": "tsx watch src/server.ts | pino-pretty",
+        "dev:test": "NODE_ENV=test tsx watch src/server.ts | pino-pretty",
         "start": "tsx src/server.ts | pino-pretty",
         "cloc": "cloc . --exclude-dir=node_modules",
         "cloc:ts": "cloc . --exclude-dir=node_modules --include-lang=TypeScript"
