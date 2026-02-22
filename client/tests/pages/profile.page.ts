@@ -28,6 +28,20 @@ export class ProfilePage {
         await this.page.getByRole("button", { name: /submit/i }).click()
     }
 
+    async acceptFirst() {
+        await this.page
+            .getByRole("button", { name: /accept/i })
+            .first()
+            .click()
+    }
+
+    async rejectFirst() {
+        await this.page
+            .getByRole("button", { name: /reject/i })
+            .first()
+            .click()
+    }
+
     async logout() {
         await this.page.getByRole("button", { name: /log out/i }).click()
     }
