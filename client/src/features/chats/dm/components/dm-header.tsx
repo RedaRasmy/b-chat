@@ -46,15 +46,9 @@ export default function DMHeader() {
             </div>
             <div className="flex gap-2 items-center">
                 {chat.typingUser && (
-                    <div className="text-xs text-muted-foreground">
-                        <span>
-                            <span className="text-primary">
-                                {chat.typingUser}
-                            </span>{" "}
-                            is
-                        </span>{" "}
+                    <span className="text-xs text-muted-foreground">
                         typing...
-                    </div>
+                    </span>
                 )}
 
                 <DeleteChat chatId={chat.id}>
