@@ -51,7 +51,7 @@ export function GroupFormDialog() {
         onSuccess: async (group) => {
             form.reset()
             setOpen(false)
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
                 queryKey: ["chats"],
             })
             navigate("/chats/" + group.channelId)
