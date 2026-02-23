@@ -21,8 +21,8 @@ export default function ChatButton({
 
     const mutation = useMutation({
         mutationFn: createDM,
-        onSuccess: (data) => {
-            queryClient.invalidateQueries({
+        onSuccess: async (data) => {
+            await queryClient.invalidateQueries({
                 queryKey: ["chats"],
             })
             navigate("/chats/" + data.channelId)
