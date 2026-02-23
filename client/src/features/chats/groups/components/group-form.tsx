@@ -17,6 +17,7 @@ import {
     FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { useSidebar } from "@/components/ui/sidebar"
 import { createGroup } from "@/features/chats/requests"
 import { fetchFriends } from "@/features/friendships/requests"
 import { InsertGroupSchema, type GroupFormData } from "@bchat/shared/validation"
@@ -30,6 +31,7 @@ import { useNavigate } from "react-router-dom"
 
 export function GroupFormDialog() {
     const [open, setOpen] = useState(false)
+    const { setOpenMobile } = useSidebar()
     const form = useForm<GroupFormData>({
         resolver: zodResolver(InsertGroupSchema),
         defaultValues: {
@@ -55,6 +57,7 @@ export function GroupFormDialog() {
                 queryKey: ["chats"],
             })
             navigate("/chats/" + group.channelId)
+            setOpenMobile(false)
         },
     })
 
