@@ -7,10 +7,10 @@ export default function useFriendsListener() {
 
     useSocketListener("request_accepted", ({ userName }) => {
         queryClient.invalidateQueries({
-            queryKey: ["sent-requests"],
+            queryKey: ["friends"],
         })
         queryClient.invalidateQueries({
-            queryKey: ["friends"],
+            queryKey: ["sent-requests"],
         })
         toast.info(`${userName} accepted your friend request`)
     })
