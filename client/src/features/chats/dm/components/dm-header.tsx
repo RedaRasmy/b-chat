@@ -10,8 +10,6 @@ import { HugeiconsIcon } from "@hugeicons/react"
 
 export default function DMHeader() {
     const { friend, chat } = useDM()
-    const name = friend.name
-    const avatar = friend.avatar
     const lastSeen =
         chat.lastSeen && chat.status === "offline"
             ? "since " + getTime(chat.lastSeen)
@@ -23,15 +21,9 @@ export default function DMHeader() {
     return (
         <PageHeader>
             <div className="flex items-center gap-2">
-                <Avatar
-                    data={{
-                        id: chat.id,
-                        name,
-                        avatar,
-                    }}
-                />
+                <Avatar data={friend} />
                 <div className="flex flex-col -space-y-0.5">
-                    <h1>{name}</h1>
+                    <h1>{friend.name}</h1>
                     <div
                         className={cn(
                             "text-[0.7rem] text-muted-foreground flex gap-",
