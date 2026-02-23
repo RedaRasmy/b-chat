@@ -58,6 +58,12 @@ export const friendService = {
                 status: "friend",
                 acceptedAt: new Date(Date.now()),
             })
+            .where(
+                and(
+                    eq(friendships.id, friendshipId),
+                    eq(friendships.receiverId, userId),
+                ),
+            )
             .returning()
 
         return {
@@ -143,6 +149,15 @@ export const friendService = {
                 blockedBy: userId,
                 blockedAt: new Date(Date.now()),
             })
+            .where(
+                and(
+                    eq(friendships.id, friendshipId),
+                    or(
+                        eq(friendships.receiverId, userId),
+                        eq(friendships.requesterId, userId),
+                    ),
+                ),
+            )
             .returning()
 
         return newFriendship
