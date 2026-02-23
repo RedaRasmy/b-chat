@@ -20,6 +20,10 @@ export default function DMCard({ chat }: { chat: DMChat }) {
             (rec) => rec.userId === user.id && rec.seenAt === null,
         )
 
+    const friend = chat.members.find((m) => m.id !== user.id)
+
+    if (!friend) throw new Error("User is the only member in DM!")
+
     return (
         <Link
             to={"/chats/" + chat.id}
@@ -28,7 +32,7 @@ export default function DMCard({ chat }: { chat: DMChat }) {
             <Avatar
                 className="row-span-2"
                 data={{
-                    id: chat.id,
+                    id: friend.id,
                     name: chatName,
                     avatar: chatAvatar,
                     status,
