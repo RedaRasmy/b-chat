@@ -71,17 +71,18 @@ export default defineConfig({
     ],
 
     /* Run your local dev server before starting the tests */
-    webServer: [
-        {
-            command: "pnpm dev",
-            url: "http://localhost:5173",
-            reuseExistingServer: !process.env.CI,
-        },
-        // {
-        //     command: "NODE_ENV=test pnpm dev",
-        //     url: "http://localhost:3000",
-        //     cwd: "../server",
-        //     reuseExistingServer: !process.env.CI,
-        // },
-    ],
+    webServer: process.env.CI
+        ? [
+              {
+                  command: "pnpm dev",
+                  url: "http://localhost:5173",
+                  reuseExistingServer: false,
+              },
+              {
+                  command: "cd ../server && pnpm dev:test",
+                  url: "http://localhost:3000",
+                  reuseExistingServer: false,
+              },
+          ]
+        : [],
 })
