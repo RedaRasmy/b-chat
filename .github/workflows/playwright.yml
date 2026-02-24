@@ -8,6 +8,20 @@ jobs:
     test:
         timeout-minutes: 60
         runs-on: ubuntu-latest
+        services:
+            postgres:
+                image: postgres
+                env:
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: postgres
+                    POSTGRES_DB: mydb
+                ports:
+                    - 5433:5432
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
         defaults:
             run:
                 working-directory: ./client
@@ -17,11 +31,14 @@ jobs:
               with:
                   node-version: lts/*
             - name: Install dependencies
+              working-directory: .
               run: npm install -g pnpm && pnpm install
             - name: Install Playwright Browsers
               run: pnpm exec playwright install --with-deps
             - name: Run Playwright tests
               run: pnpm exec playwright test
+              env:
+                  DATABASE_URL: postgresql://postgres:postgres@localhost:5433/mydb
             - uses: actions/upload-artifact@v4
               if: ${{ !cancelled() }}
               with:
