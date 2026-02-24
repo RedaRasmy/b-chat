@@ -50,7 +50,7 @@ test.describe("Friendship flow", () => {
         await profileB.acceptFirst()
 
         await profileA.gotoFriends()
-        await expect(pageA.getByText("ahmed")).toBeVisible()
+        await profileA.expectFriend("ahmed")
 
         await profileB.gotoFriends()
         await expect(pageB.getByText("reda")).toBeVisible()

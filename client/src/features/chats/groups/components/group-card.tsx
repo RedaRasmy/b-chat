@@ -20,6 +20,7 @@ export default function GroupCard({ chat }: { chat: GroupChat }) {
 
     return (
         <Link
+            aria-label="Group chat"
             to={"/chats/" + chat.id}
             className="border relative grid gap-2 gap-y-0 grid-cols-[auto_1fr] grid-rows-[auto_1fr] rounded-md items-center justify-between px-2 py-1 cursor-pointer bg-accent"
         >

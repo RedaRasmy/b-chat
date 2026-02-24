@@ -1,4 +1,4 @@
-import { type Page } from "@playwright/test"
+import { expect } from "../fixtures"
 import { BasePage } from "./base.page"
 
 export class ProfilePage extends BasePage {
@@ -51,9 +51,16 @@ export class ProfilePage extends BasePage {
 
     async chatWithFirst() {
         await this.page.getByRole("button", { name: /chat/i }).first().click()
+        await expect(this.page).toHaveURL(/chats/i)
     }
 
     async logout() {
         await this.page.getByRole("button", { name: /log out/i }).click()
+    }
+
+    async expectFriend(name: string | RegExp) {
+        await expect(
+            this.page.getByLabel(/friends/i).getByText(name),
+        ).toBeVisible()
     }
 }

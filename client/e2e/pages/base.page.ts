@@ -23,4 +23,33 @@ export class BasePage {
         await this.page.getByRole("button", { name: /users/i }).click()
         await expect(this.page).toHaveURL("/users")
     }
+
+    async gotoFirstChat() {
+        await this.page.getByLabel(/chat/i).click()
+        await expect(this.page).toHaveURL(/chats/i)
+    }
+
+    async gotoFirstDM() {
+        await this.page.getByLabel(/dm chat/i).click()
+        await expect(this.page).toHaveURL(/chats/i)
+    }
+
+    async gotoFirstGroup() {
+        await this.page.getByLabel(/group chat/i).click()
+        await expect(this.page).toHaveURL(/chats/i)
+    }
+
+    // Regions
+
+    getHeader() {
+        return this.page.getByRole("banner")
+    }
+
+    getBody() {
+        return this.page.getByRole("main")
+    }
+
+    getFooter() {
+        return this.page.getByRole("contentinfo")
+    }
 }

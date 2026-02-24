@@ -26,6 +26,7 @@ export default function DMCard({ chat }: { chat: DMChat }) {
 
     return (
         <Link
+            aria-label="DM chat"
             to={"/chats/" + chat.id}
             className="border relative grid gap-2 gap-y-0 grid-cols-[auto_1fr] grid-rows-[auto_1fr] rounded-md items-center justify-between px-2 py-1 cursor-pointer bg-accent"
         >
