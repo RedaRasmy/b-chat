@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input"
 import { useUser } from "@/features/auth/use-user"
 import { useChat } from "@/features/chats/hooks/use-chat"
 import { useMessage } from "@/features/chats/hooks/use-message"
-import { useSocket } from "@/features/chats/use-socket"
+import { useSocket } from "@/features/chats/hooks/use-socket"
 import { useState } from "react"
 
 export default function ChatFooter() {

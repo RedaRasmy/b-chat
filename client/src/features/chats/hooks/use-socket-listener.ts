@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useSocket } from "@/features/chats/use-socket"
+import { useSocket } from "@/features/chats/hooks/use-socket"
 import type { ServerEvent, ServerPayloads } from "@bchat/shared/events"
 import { useEffect, useLayoutEffect, useRef } from "react"
 

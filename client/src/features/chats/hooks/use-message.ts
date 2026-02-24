@@ -1,7 +1,7 @@
 import { useUser } from "@/features/auth/use-user"
 import { useChat } from "@/features/chats/hooks/use-chat"
 import { deleteMessage } from "@/features/chats/requests"
-import { useSocket } from "@/features/chats/use-socket"
+import { useSocket } from "@/features/chats/hooks/use-socket"
 import type { Channels, ClientMessage, MessageAck } from "@bchat/types"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useCallback } from "react"

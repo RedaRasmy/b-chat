@@ -1,6 +1,6 @@
 import { useUser } from "@/features/auth/use-user"
 import { fetchMessages } from "@/features/chats/requests"
-import { useSocket } from "@/features/chats/use-socket"
+import { useSocket } from "@/features/chats/hooks/use-socket"
 import type { SeeChatData } from "@bchat/shared/validation"
 import type { Channels } from "@bchat/types"
 import { useQuery, useQueryClient } from "@tanstack/react-query"

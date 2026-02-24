@@ -1,7 +1,7 @@
-import useFriendsListener from "@/features/chats/hooks/use-friends-listener"
-import useMembersListener from "@/features/chats/hooks/use-members-listener"
+import useFriendsListener from "@/features/friendships/use-friends-listener"
+import useMembersListener from "@/features/chats/groups/use-members-listener"
 import useMessageListener from "@/features/chats/hooks/use-message-listener"
-import usePresenceListener from "@/features/chats/hooks/use-presence-listener"
+import usePresenceListener from "@/features/profile/use-presence-listener"
 import { useTypingListener } from "@/features/chats/hooks/use-typing-listener"
 
 export default function GlobalListeners() {
