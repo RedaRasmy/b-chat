@@ -1,8 +1,8 @@
 import { BrowserContext, Page } from "@playwright/test"
-import { test, expect } from "./fixtures"
-import { LoginPage } from "./pages/login.page"
-import { ProfilePage } from "./pages/profile.page"
-import { UsersPage } from "./pages/users.page"
+import { test, expect } from "../fixtures"
+import { LoginPage } from "../pages/login.page"
+import { ProfilePage } from "../pages/profile.page"
+import { UsersPage } from "../pages/users.page"
 
 test.describe.configure({ mode: "serial" })
 

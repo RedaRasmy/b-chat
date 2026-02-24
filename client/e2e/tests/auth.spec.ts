@@ -1,4 +1,4 @@
-import { test, expect } from "./fixtures"
+import { test, expect } from "../fixtures"
 
 test.describe("Auth flow", () => {
     test("user can register and gets redirected", async ({ register }) => {
