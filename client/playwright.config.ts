@@ -79,9 +79,11 @@ export default defineConfig({
                   reuseExistingServer: false,
               },
               {
-                  command: "cd ../server && pnpm dev:test",
+                  command: "cd ../server && pnpm start:test",
                   url: "http://localhost:3000",
                   reuseExistingServer: false,
+                  stdout: "pipe",
+                  stderr: "pipe",
               },
           ]
         : [],
