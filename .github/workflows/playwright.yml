@@ -44,6 +44,8 @@ jobs:
               run: pnpm exec playwright test
               env:
                   DATABASE_URL: postgresql://postgres:postgres@localhost:5433/mydb
+                  JWT_ACCESS_SECRET: dsjkfjaklsjdkfjaksdjkfjaksdkfjaskfjkasjdkf
+                  FRONTEND_URL: http://localhost:5173
             - uses: actions/upload-artifact@v4
               if: ${{ !cancelled() }}
               with:
