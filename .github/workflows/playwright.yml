@@ -35,6 +35,11 @@ jobs:
               run: npm install -g pnpm && pnpm install
             - name: Install Playwright Browsers
               run: pnpm exec playwright install --with-deps
+            - name: Push database tables
+              working-directory: ${{ github.workspace }}
+              run: pnpm db:push
+              env:
+                  DATABASE_URL: postgresql://postgres:postgres@localhost:5433/mydb
             - name: Run Playwright tests
               run: pnpm exec playwright test
               env:
