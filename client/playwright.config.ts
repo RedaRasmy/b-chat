@@ -80,7 +80,7 @@ export default defineConfig({
               },
               {
                   command: "cd ../server && pnpm start:test",
-                  url: "http://localhost:3000",
+                  url: "http://localhost:3000/health",
                   reuseExistingServer: false,
                   stdout: "pipe",
                   stderr: "pipe",

@@ -21,6 +21,7 @@ export function createApp() {
         }),
     )
 
+    app.get("/health", (req, res) => res.send("ok"))
     app.use("/api", router)
     app.use(notFound)
     app.use(errorHandler)
