@@ -1,6 +1,6 @@
 import { pgTable, uuid, varchar } from "drizzle-orm/pg-core"
 import { channels } from "./channels"
-import { InferSelectModel, relations } from "drizzle-orm"
+import { type InferSelectModel, relations } from "drizzle-orm"
 
 export const groups = pgTable("groups", {
     channelId: uuid("channel_id")

@@ -1,4 +1,4 @@
-import {
+import type {
     ChatMessage,
     MessageDeletedData,
     StatusChangedData,
@@ -9,7 +9,7 @@ import {
     RequestAcceptedData,
 } from "@bchat/types"
 import type { SERVER_EVENTS, CLIENT_EVENTS } from "./events"
-import {
+import type {
     GetMessageData,
     MemberDeletedData,
     MemberLeftData,
@@ -40,14 +40,3 @@ export interface ServerPayloads {
     [SERVER_EVENTS.FRIEND_REQUEST]: FriendRequestData
     [SERVER_EVENTS.REQUEST_ACCEPTED]: RequestAcceptedData
 }
-
-// function ClientEmitter<T extends ClientEvent>(
-//     name: T,
-//     payload: ClientPayloads[T],
-// ) {}
-// function ServerEmitter<T extends ServerEvent>(
-//     name: T,
-//     payload: ServerPayloads[T],
-// ) {}
-
-// ServerEmitter("chat_seen", {})

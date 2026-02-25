@@ -1,4 +1,4 @@
-import { relations, InferSelectModel } from "drizzle-orm"
+import { relations, type InferSelectModel } from "drizzle-orm"
 import {
     pgTable,
     uuid,

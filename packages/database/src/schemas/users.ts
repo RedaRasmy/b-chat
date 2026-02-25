@@ -1,4 +1,4 @@
-import { InferSelectModel, relations } from "drizzle-orm"
+import { type InferSelectModel, relations } from "drizzle-orm"
 import { pgTable, varchar, uuid, pgEnum, timestamp } from "drizzle-orm/pg-core"
 import { refreshTokens } from "./refresh-tokens"
 import { friendships } from "./friendships"

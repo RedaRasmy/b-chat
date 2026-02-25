@@ -1,4 +1,4 @@
-import { Member } from "@bchat/types"
+import type { Member } from "@bchat/types"
 import z from "zod"
 
 export const InsertMembersSchema = z.array(z.uuid())

@@ -1,5 +1,5 @@
-import { Message, MessageReceipt } from "@bchat/database/tables"
-import { Prettify } from "./global"
+import type { Message, MessageReceipt } from "@bchat/database/tables"
+import type { Prettify } from "./global"
 
 export type ChatMessage = Prettify<
     Message & {

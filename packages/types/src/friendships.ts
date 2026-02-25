@@ -1,6 +1,6 @@
-import { Friendship, User } from "@bchat/database/tables"
-import { Prettify } from "./global"
-import { OtherUser } from "./users"
+import type { Friendship, User } from "@bchat/database/tables"
+import type { Prettify } from "./global"
+import type { OtherUser } from "./users"
 
 export type FriendshipRequest = Prettify<
     Friendship & {

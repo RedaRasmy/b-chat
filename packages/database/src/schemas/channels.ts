@@ -1,6 +1,6 @@
 import { pgEnum, pgTable, uuid } from "drizzle-orm/pg-core"
 import { createdAt } from "../timestamps"
-import { InferSelectModel, relations } from "drizzle-orm"
+import { type InferSelectModel, relations } from "drizzle-orm"
 import { messages } from "./messages"
 import { members } from "./members"
 import { dms } from "./dms"

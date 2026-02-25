@@ -1,5 +1,5 @@
-import { Member, User } from "@bchat/database/tables"
-import { Prettify } from "./global"
+import type { Member, User } from "@bchat/database/tables"
+import type { Prettify } from "./global"
 
 export type OtherUser = Pick<User, "id" | "name" | "avatar" | "role">
 

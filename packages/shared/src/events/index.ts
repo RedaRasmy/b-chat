@@ -1,6 +1,6 @@
-import { MessageAck } from "@bchat/types"
+import type { MessageAck } from "@bchat/types"
 import { CLIENT_EVENTS } from "./events"
-import { ClientPayloads, ServerPayloads } from "./payloads"
+import type { ClientPayloads, ServerPayloads } from "./payloads"
 
 export * from "./events"
 export * from "./payloads"

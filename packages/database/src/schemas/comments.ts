@@ -1,7 +1,7 @@
 import { posts } from "./posts"
 import { users } from "./users"
 import { createdAt, updatedAt } from "../timestamps"
-import { relations, InferSelectModel } from "drizzle-orm"
+import { relations, type InferSelectModel } from "drizzle-orm"
 import { boolean, index, pgTable, text, uuid } from "drizzle-orm/pg-core"
 
 export const comments = pgTable(

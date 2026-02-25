@@ -8,7 +8,11 @@ import {
 } from "drizzle-orm/pg-core"
 import { channels } from "./channels"
 import { users } from "./users"
-import { InferInsertModel, InferSelectModel, relations } from "drizzle-orm"
+import {
+    type InferInsertModel,
+    type InferSelectModel,
+    relations,
+} from "drizzle-orm"
 
 export const chatRole = pgEnum("chat_role", ["owner", "admin", "member"])
 export const memberStatus = pgEnum("member_status", ["active", "removed"])
