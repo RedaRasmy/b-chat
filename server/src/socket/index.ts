@@ -1,6 +1,5 @@
 import { Server as HTTPServer } from "http"
 import { Server as SocketIOServer, Socket } from "socket.io"
-import { allowedOrigins } from "../app"
 import { socketAuthMiddleware } from "./middlewares/auth"
 import {
     handleConnection,
@@ -10,12 +9,12 @@ import { handleSendMessage } from "./handlers/message.handler"
 import { handleGetMessage, handleSeeChat } from "./handlers/receipt.handler"
 import { handleTyping } from "./handlers/typing.handler"
 import {
-    CLIENT_EVENTS,
     ClientToServerEvents,
     ServerEvent,
     ServerPayloads,
     ServerToClientEvents,
 } from "@bchat/shared/events"
+import { allowedOrigins } from "@/config/allowed-origins"
 
 export type TypedServer = SocketIOServer<
     ClientToServerEvents,

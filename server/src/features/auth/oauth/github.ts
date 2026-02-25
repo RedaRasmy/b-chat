@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm"
 import db from "@bchat/database"
-import { accessTokenOptions, refreshTokenOptions } from "../options"
+import { getRefreshTokenOptions, getAccessTokenOptions } from "../options"
 import { refreshTokens, users } from "@bchat/database/tables"
 import { generateAccessToken } from "@/lib/jwt"
 import { generateToken } from "@/utils/generate-token"
@@ -113,8 +113,8 @@ export const githubCallback = makeEndpoint(async (req, res, next) => {
             expiresAt: new Date(Date.now() + MONTH),
         })
 
-        res.cookie("accessToken", accessToken, accessTokenOptions)
-        res.cookie("refreshToken", refreshToken, refreshTokenOptions)
+        res.cookie("accessToken", accessToken, getAccessTokenOptions(req))
+        res.cookie("refreshToken", refreshToken, getRefreshTokenOptions(req))
 
         res.redirect(`${process.env.FRONTEND_URL}`)
     } catch (err) {

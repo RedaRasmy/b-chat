@@ -1,5 +1,5 @@
 import { LoginSchema, RegisterSchema } from "@bchat/shared/validation"
-import { accessTokenOptions, refreshTokenOptions } from "./options"
+import { getRefreshTokenOptions, getAccessTokenOptions } from "./options"
 import { authService } from "@/features/auth/service"
 import { makeEndpoint } from "@/utils/make-endpoint"
 
@@ -12,8 +12,12 @@ export const register = makeEndpoint(
             const { user, accessToken, refreshToken } =
                 await authService.register(req.body)
 
-            res.cookie("accessToken", accessToken, accessTokenOptions)
-            res.cookie("refreshToken", refreshToken, refreshTokenOptions)
+            res.cookie("accessToken", accessToken, getAccessTokenOptions(req))
+            res.cookie(
+                "refreshToken",
+                refreshToken,
+                getRefreshTokenOptions(req),
+            )
 
             res.status(201).json({
                 id: user.id,
@@ -38,8 +42,12 @@ export const login = makeEndpoint(
                 req.body,
             )
 
-            res.cookie("accessToken", accessToken, accessTokenOptions)
-            res.cookie("refreshToken", refreshToken, refreshTokenOptions)
+            res.cookie("accessToken", accessToken, getAccessTokenOptions(req))
+            res.cookie(
+                "refreshToken",
+                refreshToken,
+                getRefreshTokenOptions(req),
+            )
 
             res.json({
                 id: user.id,
@@ -66,7 +74,7 @@ export const refresh = makeEndpoint(async (req, res, next) => {
     try {
         const { user, accessToken } = await authService.refresh(refreshToken)
 
-        res.cookie("accessToken", accessToken, accessTokenOptions)
+        res.cookie("accessToken", accessToken, getAccessTokenOptions(req))
 
         res.json({
             id: user.id,

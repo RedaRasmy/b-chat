@@ -1,14 +1,44 @@
+import { allowedOrigins } from "@/config/allowed-origins"
 import { MONTH } from "@/utils/periods"
-import { CookieOptions } from "express"
+import { Request, CookieOptions } from "express"
 
-export const accessTokenOptions: CookieOptions = {
-    httpOnly: true,
-    secure: true,
-    maxAge: 15 * 60 * 1000, // 15min,
+function getCookieOptions<P, ResBody, ReqBody, ReqQuery>(
+    req: Request<P, ResBody, ReqBody, ReqQuery>,
+    maxAge: number,
+): CookieOptions {
+    const isProduction = process.env.NODE_ENV === "production"
+
+    const requestOrigin = req.get("origin") || req.get("referer") || ""
+
+    if (!requestOrigin) {
+        return {
+            httpOnly: true,
+            secure: isProduction,
+            sameSite: "lax",
+            maxAge,
+        }
+    }
+
+    const isSameOrigin = allowedOrigins.some((domain) =>
+        requestOrigin.startsWith(domain),
+    )
+
+    return {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isSameOrigin ? "lax" : "none",
+        maxAge,
+    }
 }
 
-export const refreshTokenOptions: CookieOptions = {
-    httpOnly: true,
-    secure: true,
-    maxAge: MONTH,
+export function getAccessTokenOptions<P, ResBody, ReqBody, ReqQuery>(
+    req: Request<P, ResBody, ReqBody, ReqQuery>,
+) {
+    return getCookieOptions(req, 15 * 60 * 1000)
+}
+
+export function getRefreshTokenOptions<P, ResBody, ReqBody, ReqQuery>(
+    req: Request<P, ResBody, ReqBody, ReqQuery>,
+) {
+    return getCookieOptions(req, MONTH)
 }

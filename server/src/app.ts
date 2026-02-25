@@ -4,10 +4,7 @@ import { router } from "@/router"
 import cookieParser from "cookie-parser"
 import express from "express"
 import cors from "cors"
-
-export const allowedOrigins = [
-    process.env.FRONTEND_URL ?? "http://localhost:5173",
-]
+import { allowedOrigins } from "@/config/allowed-origins"
 
 export function createApp() {
     const app = express()
