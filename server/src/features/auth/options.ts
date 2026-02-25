@@ -26,7 +26,7 @@ function getCookieOptions<P, ResBody, ReqBody, ReqQuery>(
     return {
         httpOnly: true,
         secure: isProduction,
-        sameSite: isSameOrigin ? "lax" : "none",
+        sameSite: isSameOrigin ? "none" : "lax",
         maxAge,
     }
 }
