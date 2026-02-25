@@ -1,0 +1,19 @@
+services:
+    - type: web
+      name: server
+      runtime: node
+      rootDir: .
+      buildCommand: |
+          npm install -g pnpm
+          pnpm install
+      startCommand: cd server && pnpm start
+
+    - type: static
+      name: client
+      runtime: static
+      rootDir : .
+      buildCommand: |
+          npm install -g pnpm
+          pnpm install
+          cd client && pnpm build
+      staticPublishPath: ./client/dist
