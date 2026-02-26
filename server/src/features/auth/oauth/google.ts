@@ -90,7 +90,7 @@ export const googleCallback = makeEndpoint(async (req, res, next) => {
         res.cookie("accessToken", accessToken, getAccessTokenOptions(req))
         res.cookie("refreshToken", refreshToken, getRefreshTokenOptions(req))
 
-        res.redirect(`${process.env.FRONTEND_URL}/profile`)
+        res.redirect(`${process.env.FRONTEND_URL}`)
     } catch (err) {
         console.error("Google OAuth error:", err)
         return res.redirect(
