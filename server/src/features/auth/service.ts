@@ -1,5 +1,6 @@
 import { ConflictError, NotFoundError, UnauthorizedError } from "@/errors"
 import { generateAccessToken } from "@/lib/jwt"
+import logger from "@/lib/logger"
 import { generateToken } from "@/utils/generate-token"
 import { MONTH } from "@/utils/periods"
 import db from "@bchat/database"
@@ -133,7 +134,7 @@ export const authService = {
             .delete(refreshTokens)
             .where(eq(refreshTokens.token, refreshToken))
         if (res.rowCount === 0) {
-            throw new Error("Logout failed")
+            logger.info("Token deletion failed")
         }
     },
 

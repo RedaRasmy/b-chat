@@ -91,18 +91,15 @@ export const refresh = makeEndpoint(async (req, res, next) => {
 export const logout = makeEndpoint(async (req, res, next) => {
     const refreshToken = req.cookies.refreshToken
 
+    res.clearCookie("accessToken", getAccessTokenOptions(req))
+    res.clearCookie("refreshToken", getRefreshTokenOptions(req))
+
     if (!refreshToken || typeof refreshToken !== "string") {
-        return res.status(400).json({
-            message: "Refresh token not provided",
-        })
+        return res.sendStatus(204)
     }
 
     try {
         await authService.logout(refreshToken)
-
-        res.clearCookie("accessToken")
-        res.clearCookie("refreshToken")
-
         res.sendStatus(204)
     } catch (err) {
         next(err)
