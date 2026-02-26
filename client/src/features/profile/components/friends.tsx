@@ -1,8 +1,11 @@
+import { Button } from "@/components/ui/button"
 import ChatButton from "@/features/chats/components/chat-button"
 import FriendCard from "@/features/friendships/components/friend-card"
 import UnfriendButton from "@/features/friendships/components/unfriend-button"
 import { fetchFriends } from "@/features/friendships/requests"
+import LoadingPage from "@/pages/loading"
 import { useQuery } from "@tanstack/react-query"
+import { Link } from "react-router-dom"
 
 export default function Friends() {
     const { data, isLoading } = useQuery({
@@ -10,13 +13,16 @@ export default function Friends() {
         queryFn: fetchFriends,
     })
 
-    if (isLoading || !data) return null
-    if (data?.length === 0)
+    if (isLoading || !data) return <LoadingPage className="h-full" />
+    if (data.length === 0)
         return (
-            <div className="text-center flex items-center h-full justify-center font-semibold text-xl">
+            <div className="text-center flex items-center flex-col gap-2 h-full justify-center font-semibold text-xl">
                 <h1 className="max-w-50 lg:max-w-100">
                     You don't have any friends yet
                 </h1>
+                <Link to={"/users"}>
+                    <Button>Add new friend</Button>
+                </Link>
             </div>
         )
 
