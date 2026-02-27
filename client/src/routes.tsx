@@ -1,12 +1,13 @@
-import App from "@/App"
-import ChatPage from "@/pages/chat"
-import ProfilePage from "@/pages/profile"
-import LoginPage from "@/pages/auth/login"
-import PostsPage from "@/pages/posts"
-import RegisterPage from "@/pages/auth/register"
 import { createBrowserRouter } from "react-router-dom"
-import AuthLayout from "@/pages/auth"
-import UsersPage from "@/pages/users"
+import { lazy } from "react"
+import App from "@/App"
+const ChatPage = lazy(() => import("@/pages/chat"))
+const ProfilePage = lazy(() => import("@/pages/profile"))
+const LoginPage = lazy(() => import("@/pages/auth/login"))
+const RegisterPage = lazy(() => import("@/pages/auth/register"))
+const PostsPage = lazy(() => import("@/pages/posts"))
+const UsersPage = lazy(() => import("@/pages/users"))
+const AuthLayout = lazy(() => import("@/pages/auth"))
 
 export const router = createBrowserRouter([
     {
