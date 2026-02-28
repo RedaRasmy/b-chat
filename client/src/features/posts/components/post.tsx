@@ -6,6 +6,7 @@ import {
     CardContent,
     CardAction,
 } from "@/components/ui/card"
+import { getTime } from "@/features/chats/utils/get-time"
 import type { PostWithAuthor } from "@bchat/types"
 import type { ReactNode } from "react"
 
@@ -16,7 +17,7 @@ export default function Post({
     post: PostWithAuthor
     children?: ReactNode
 }) {
-    const date = new Date(post.createdAt).toLocaleDateString()
+    const date = getTime(post.createdAt)
     return (
         <Card className="w-full max-w-200">
             <CardHeader>
