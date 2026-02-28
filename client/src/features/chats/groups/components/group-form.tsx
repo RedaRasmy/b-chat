@@ -27,7 +27,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 export function GroupFormDialog() {
     const [open, setOpen] = useState(false)
@@ -115,7 +115,7 @@ export function GroupFormDialog() {
                             render={({ field, fieldState }) => (
                                 <Field data-invalid={fieldState.invalid}>
                                     <FieldLabel>Members</FieldLabel>
-                                    {friends ? (
+                                    {friends && friends.length > 0 ? (
                                         <div className="grid gap-1 max-h-70 overflow-auto">
                                             {friends.map((friend) => (
                                                 <div
@@ -159,7 +159,20 @@ export function GroupFormDialog() {
                                             ))}
                                         </div>
                                     ) : (
-                                        <div>No friends yet</div>
+                                        <div className="text-center gap-2">
+                                            <DialogClose
+                                                render={
+                                                    <Link to={"/users"}>
+                                                        <Button
+                                                            size={"sm"}
+                                                            variant={"link"}
+                                                        >
+                                                            Add new friends
+                                                        </Button>
+                                                    </Link>
+                                                }
+                                            />
+                                        </div>
                                     )}
                                     {fieldState.invalid && (
                                         <FieldError
