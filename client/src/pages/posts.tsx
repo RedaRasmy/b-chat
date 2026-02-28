@@ -29,7 +29,7 @@ export default function PostsPage() {
     })
     if (!data) return null
     return (
-        <div className="w-full h-screen grid">
+        <div className="w-full h-screen grid grid-rows-[auto_1fr]">
             <PageHeader>
                 <h1>Posts</h1>
                 <PostForm
