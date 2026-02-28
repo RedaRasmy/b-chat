@@ -53,11 +53,8 @@ export default function UsersPage() {
             </PageHeader>
             <main
                 className={cn(
-                    "p-3 space-y-2 overflow-y-auto",
+                    "p-3 grid grid-rows-[auto_1fr]",
                     "max-w-200 mx-auto w-full space-y-3",
-                    {
-                        "opacity-50": isPlaceholderData,
-                    },
                 )}
             >
                 <Input
@@ -66,49 +63,57 @@ export default function UsersPage() {
                     className="py-5 px-5 rounded-2xl"
                     placeholder="Find users by name"
                 />
-                {data ? (
-                    data.map((user) => {
-                        const friend = friends.find((f) => f.id === user.id)
-                        const sentReq = sentRequests.find(
-                            (req) => req.receiverId === user.id,
-                        )
-                        const req = receivedRequests.find(
-                            (req) => req.requesterId === user.id,
-                        )
-                        if (friend)
-                            return (
-                                <UserCard key={user.id} user={user}>
-                                    <UnfriendButton
-                                        friendshipId={friend.friendshipId}
-                                    />
-                                    <ChatButton friendId={user.id} />
-                                </UserCard>
+                <section
+                    className={cn("p-1 space-y-2 overflow-y-auto", {
+                        "opacity-50": isPlaceholderData,
+                    })}
+                >
+                    {data ? (
+                        data.map((user) => {
+                            const friend = friends.find((f) => f.id === user.id)
+                            const sentReq = sentRequests.find(
+                                (req) => req.receiverId === user.id,
                             )
-                        if (sentReq) {
-                            return (
-                                <UserCard key={user.id} user={user}>
-                                    <CancelButton friendshipId={sentReq.id} />
-                                </UserCard>
+                            const req = receivedRequests.find(
+                                (req) => req.requesterId === user.id,
                             )
-                        }
+                            if (friend)
+                                return (
+                                    <UserCard key={user.id} user={user}>
+                                        <UnfriendButton
+                                            friendshipId={friend.friendshipId}
+                                        />
+                                        <ChatButton friendId={user.id} />
+                                    </UserCard>
+                                )
+                            if (sentReq) {
+                                return (
+                                    <UserCard key={user.id} user={user}>
+                                        <CancelButton
+                                            friendshipId={sentReq.id}
+                                        />
+                                    </UserCard>
+                                )
+                            }
 
-                        if (req) {
+                            if (req) {
+                                return (
+                                    <UserCard key={user.id} user={user}>
+                                        <RejectButton friendshipId={req.id} />
+                                        <AcceptButton friendshipId={req.id} />
+                                    </UserCard>
+                                )
+                            }
                             return (
                                 <UserCard key={user.id} user={user}>
-                                    <RejectButton friendshipId={req.id} />
-                                    <AcceptButton friendshipId={req.id} />
+                                    <RequestButton userId={user.id} />
                                 </UserCard>
                             )
-                        }
-                        return (
-                            <UserCard key={user.id} user={user}>
-                                <RequestButton userId={user.id} />
-                            </UserCard>
-                        )
-                    })
-                ) : (
-                    <LoadingPage />
-                )}
+                        })
+                    ) : (
+                        <LoadingPage className="h-full" />
+                    )}
+                </section>
             </main>
         </div>
     )
