@@ -5,7 +5,7 @@ import { ProfilePage } from "../pages/profile.page"
 import { UsersPage } from "../pages/users.page"
 import { DMPage } from "../pages/dm.page"
 
-// test.describe.configure({ mode: "serial" })
+test.describe.configure({ mode: "serial" })
 
 test.describe("DM flow", () => {
     let userAContext: BrowserContext
@@ -65,9 +65,7 @@ test.describe("DM flow", () => {
         await dmB.expectMessage("hello")
 
         await dmB.sendMessage("hi")
-        await expect(async () => {
-            await dmA.expectMessage("hi")
-        }).toPass({ timeout: 3000 })
+        await dmA.expectMessage("hi")
 
         await userAContext.close()
         await userBContext.close()

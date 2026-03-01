@@ -34,7 +34,9 @@ export class DMPage extends BasePage {
     }
 
     async expectMessage(msg: string | RegExp) {
-        await expect(this.getBody().getByText(msg)).toBeVisible()
+        await expect(async () => {
+            await expect(this.getBody().getByText(msg)).toBeVisible()
+        }).toPass({ timeout: 5000 })
     }
 
     async deleteChat() {
