@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom"
 import { lazy } from "react"
 import App from "@/App"
+import NotFound from "@/pages/not-found"
 const ChatPage = lazy(() => import("@/pages/chat"))
 const ProfilePage = lazy(() => import("@/pages/profile"))
 const LoginPage = lazy(() => import("@/pages/auth/login"))
@@ -45,5 +46,9 @@ export const router = createBrowserRouter([
                 element: <RegisterPage />,
             },
         ],
+    },
+    {
+        path: "*",
+        element: <NotFound />,
     },
 ])
