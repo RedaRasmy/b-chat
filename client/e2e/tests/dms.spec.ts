@@ -1,5 +1,5 @@
 import { BrowserContext, Page } from "@playwright/test"
-import { test, expect } from "../fixtures"
+import { test } from "../fixtures"
 import { LoginPage } from "../pages/login.page"
 import { ProfilePage } from "../pages/profile.page"
 import { UsersPage } from "../pages/users.page"
@@ -22,7 +22,7 @@ test.describe("DM flow", () => {
 
     test.beforeEach(async ({ browser, request }) => {
         // reset DB
-        await request.post("http://localhost:5173/api/test/seed")
+        await request.post("http://localhost:3000/api/test/seed")
 
         // setup
         userAContext = await browser.newContext()

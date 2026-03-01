@@ -19,7 +19,7 @@ test.describe("Friendship flow", () => {
 
     test.beforeEach(async ({ browser, request }) => {
         // reset DB
-        await request.post("http://localhost:5173/api/test/seed")
+        await request.post("http://localhost:3000/api/test/seed")
 
         // setup
         userAContext = await browser.newContext()
