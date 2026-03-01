@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom"
 import { lazy } from "react"
 import App from "@/App"
 import NotFound from "@/pages/not-found"
+import { ErrorBoundary } from "@/pages/error"
 const ChatPage = lazy(() => import("@/pages/chat"))
 const ProfilePage = lazy(() => import("@/pages/profile"))
 const LoginPage = lazy(() => import("@/pages/auth/login"))
@@ -14,6 +15,7 @@ export const router = createBrowserRouter([
     {
         path: "/",
         element: <App />,
+        ErrorBoundary,
         children: [
             {
                 index: true,
