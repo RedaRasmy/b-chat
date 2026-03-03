@@ -222,7 +222,7 @@ export default function LoginPage() {
                                 variant="outline"
                                 className="w-full cursor-pointer"
                                 onClick={() => {
-                                    window.location.href = `${import.meta.env.VITE_API_URL}/api/auth/google/login`
+                                    window.location.href = `${import.meta.env.DEV ? import.meta.env.VITE_API_URL : ""}/api/auth/google/login`
                                 }}
                             >
                                 <GoogleIcon />
@@ -232,7 +232,7 @@ export default function LoginPage() {
                                 variant="outline"
                                 className="w-full cursor-pointer"
                                 onClick={() => {
-                                    window.location.href = `${import.meta.env.VITE_API_URL}/api/auth/github/login`
+                                    window.location.href = `${import.meta.env.DEV ? import.meta.env.VITE_API_URL : ""}/api/auth/github/login`
                                 }}
                             >
                                 <GithubIcon />
