@@ -1,11 +1,10 @@
 import { useSidebar } from "@/components/ui/sidebar"
 import { useUser } from "@/features/auth/use-user"
 import { useSocketListener } from "@/features/chats/hooks/use-socket-listener"
-import { fetchChats } from "@/features/chats/requests"
 import { useSocket } from "@/features/chats/hooks/use-socket"
 import { getChatName } from "@/features/chats/utils/chats"
 import type { Channels, ChatMessage } from "@bchat/types"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQueryClient } from "@tanstack/react-query"
 import { useParams } from "react-router-dom"
 import { toast } from "sonner"
 
@@ -16,13 +15,9 @@ export default function useMessageListener() {
     const currentChannelId = useParams().id
     const { open } = useSidebar()
 
-    const { data: chats = [] } = useQuery({
-        queryKey: ["chats"],
-        queryFn: fetchChats,
-    })
-
     useSocketListener("new_message", (message) => {
         console.log("new msg :", message)
+        const chats = queryClient.getQueryData<Channels>(["chats"]) ?? []
         const chat = chats.find((c) => c.id === message.channelId)
 
         if (chat) {
