@@ -21,6 +21,7 @@ export const githubLogin = makeEndpoint(async (req, res) => {
 
 export const githubCallback = makeEndpoint(async (req, res, next) => {
     const { code } = req.query
+    const base = process.env.FRONTEND_URL ?? ""
 
     try {
         const tokenResponse = await fetch(
@@ -67,9 +68,7 @@ export const githubCallback = makeEndpoint(async (req, res, next) => {
         const githubId = githubUser.id.toString()
 
         if (!primaryEmail) {
-            return res.redirect(
-                `${process.env.FRONTEND_URL}/login?error=no_email`,
-            )
+            throw new Error("Email don't exist")
         }
 
         let user = await db.query.users.findFirst({
@@ -116,11 +115,9 @@ export const githubCallback = makeEndpoint(async (req, res, next) => {
         res.cookie("accessToken", accessToken, getAccessTokenOptions(req))
         res.cookie("refreshToken", refreshToken, getRefreshTokenOptions(req))
 
-        res.redirect(`${process.env.FRONTEND_URL}`)
+        res.redirect(`${base}/`)
     } catch (err) {
         console.error("GitHub OAuth error:", err)
-        return res.redirect(
-            `${process.env.FRONTEND_URL}/auth/login?error=github_auth_failed`,
-        )
+        return res.redirect(`${base}/auth/login?error=github_auth_failed`)
     }
 })

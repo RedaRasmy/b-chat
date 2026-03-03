@@ -22,6 +22,7 @@ export const googleLogin = makeEndpoint(async (req, res) => {
 
 export const googleCallback = makeEndpoint(async (req, res, next) => {
     const { code } = req.query
+    const base = process.env.FRONTEND_URL ?? ""
 
     try {
         const tokenResponse = await fetch(
@@ -90,11 +91,9 @@ export const googleCallback = makeEndpoint(async (req, res, next) => {
         res.cookie("accessToken", accessToken, getAccessTokenOptions(req))
         res.cookie("refreshToken", refreshToken, getRefreshTokenOptions(req))
 
-        res.redirect(`${process.env.FRONTEND_URL}`)
+        res.redirect(`${base}/`)
     } catch (err) {
         console.error("Google OAuth error:", err)
-        return res.redirect(
-            `${process.env.FRONTEND_URL}/auth/login?error=google_auth_failed`,
-        )
+        return res.redirect(`${base}/auth/login?error=google_auth_failed`)
     }
 })

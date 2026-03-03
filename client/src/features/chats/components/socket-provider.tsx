@@ -10,9 +10,12 @@ export type ClientSocket = Socket<ServerToClientEvents, ClientToServerEvents>
 
 export default function SocketProvider({ children }: { children: ReactNode }) {
     const [socket] = useState<ClientSocket>(() => {
-        const newSocket = io(import.meta.env.VITE_API_URL, {
-            withCredentials: true,
-        })
+        const newSocket = io(
+            import.meta.env.DEV ? import.meta.env.VITE_API_URL : "/",
+            {
+                withCredentials: true,
+            },
+        )
 
         newSocket.on("connect", () => {
             console.log("Connected")
