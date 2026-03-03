@@ -1,8 +1,9 @@
 import { createBrowserRouter } from "react-router-dom"
-import { lazy } from "react"
+import { lazy, Suspense } from "react"
 import App from "@/App"
 import NotFound from "@/pages/not-found"
 import { ErrorBoundary } from "@/pages/error"
+import LoadingPage from "@/pages/loading"
 const ChatPage = lazy(() => import("@/pages/chat"))
 const ProfilePage = lazy(() => import("@/pages/profile"))
 const LoginPage = lazy(() => import("@/pages/auth/login"))
@@ -37,7 +38,11 @@ export const router = createBrowserRouter([
     },
     {
         path: "/auth",
-        element: <AuthLayout />,
+        element: (
+            <Suspense fallback={<LoadingPage />}>
+                <AuthLayout />
+            </Suspense>
+        ),
         children: [
             {
                 path: "login",
