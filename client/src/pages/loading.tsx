@@ -5,7 +5,7 @@ export default function LoadingPage({ className }: { className?: string }) {
     return (
         <div
             className={cn(
-                "flex h-screen items-center justify-center",
+                "flex h-screen w-full items-center justify-center",
                 className,
             )}
         >
