@@ -2,6 +2,7 @@ import UserCard from "@/components/user-card"
 import AcceptButton from "@/features/friendships/components/accept-button"
 import RejectButton from "@/features/friendships/components/reject-button"
 import { fetchReceivedRequests } from "@/features/friendships/requests"
+import LoadingPage from "@/pages/loading"
 import { useQuery } from "@tanstack/react-query"
 
 export default function Requests() {
@@ -10,7 +11,7 @@ export default function Requests() {
         queryFn: fetchReceivedRequests,
     })
 
-    if (isLoading || !data) return null
+    if (isLoading || !data) return <LoadingPage className="h-full" />
     if (data?.length === 0)
         return (
             <div className="text-center flex items-center h-full justify-center font-semibold text-xl">

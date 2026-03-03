@@ -5,6 +5,7 @@ import Post from "@/features/posts/components/post"
 import { PostForm } from "@/features/posts/components/post-form"
 import { deletePost, updatePost } from "@/features/posts/requests"
 import { fetchMyPosts } from "@/features/profile/requests"
+import LoadingPage from "@/pages/loading"
 import { Delete03Icon, Edit04Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
@@ -35,7 +36,7 @@ export default function MyPosts() {
         },
     })
 
-    if (isLoading || !data) return null
+    if (isLoading || !data) return <LoadingPage className="h-full" />
 
     if (data.length === 0)
         return (
