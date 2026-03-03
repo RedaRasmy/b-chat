@@ -22,6 +22,15 @@ export function handleSendMessage(io: TypedServer, socket: TypedSocket) {
         const { content, channelId, tempId } = result.data
         const user = socket.user
 
+        if (content.trim().length === 0) {
+            return callback({
+                success: false,
+                error: "Message cannot be empty",
+                tempId,
+                channelId,
+            })
+        }
+
         try {
             const channel =
                 await channelService.getChannelWithMembers(channelId)

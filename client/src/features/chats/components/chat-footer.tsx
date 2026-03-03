@@ -14,8 +14,9 @@ export default function ChatFooter() {
     const { chat } = useChat()
 
     function handleSend() {
-        if (message.length > 0) {
-            send(message)
+        const trimmed = message.trim()
+        if (trimmed.length > 0) {
+            send(trimmed)
             setMessage("")
         }
     }
@@ -37,13 +38,13 @@ export default function ChatFooter() {
                 onKeyDown={(e) => {
                     if (e.key === "Enter") {
                         handleSend()
-                    } else {
+                    } else if (e.key.length === 1) {
                         sendTyping()
                     }
                 }}
                 aria-label="Message"
             />
-            <Button onClick={handleSend} disabled={!message}>
+            <Button onClick={handleSend} disabled={!message.trim()}>
                 Send
             </Button>
         </footer>
