@@ -9,7 +9,7 @@
         "dev:server": "pnpm --filter @bchat/server dev",
         "dev": "pnpm --parallel --filter @bchat/client --filter @bchat/server dev",
         "build": "pnpm --filter @bchat/client build",
-        "start": "pnpm --parallel --filter @bchat/server --filter @bchat/client start",
+        "start": "pnpm --filter @bchat/server start",
         "db:push": "pnpm --filter=@bchat/database push",
         "db:generate": "nnpm --filter=@bchat/database generate",
         "db:migrate": "pnpm --filter=@bchat/database migrate",
