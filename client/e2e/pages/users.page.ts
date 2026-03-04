@@ -3,6 +3,7 @@ import { BasePage } from "./base.page"
 export class UsersPage extends BasePage {
     async goto() {
         await this.page.goto("/users")
+        await this.page.getByPlaceholder(/find users/i).waitFor()
     }
 
     async search(name: string) {

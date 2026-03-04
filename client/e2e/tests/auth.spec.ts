@@ -1,6 +1,7 @@
 import { test, expect } from "../fixtures"
 
 test.describe("Auth flow", () => {
+    test.describe.configure({ mode: "serial" })
     test("user can register and gets redirected", async ({ register }) => {
         await register.goto()
 
@@ -25,6 +26,7 @@ test.describe("Auth flow", () => {
 
         // log out
         await register.page.getByRole("button", { name: /log out/i }).click()
+        await register.page.waitForURL("/auth/login")
 
         // log in
         await login.goto()
@@ -41,7 +43,8 @@ test.describe("Auth flow", () => {
         await expect(page).toHaveURL("/auth/login")
     })
 
-    test("duplicate email shows error", async ({ register }) => {
+    test("duplicate email shows error", async ({ register, request }) => {
+        await request.post("http://localhost:3000/api/test/seed")
         const email = "omar@example.com"
 
         await register.goto()

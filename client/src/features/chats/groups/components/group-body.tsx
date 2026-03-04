@@ -11,7 +11,10 @@ export default function ChatBody() {
     const { retry, remove } = useMessage()
 
     return (
-        <main className="p-3 space-y-2 overflow-y-auto relative">
+        <main
+            aria-label="Chat body"
+            className="p-3 space-y-2 overflow-y-auto relative"
+        >
             {messages.map((msg) => (
                 <GroupMessage
                     onDelete={remove}

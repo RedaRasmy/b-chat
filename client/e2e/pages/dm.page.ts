@@ -30,7 +30,9 @@ export class DMPage extends BasePage {
         await this.getMessageInput().fill(msg)
         await this.getSendButton().click()
         await expect(this.getMessageInput()).toHaveValue("")
-        await expect(this.getBody().getByText(msg)).toBeVisible()
+        await expect(
+            this.page.getByLabel(/chat body/i).getByText(msg),
+        ).toBeVisible()
     }
 
     async expectMessage(msg: string | RegExp) {

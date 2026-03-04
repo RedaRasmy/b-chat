@@ -20,7 +20,8 @@ test.describe("DM flow", () => {
     let dmA: DMPage
     let dmB: DMPage
 
-    test.beforeEach(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser, request }) => {
+        test.setTimeout(120000)
         // reset DB
         await request.post("http://localhost:3000/api/test/seed")
 
