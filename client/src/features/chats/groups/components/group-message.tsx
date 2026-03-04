@@ -77,7 +77,7 @@ export default function GroupMessage({
                                         {getTime(message.createdAt)}
                                     </span>
                                 </div>
-                                <div className="w-full text-end px-4">
+                                <div className="w-full text-end px-4 break-all">
                                     {message.content}
                                 </div>
                                 {isUser && (
