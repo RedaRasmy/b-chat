@@ -6,8 +6,6 @@ import { TypedServer, TypedSocket } from "@/socket"
 
 export function handleGetMessage(io: TypedServer, socket: TypedSocket) {
     return async (data: any) => {
-        logger.info("Message delivered:", data)
-
         try {
             const { channelId, messageId, senderId } =
                 GetMessageSchema.parse(data)

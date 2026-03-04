@@ -1,13 +1,11 @@
 import { MessageAck } from "@bchat/types"
 import { SendMessageSchema } from "@bchat/shared/validation"
-import { sleep } from "@/utils/sleep"
 import { messageService } from "@/features/messages/service"
 import { channelService } from "@/features/channels/service"
 import { TypedServer, TypedSocket } from "@/socket"
 
 export function handleSendMessage(io: TypedServer, socket: TypedSocket) {
     return async (msg: any, callback: (response: MessageAck) => void) => {
-        console.log("Received message:", msg)
 
         const result = SendMessageSchema.safeParse(msg)
         if (!result.success) {
@@ -47,8 +45,6 @@ export function handleSendMessage(io: TypedServer, socket: TypedSocket) {
             const recipients = channel.members.filter(
                 (m) => m.userId !== user.id,
             )
-
-            await sleep(200) // TODO: delete this
 
             const message = await messageService.createMessage({
                 channelId,
