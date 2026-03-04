@@ -26,4 +26,8 @@ export default defineConfig({
         globals: true,
         setupFiles: ["./src/test/setup.ts"],
     },
+    esbuild: {
+        drop: ["debugger"],
+        pure: ["console.log", "console.debug", "console.info"],
+    },
 })
