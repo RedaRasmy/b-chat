@@ -6,25 +6,12 @@ function getCookieOptions<P, ResBody, ReqBody, ReqQuery>(
     req: Request<P, ResBody, ReqBody, ReqQuery>,
     maxAge: number,
 ): CookieOptions {
-    const requestOrigin = req.get("origin") || req.get("referer") || ""
-
-    if (!requestOrigin) {
-        return {
-            httpOnly: true,
-            secure: true,
-            sameSite: "lax",
-            maxAge,
-        }
-    }
-
-    const isSameOrigin = allowedOrigins.some((domain) =>
-        requestOrigin.startsWith(domain),
-    )
+    const isProduction = process.env.NODE_ENV === "production"
 
     return {
         httpOnly: true,
-        secure: true,
-        sameSite: isSameOrigin ? "none" : "lax",
+        secure: isProduction,
+        sameSite: "lax",
         maxAge,
     }
 }
