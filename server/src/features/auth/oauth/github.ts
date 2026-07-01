@@ -99,6 +99,8 @@ export const githubCallback = makeEndpoint(async (req, res, next) => {
             user = newUser
         }
 
+        if (!user) throw new Error("Failed to select/create user")
+
         const accessToken = generateAccessToken({
             id: user.id,
             email: user.email,
