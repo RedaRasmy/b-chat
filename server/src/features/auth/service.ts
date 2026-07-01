@@ -17,7 +17,7 @@ export const authService = {
 
         if (hasAdmin === null) {
             const [userCount] = await db.select({ count: count() }).from(users)
-            hasAdmin = userCount.count > 0
+            hasAdmin = userCount!.count > 0
         }
 
         const exist = await db.query.users.findFirst({
@@ -38,6 +38,7 @@ export const authService = {
             })
             .returning()
 
+        if (!user) throw new Error("Failed to create user")
         // ----- Auto Sign-in ------
 
         // Generate Tokens :

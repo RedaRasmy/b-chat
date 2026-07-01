@@ -26,12 +26,15 @@ export const getPosts = makeEndpoint(
         try {
             const data = await postService.getPosts({ search, offset, limit })
 
-            const [{ total }] = await db
+            const [result] = await db
                 .select({ total: count() })
                 .from(posts)
                 .where(() => {
                     if (search) return ilike(posts.content, search)
                 })
+
+            if (!result) throw new Error("Failed to select count")
+            const total = result.total
 
             res.json(
                 getPaginatedData({
@@ -149,10 +152,13 @@ export const getPostComments = makeEndpoint(
                 limit,
             })
 
-            const [{ total }] = await db
+            const [result] = await db
                 .select({ total: count() })
                 .from(comments)
                 .where(() => eq(comments.postId, postId))
+
+            if (!result) throw new Error("Failed to select count")
+            const total = result.total
 
             res.json(
                 getPaginatedData({

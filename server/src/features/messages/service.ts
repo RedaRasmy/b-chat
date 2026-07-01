@@ -73,6 +73,8 @@ export const messageService = {
                 })
                 .returning()
 
+            if (!message) throw new Error("Failed to create message")
+
             const receipts =
                 recipientIds.length > 0
                     ? await tx

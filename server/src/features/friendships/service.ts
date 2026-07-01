@@ -66,6 +66,8 @@ export const friendService = {
             )
             .returning()
 
+        if (!newFriendship) throw new Error("Failed to update friendship")
+
         return {
             userName: friendship.receiver.name,
             friendship: newFriendship,

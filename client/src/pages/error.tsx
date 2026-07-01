@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { isRouteErrorResponse, Link, useRouteError } from "react-router-dom"
 
 export function ErrorBoundary() {
-    let error = useRouteError()
+    const error = useRouteError()
     if (isRouteErrorResponse(error)) {
         return (
             <div className="h-screen flex flex-col items-center justify-center gap-2">

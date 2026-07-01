@@ -114,6 +114,8 @@ export const channelService = {
                 })
                 .returning()
 
+            if (!channel) throw new Error("Failed to create channel")
+
             const [dm] = await tx
                 .insert(dms)
                 .values({
@@ -122,6 +124,8 @@ export const channelService = {
                     user2Id: friendId,
                 })
                 .returning()
+
+            if (!dm) throw new Error("Failed to create DM")
 
             await tx.insert(members).values([
                 { channelId: channel.id, userId: userId },
@@ -155,6 +159,8 @@ export const channelService = {
                 })
                 .returning()
 
+            if (!channel) throw new Error("Failed to create channel")
+
             const [group] = await tx
                 .insert(groups)
                 .values({
@@ -162,6 +168,8 @@ export const channelService = {
                     name,
                 })
                 .returning()
+
+            if (!group) throw new Error("Failed to create group")
 
             await tx.insert(members).values(
                 validMembers.map(
