@@ -8,8 +8,6 @@
         "build": "tsc -b && vite build",
         "lint": "eslint .",
         "preview": "vite preview",
-        "cloc": "cloc . --exclude-dir=node_modules,ui",
-        "cloc:ts": "cloc . --exclude-dir=node_modules,ui --include-lang=TypeScript",
         "test:ete": "pnpm exec playwright test",
         "show-report": "pnpm exec playwright show-report",
         "test:ui": "pnpm exec playwright test --ui",
