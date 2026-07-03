@@ -11,7 +11,7 @@
         "build": "pnpm --filter @bchat/client build",
         "start": "pnpm --filter @bchat/server start",
         "db:push": "pnpm --filter=@bchat/database push",
-        "db:generate": "nnpm --filter=@bchat/database generate",
+        "db:generate": "pnpm --filter=@bchat/database generate",
         "db:migrate": "pnpm --filter=@bchat/database migrate",
         "db:studio": "pnpm --filter=@bchat/database studio",
         "db:seed": "pnpm --filter=@bchat/database seed"
