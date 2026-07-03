@@ -1,11 +1,5 @@
+import type { ClientSocket } from "@/features/chats/types"
 import { createContext } from "react"
-import type { Socket } from "socket.io-client"
-import type {
-    ServerToClientEvents,
-    ClientToServerEvents,
-} from "@bchat/shared/events"
-
-export type ClientSocket = Socket<ServerToClientEvents, ClientToServerEvents>
 
 export type SocketContext = {
     socket: ClientSocket

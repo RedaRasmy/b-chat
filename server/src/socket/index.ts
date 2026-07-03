@@ -9,9 +9,9 @@ import { handleSendMessage } from "./handlers/message.handler"
 import { handleGetMessage, handleSeeChat } from "./handlers/receipt.handler"
 import { handleTyping } from "./handlers/typing.handler"
 import {
+    Args,
     ClientToServerEvents,
     ServerEvent,
-    ServerPayloads,
     ServerToClientEvents,
 } from "@bchat/shared/events"
 import { allowedOrigins } from "@/config/allowed-origins"
@@ -78,15 +78,19 @@ function getTypedIO() {
 export function emitToUser<T extends ServerEvent>(
     userId: string,
     event: T,
-    data: ServerPayloads[T],
+    ...args: Args<T>
 ) {
-    getTypedIO().to(`user:${userId}`).emit(event, data)
+    getTypedIO()
+        .to(`user:${userId}`)
+        .emit(event, ...args)
 }
 
 export function emitToChannel<T extends ServerEvent>(
     channelId: string,
     event: T,
-    data: ServerPayloads[T],
+    ...args: Args<T>
 ) {
-    getTypedIO().to(`channel:${channelId}`).emit(event, data)
+    getTypedIO()
+        .to(`channel:${channelId}`)
+        .emit(event, ...args)
 }
