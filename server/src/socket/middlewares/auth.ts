@@ -35,7 +35,7 @@ export async function socketAuthMiddleware(
 
         if (!user) return next(new Error("User not found"))
 
-        socket.user = user
+        socket.data.user = user
 
         next()
     } catch (err) {

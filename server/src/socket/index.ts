@@ -1,5 +1,5 @@
 import { Server as HTTPServer } from "http"
-import { Server as SocketIOServer, Socket } from "socket.io"
+import { Server as SocketIOServer, Socket, DefaultEventsMap } from "socket.io"
 import { socketAuthMiddleware } from "./middlewares/auth"
 import {
     handleConnection,
@@ -15,12 +15,24 @@ import {
     ServerToClientEvents,
 } from "@bchat/shared/events"
 import { allowedOrigins } from "@/config/allowed-origins"
+import { Profile } from "@bchat/types"
 
 export type TypedServer = SocketIOServer<
     ClientToServerEvents,
-    ServerToClientEvents
+    ServerToClientEvents,
+    DefaultEventsMap,
+    {
+        user: Profile
+    }
 >
-export type TypedSocket = Socket<ClientToServerEvents, ServerToClientEvents>
+export type TypedSocket = Socket<
+    ClientToServerEvents,
+    ServerToClientEvents,
+    DefaultEventsMap,
+    {
+        user: Profile
+    }
+>
 
 let io: TypedServer
 
@@ -56,7 +68,7 @@ export function getIO() {
 
 export function getUserSocket(userId: string) {
     const sockets = Array.from(getIO().sockets.sockets.values())
-    return sockets.find((s) => s.user.id === userId)
+    return sockets.find((s) => s.data.user.id === userId)
 }
 
 function getTypedIO() {

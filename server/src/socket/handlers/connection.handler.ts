@@ -6,7 +6,7 @@ import { SERVER_EVENTS } from "@bchat/shared/events"
 import { TypedServer, TypedSocket } from "@/socket"
 
 export async function handleConnection(io: TypedServer, socket: TypedSocket) {
-    const user = socket.user
+    const user = socket.data.user
     logger.info(user, "User connected:")
 
     await userService.updateStatus(user.id, "online")
@@ -32,7 +32,7 @@ export async function handleDisconnection(
     io: TypedServer,
     socket: TypedSocket,
 ) {
-    const user = socket.user
+    const user = socket.data.user
     logger.info(user, "User disconnected:")
 
     try {

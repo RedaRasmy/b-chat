@@ -6,18 +6,19 @@ export function handleTyping(io: TypedServer, socket: TypedSocket) {
     return (data: any) => {
         try {
             const { channelId } = TypingSchema.parse(data)
+            const user = socket.data.user
 
             if (!socket.rooms.has(`channel:${channelId}`)) {
                 logger.warn(
-                    `User ${socket.user.id} tried to type in unauthorized channel ${channelId}`,
+                    `User ${user.id} tried to type in unauthorized channel ${channelId}`,
                 )
                 return
             }
 
             io.to(`channel:${channelId}`).emit("new_typing", {
                 channelId,
-                userId: socket.user.id,
-                userName: socket.user.name,
+                userId: user.id,
+                userName: user.name,
             })
         } catch (err) {
             logger.error(err, "Error handling typing:")

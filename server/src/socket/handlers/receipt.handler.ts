@@ -9,7 +9,7 @@ export function handleGetMessage(io: TypedServer, socket: TypedSocket) {
         try {
             const { channelId, messageId, senderId } =
                 GetMessageSchema.parse(data)
-            const user = socket.user
+            const user = socket.data.user
 
             const channel = await channelService.verifyUserInChannel(
                 channelId,
@@ -37,7 +37,7 @@ export function handleSeeChat(io: TypedServer, socket: TypedSocket) {
     return async (data: any) => {
         try {
             const { channelId } = SeeChatSchema.parse(data)
-            const user = socket.user
+            const user = socket.data.user
 
             const channel = await channelService.verifyUserInChannel(
                 channelId,
