@@ -1,4 +1,4 @@
-import { index, pgTable, text, uuid } from "drizzle-orm/pg-core"
+import { index, pgTable, bigserial, text, uuid } from "drizzle-orm/pg-core"
 import { channels } from "./channels"
 import { users } from "./users"
 import { createdAt, updatedAt } from "../timestamps"
@@ -16,6 +16,7 @@ export const messages = pgTable(
             .notNull()
             .references(() => users.id, { onDelete: "cascade" }),
         content: text().notNull(),
+        order: bigserial({ mode: "number" }),
         createdAt,
         updatedAt,
     },
