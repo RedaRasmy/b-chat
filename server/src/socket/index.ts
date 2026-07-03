@@ -16,6 +16,7 @@ import {
 } from "@bchat/shared/events"
 import { allowedOrigins } from "@/config/allowed-origins"
 import { Profile } from "@bchat/types"
+import logger from "@/lib/logger"
 
 export type TypedServer = SocketIOServer<
     ClientToServerEvents,
@@ -54,6 +55,12 @@ export function setupSocketIO(server: HTTPServer) {
         socket.on("see_chat", handleSeeChat(io, socket))
         socket.on("send_typing", handleTyping(io, socket))
         socket.on("disconnect", () => handleDisconnection(io, socket))
+
+        socket.onAny((event) => {
+            if (socket.listeners(event).length === 0) {
+                logger.warn(`missing handler for event ${event}`)
+            }
+        })
     })
 
     return io
