@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button"
-import { createDM, fetchChats } from "@/features/chats/requests"
+import { useChats } from "@/features/chats/queries"
+import { createDM } from "@/features/chats/requests"
 import { Message01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
 
 export default function ChatButton({
@@ -13,10 +14,7 @@ export default function ChatButton({
     className?: string
 }) {
     const navigate = useNavigate()
-    const { data, isLoading } = useQuery({
-        queryKey: ["chats"],
-        queryFn: fetchChats,
-    })
+    const { data, isLoading } = useChats()
     const queryClient = useQueryClient()
 
     const mutation = useMutation({

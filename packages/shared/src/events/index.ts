@@ -57,7 +57,7 @@ export type ClientToServerEvents = {
 
     [CLIENT_EVENTS.SEND_TYPING]: (payload: SendTypingData) => void
 
-    [CLIENT_EVENTS.SYNC_MESSAGES]: (payload: Record<string, number>) => void
+    [CLIENT_EVENTS.SYNC_MESSAGES]: (payload: number) => void
 }
 
 // Utility Types

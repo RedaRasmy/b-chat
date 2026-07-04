@@ -3,12 +3,14 @@ export const CLIENT_EVENTS = {
     GET_MESSAGE: "get_message",
     SEE_CHAT: "see_chat",
     SEND_TYPING: "send_typing",
+    SYNC_MESSAGES: "sync_messages",
 } as const
 
 export const SERVER_EVENTS = {
     NEW_MESSAGE: "new_message",
     MESSAGE_DELIVERED: "message_delivered",
     MESSAGE_DELETED: "message_deleted",
+    MISSING_MESSAGES: "missing_messages",
     CHAT_SEEN: "chat_seen",
     NEW_TYPING: "new_typing",
     USER_STATUS_CHANGED: "user_status_changed",

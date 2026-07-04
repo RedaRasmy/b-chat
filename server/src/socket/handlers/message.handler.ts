@@ -5,7 +5,6 @@ import { channelService } from "@/features/channels/service"
 import { TypedServer, TypedSocket } from "@/socket"
 
 export function handleSendMessage(io: TypedServer, socket: TypedSocket) {
-    // TODO: any
     return async (msg: any, callback: (response: MessageAck) => void) => {
         const result = SendMessageSchema.safeParse(msg)
         if (!result.success) {

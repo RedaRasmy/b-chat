@@ -17,6 +17,7 @@ import {
 import { allowedOrigins } from "@/config/allowed-origins"
 import { Profile } from "@bchat/types"
 import logger from "@/lib/logger"
+import { handleSyncMessages } from "@/socket/handlers/sync.handler"
 
 export type TypedServer = SocketIOServer<
     ClientToServerEvents,
@@ -51,6 +52,7 @@ export function setupSocketIO(server: HTTPServer) {
         await handleConnection(io, socket)
 
         socket.on("send_message", handleSendMessage(io, socket))
+        socket.on("sync_messages", handleSyncMessages(io, socket))
         socket.on("get_message", handleGetMessage(io, socket))
         socket.on("see_chat", handleSeeChat(io, socket))
         socket.on("send_typing", handleTyping(io, socket))
@@ -58,7 +60,7 @@ export function setupSocketIO(server: HTTPServer) {
 
         socket.onAny((event) => {
             if (socket.listeners(event).length === 0) {
-                logger.warn(`missing handler for event ${event}`)
+                logger.warn(`missing handler for ${event} event`)
             }
         })
     })

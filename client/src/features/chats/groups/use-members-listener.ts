@@ -4,6 +4,9 @@ import { useQueryClient } from "@tanstack/react-query"
 export default function useMembersListener() {
     const queryClient = useQueryClient()
 
+    // Simplicity vs Optimization Trade-off
+    // Members events are not that frequent
+
     useSocketListener("new_members", () => {
         console.log("new members")
         queryClient.invalidateQueries({

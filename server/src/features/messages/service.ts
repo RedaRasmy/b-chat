@@ -1,9 +1,9 @@
 import { ForbiddenError, NotFoundError } from "@/errors"
 import db from "@bchat/database"
-import { messages, messageReceipts } from "@bchat/database/tables"
+import { messages, messageReceipts, members } from "@bchat/database/tables"
 import { canDeleteMessage } from "@bchat/shared/permissions"
 import { ChatMessage } from "@bchat/types"
-import { and, eq, exists, inArray, isNull } from "drizzle-orm"
+import { and, eq, exists, gt, inArray, isNull, or } from "drizzle-orm"
 
 export const messageService = {
     async deleteMessageWithAuth(messageId: string, userId: string) {
@@ -122,6 +122,41 @@ export const messageService = {
                 ),
             ),
         })
+    },
+
+    async getMissingMessages(userId: string, lastOrder: number) {
+
+        const missingMessages = await db.query.messages.findMany({
+            where: and(
+                gt(messages.order, lastOrder),
+                exists(
+                    db
+                        .select()
+                        .from(members)
+                        .where(
+                            and(
+                                eq(members.channelId, messages.channelId),
+                                eq(members.userId, userId),
+                            ),
+                        ),
+                ),
+            ),
+            with: {
+                receipts: true,
+            },
+            orderBy: (messages, { asc }) => [asc(messages.order)],
+        })
+
+        const groupedMessages: Record<string, typeof missingMessages> = {}
+
+        for (const msg of missingMessages) {
+            if (!groupedMessages[msg.channelId]) {
+                groupedMessages[msg.channelId] = []
+            }
+            groupedMessages[msg.channelId]!.push(msg)
+        }
+
+        return groupedMessages
     },
 
     async markMessagesAsSeen(messageIds: string[], userId: string) {
