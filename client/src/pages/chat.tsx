@@ -3,9 +3,8 @@ import DMChat from "@/features/chats/dm/components/dm-chat"
 import { DMProvider } from "@/features/chats/dm/components/dm-provider"
 import GroupChat from "@/features/chats/groups/components/group-chat"
 import { GroupProvider } from "@/features/chats/groups/components/group-provider"
-import { fetchChats } from "@/features/chats/requests"
+import { useChats } from "@/features/chats/queries"
 import LoadingPage from "@/pages/loading"
-import { useQuery } from "@tanstack/react-query"
 import { Navigate, useParams } from "react-router-dom"
 import { toast } from "sonner"
 
@@ -17,11 +16,7 @@ export default function ChatPage() {
             "ChatProvider must be used within ChatPage in chats/:id route",
         )
     }
-    const { data: chats, isLoading } = useQuery({
-        queryKey: ["chats"],
-        queryFn: fetchChats,
-        staleTime: Infinity,
-    })
+    const { data: chats, isLoading } = useChats()
 
     if (isLoading) return <LoadingPage />
 
