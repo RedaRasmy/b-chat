@@ -12,7 +12,7 @@ import {
 import DMCard from "@/features/chats/dm/components/dm-card"
 import GroupCard from "@/features/chats/groups/components/group-card"
 import { GroupFormDialog } from "@/features/chats/groups/components/group-form"
-import { fetchChats } from "@/features/chats/requests"
+import { useChats } from "@/features/chats/queries"
 import { fetchReceivedRequests } from "@/features/friendships/requests"
 import {
     Files01Icon,
@@ -24,10 +24,7 @@ import { useQuery } from "@tanstack/react-query"
 import { Link } from "react-router-dom"
 
 export function AppSidebar() {
-    const { data = [] } = useQuery({
-        queryKey: ["chats"],
-        queryFn: fetchChats,
-    })
+    const { data: chats = [] } = useChats()
 
     const { data: requests = [] } = useQuery({
         queryKey: ["requests"],
@@ -35,7 +32,7 @@ export function AppSidebar() {
     })
     const requestCount = requests.length
 
-    const chats = data.sort((a, b) => {
+    const sortedChats = chats.sort((a, b) => {
         if (!a.lastMessage) return 1
         if (!b.lastMessage) return -1
 
@@ -85,7 +82,7 @@ export function AppSidebar() {
                         <GroupFormDialog />
                     </SidebarGroupLabel>
                     <SidebarGroupContent className="grid gap-1 overflow-auto p-2 -mt-2">
-                        {chats.map((chat) => (
+                        {sortedChats.map((chat) => (
                             <div
                                 key={chat.id}
                                 onClick={() => setOpenMobile(false)}
