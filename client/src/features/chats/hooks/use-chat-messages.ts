@@ -1,10 +1,10 @@
 import { useUser } from "@/features/auth/use-user"
-import { fetchMessages } from "@/features/chats/requests"
 import { useSocket } from "@/features/chats/hooks/use-socket"
 import type { SeeChatData } from "@bchat/shared/validation"
 import type { Channels } from "@bchat/types"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQueryClient } from "@tanstack/react-query"
 import { useEffect, useRef } from "react"
+import { useMessages } from "@/features/chats/queries"
 
 export function useChatMessages(channelId: string) {
     const queryClient = useQueryClient()
@@ -12,11 +12,7 @@ export function useChatMessages(channelId: string) {
     const socket = useSocket()
     const user = useUser()
 
-    const { data: messages = [] } = useQuery({
-        queryKey: ["messages", channelId],
-        queryFn: () => fetchMessages(channelId),
-        staleTime: Infinity,
-    })
+    const { data: messages = [] } = useMessages(channelId)
 
     useEffect(() => {
         queryClient.invalidateQueries({
