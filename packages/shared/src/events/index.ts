@@ -11,11 +11,11 @@ import type {
 } from "@bchat/types"
 import {
     CLIENT_EVENTS,
-    ClientEvent,
+    type ClientEvent,
     SERVER_EVENTS,
-    ServerEvent,
+    type ServerEvent,
 } from "./events"
-import {
+import type {
     GetMessageData,
     MemberDeletedData,
     MemberLeftData,
@@ -40,9 +40,12 @@ export type ServerToClientEvents = {
     [SERVER_EVENTS.MEMBER_LEFT]: (payload: MemberLeftData) => void
     [SERVER_EVENTS.FRIEND_REQUEST]: (payload: FriendRequestData) => void
     [SERVER_EVENTS.REQUEST_ACCEPTED]: (payload: RequestAcceptedData) => void
+    [SERVER_EVENTS.MISSING_MESSAGES]: (
+        payload: Record<string, ChatMessage[]>,
+    ) => void
 }
 
-export interface ClientToServerEvents {
+export type ClientToServerEvents = {
     [CLIENT_EVENTS.SEND_MESSAGE]: (
         payload: SendMessageData,
         callback: (response: MessageAck) => void,
@@ -53,6 +56,8 @@ export interface ClientToServerEvents {
     [CLIENT_EVENTS.SEE_CHAT]: (payload: SeeChatData) => void
 
     [CLIENT_EVENTS.SEND_TYPING]: (payload: SendTypingData) => void
+
+    [CLIENT_EVENTS.SYNC_MESSAGES]: (payload: Record<string, number>) => void
 }
 
 // Utility Types

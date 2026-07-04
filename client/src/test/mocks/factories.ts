@@ -21,6 +21,7 @@ export function createMessage(overrides?: Partial<Message>): Message {
         channelId: crypto.randomUUID(),
         createdAt: new Date(),
         updatedAt: new Date(),
+        order: 0,
         ...overrides,
     }
 }

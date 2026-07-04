@@ -10,6 +10,7 @@ export function getSortSchema(sortableFields: string[]) {
         .refine(
             (val) => {
                 const [field] = val.split(":")
+                if (!field) return false
                 return sortableFields.includes(field)
             },
             {

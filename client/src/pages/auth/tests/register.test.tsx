@@ -75,12 +75,12 @@ describe("RegisterPage", () => {
             renderWithMain(<RegisterPage />)
 
             const passwordInput = screen.getByLabelText("Password")
-            const toggleButtons = screen.getAllByRole("button", { name: "" })
+            const toggleButton = screen.getAllByRole("button", { name: "" })[0]!
 
             expect(passwordInput).toHaveAttribute("type", "password")
-            await user.click(toggleButtons[0])
+            await user.click(toggleButton)
             expect(passwordInput).toHaveAttribute("type", "text")
-            await user.click(toggleButtons[0])
+            await user.click(toggleButton)
             expect(passwordInput).toHaveAttribute("type", "password")
         })
     })
