@@ -6,7 +6,7 @@ import logger from "@/lib/logger"
 const schema = z.int().min(0)
 
 export function handleSyncMessages(io: TypedServer, socket: TypedSocket) {
-    return async (data: any) => {
+    return async (data: unknown) => {
         const result = schema.safeParse(data)
         if (!result.success) {
             logger.error(result.error.issues, "Sync handler: invalid data")

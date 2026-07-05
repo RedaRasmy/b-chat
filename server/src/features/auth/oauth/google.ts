@@ -20,7 +20,7 @@ export const googleLogin = makeEndpoint(async (req, res) => {
     res.redirect(googleAuthUrl)
 })
 
-export const googleCallback = makeEndpoint(async (req, res, next) => {
+export const googleCallback = makeEndpoint(async (req, res) => {
     const { code } = req.query
     const base = process.env.FRONTEND_URL ?? ""
 

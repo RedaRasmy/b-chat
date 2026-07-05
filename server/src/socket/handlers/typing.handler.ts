@@ -3,7 +3,7 @@ import logger from "@/lib/logger"
 import { TypedServer, TypedSocket } from "@/socket"
 
 export function handleTyping(io: TypedServer, socket: TypedSocket) {
-    return (data: any) => {
+    return (data: unknown) => {
         try {
             const { channelId } = TypingSchema.parse(data)
             const user = socket.data.user

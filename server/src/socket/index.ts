@@ -80,16 +80,12 @@ export function getUserSocket(userId: string) {
     return sockets.find((s) => s.data.user.id === userId)
 }
 
-function getTypedIO() {
-    return getIO() as any
-}
-
 export function emitToUser<T extends ServerEvent>(
     userId: string,
     event: T,
     ...args: Args<T>
 ) {
-    getTypedIO()
+    getIO()
         .to(`user:${userId}`)
         .emit(event, ...args)
 }
@@ -99,7 +95,7 @@ export function emitToChannel<T extends ServerEvent>(
     event: T,
     ...args: Args<T>
 ) {
-    getTypedIO()
+    getIO()
         .to(`channel:${channelId}`)
         .emit(event, ...args)
 }

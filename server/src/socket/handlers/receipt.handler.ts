@@ -5,7 +5,7 @@ import { channelService } from "@/features/channels/service"
 import { TypedServer, TypedSocket } from "@/socket"
 
 export function handleGetMessage(io: TypedServer, socket: TypedSocket) {
-    return async (data: any) => {
+    return async (data: unknown) => {
         try {
             const { channelId, messageId, senderId } =
                 GetMessageSchema.parse(data)
@@ -34,7 +34,7 @@ export function handleGetMessage(io: TypedServer, socket: TypedSocket) {
 }
 
 export function handleSeeChat(io: TypedServer, socket: TypedSocket) {
-    return async (data: any) => {
+    return async (data: unknown) => {
         try {
             const { channelId } = SeeChatSchema.parse(data)
             const user = socket.data.user

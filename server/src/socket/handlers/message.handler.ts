@@ -1,11 +1,14 @@
 import { MessageAck } from "@bchat/types"
-import { SendMessageSchema } from "@bchat/shared/validation"
+import { SendMessageData, SendMessageSchema } from "@bchat/shared/validation"
 import { messageService } from "@/features/messages/service"
 import { channelService } from "@/features/channels/service"
 import { TypedServer, TypedSocket } from "@/socket"
 
 export function handleSendMessage(io: TypedServer, socket: TypedSocket) {
-    return async (msg: any, callback: (response: MessageAck) => void) => {
+    return async (
+        msg: SendMessageData,
+        callback: (response: MessageAck) => void,
+    ) => {
         const result = SendMessageSchema.safeParse(msg)
         if (!result.success) {
             return callback({

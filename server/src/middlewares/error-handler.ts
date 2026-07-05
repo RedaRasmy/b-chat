@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction } from "express"
+import type { Request, Response } from "express"
 import logger from "../lib/logger"
 import { HttpError } from "@/errors"
 
@@ -6,7 +6,6 @@ export const errorHandler = (
     err: Error,
     req: Request,
     res: Response,
-    next: NextFunction,
 ) => {
     logger.error(
         {

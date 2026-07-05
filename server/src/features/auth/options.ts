@@ -1,4 +1,3 @@
-import { allowedOrigins } from "@/config/allowed-origins"
 import { MONTH } from "@/utils/periods"
 import { Request, CookieOptions } from "express"
 

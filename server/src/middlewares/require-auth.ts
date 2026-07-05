@@ -23,7 +23,7 @@ export const requireAuth = (requiredRole?: User["role"]) => {
             }
 
             next()
-        } catch (error) {
+        } catch {
             res.status(401).json({ message: "Invalid token" })
         }
     }

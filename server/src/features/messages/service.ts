@@ -3,7 +3,7 @@ import db from "@bchat/database"
 import { messages, messageReceipts, members } from "@bchat/database/tables"
 import { canDeleteMessage } from "@bchat/shared/permissions"
 import { ChatMessage } from "@bchat/types"
-import { and, eq, exists, gt, inArray, isNull, or } from "drizzle-orm"
+import { and, eq, exists, gt, inArray, isNull } from "drizzle-orm"
 
 export const messageService = {
     async deleteMessageWithAuth(messageId: string, userId: string) {
@@ -125,7 +125,6 @@ export const messageService = {
     },
 
     async getMissingMessages(userId: string, lastOrder: number) {
-
         const missingMessages = await db.query.messages.findMany({
             where: and(
                 gt(messages.order, lastOrder),

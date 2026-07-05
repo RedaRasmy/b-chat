@@ -38,7 +38,7 @@ export async function socketAuthMiddleware(
         socket.data.user = user
 
         next()
-    } catch (err) {
+    } catch {
         return next(new Error("Invalid token"))
     }
 }

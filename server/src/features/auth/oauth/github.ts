@@ -19,7 +19,7 @@ export const githubLogin = makeEndpoint(async (req, res) => {
     res.redirect(githubAuthUrl)
 })
 
-export const githubCallback = makeEndpoint(async (req, res, next) => {
+export const githubCallback = makeEndpoint(async (req, res) => {
     const { code } = req.query
     const base = process.env.FRONTEND_URL ?? ""
 
@@ -60,9 +60,14 @@ export const githubCallback = makeEndpoint(async (req, res, next) => {
         )
         const emails = await emailResponse.json()
 
+        type Email = {
+            primary: boolean
+            verified: boolean
+        }
+
         const primaryEmailObject =
-            emails.find((email: any) => email.primary && email.verified) ||
-            emails.find((email: any) => email.verified)
+            emails.find((email: Email) => email.primary && email.verified) ||
+            emails.find((email: Email) => email.verified)
 
         const primaryEmail = primaryEmailObject.email
         const githubId = githubUser.id.toString()
