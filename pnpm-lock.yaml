@@ -236,9 +236,6 @@ importers:
       express:
         specifier: ^5.2.1
         version: 5.2.1
-      express-zod-endpoint:
-        specifier: ^0.0.1
-        version: 0.0.1
       jsonwebtoken:
         specifier: ^9.0.3
         version: 9.0.3
@@ -2329,9 +2326,6 @@ packages:
     peerDependencies:
       express: '>= 4.11'
 
-  express-zod-endpoint@0.0.1:
-    resolution: {integrity: sha512-YK54EzPhUouz2jOOT5GwI4n2pyWskgKz3l3GLRkYhxwlcSM0NP22T2siu1OcVQKeqWjSesU6xjlFQ1SF+0NdYA==}
-
   express@5.2.1:
     resolution: {integrity: sha512-hIS4idWWai69NezIdRt2xFVofaF4j+6INOpJlVOLDO8zXGpUVEVzIYk12UUi2JzjEzWL3IOAxcTubgz9Po0yXw==}
     engines: {node: '>= 18'}
@@ -3917,9 +3911,6 @@ packages:
 
   zod@4.3.6:
     resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
-
-  zod@4.4.3:
-    resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
 snapshots:
 
@@ -5757,13 +5748,6 @@ snapshots:
     dependencies:
       express: 5.2.1
 
-  express-zod-endpoint@0.0.1:
-    dependencies:
-      express: 5.2.1
-      zod: 4.4.3
-    transitivePeerDependencies:
-      - supports-color
-
   express@5.2.1:
     dependencies:
       accepts: 2.0.0
@@ -7282,5 +7266,3 @@ snapshots:
   zod@3.25.76: {}
 
   zod@4.3.6: {}
-
-  zod@4.4.3: {}
