@@ -1,0 +1,32 @@
+name: Unit Tests
+
+on:
+    push:
+        branches: [main, master]
+    pull_request:
+        branches: [main, master]
+
+jobs:
+    unit-test:
+        runs-on: ubuntu-latest
+
+        defaults:
+            run:
+                working-directory: ./client
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: lts/*
+
+            - name: Install dependencies
+              working-directory: .
+              run: npm install -g pnpm && pnpm install
+
+            - name: Run Unit Tests
+              run: pnpm test
+
+              env:
+                  VITE_API_URL: http://localhost:3000
