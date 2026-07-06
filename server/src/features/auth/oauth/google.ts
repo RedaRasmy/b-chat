@@ -6,6 +6,7 @@ import { generateAccessToken } from "@/lib/jwt"
 import { generateToken } from "@/utils/generate-token"
 import { MONTH } from "@/utils/periods"
 import { makeEndpoint } from "@/utils/make-endpoint"
+import logger from "@/lib/logger"
 
 export const googleLogin = makeEndpoint(async (req, res) => {
     const params = new URLSearchParams({
@@ -95,7 +96,7 @@ export const googleCallback = makeEndpoint(async (req, res) => {
 
         res.redirect(`${base}/`)
     } catch (err) {
-        console.error("Google OAuth error:", err)
+        logger.error(err, "Google OAuth error:")
         return res.redirect(`${base}/auth/login?error=google_auth_failed`)
     }
 })

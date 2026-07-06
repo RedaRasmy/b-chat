@@ -6,6 +6,7 @@ import { generateAccessToken } from "@/lib/jwt"
 import { generateToken } from "@/utils/generate-token"
 import { MONTH } from "@/utils/periods"
 import { makeEndpoint } from "@/utils/make-endpoint"
+import logger from "@/lib/logger"
 
 export const githubLogin = makeEndpoint(async (req, res) => {
     const params = new URLSearchParams({
@@ -124,7 +125,7 @@ export const githubCallback = makeEndpoint(async (req, res) => {
 
         res.redirect(`${base}/`)
     } catch (err) {
-        console.error("GitHub OAuth error:", err)
+        logger.error(err, "GitHub OAuth error:")
         return res.redirect(`${base}/auth/login?error=github_auth_failed`)
     }
 })

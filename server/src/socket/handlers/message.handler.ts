@@ -3,6 +3,7 @@ import { SendMessageData, SendMessageSchema } from "@bchat/shared/validation"
 import { messageService } from "@/features/messages/service"
 import { channelService } from "@/features/channels/service"
 import { TypedServer, TypedSocket } from "@/socket"
+import logger from "@/lib/logger"
 
 export function handleSendMessage(io: TypedServer, socket: TypedSocket) {
     return async (
@@ -64,7 +65,7 @@ export function handleSendMessage(io: TypedServer, socket: TypedSocket) {
                 channelId,
             })
         } catch (err) {
-            console.error("Error sending message:", err)
+            logger.error(err, "Error sending message:")
             callback({
                 success: false,
                 tempId,
