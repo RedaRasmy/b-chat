@@ -15,12 +15,6 @@ export function useChatMessages(channelId: string) {
     const { data: messages = [] } = useMessages(channelId)
 
     useEffect(() => {
-        queryClient.invalidateQueries({
-            queryKey: ["messages", channelId],
-        })
-    }, [queryClient, channelId])
-
-    useEffect(() => {
         bottomRef.current?.scrollIntoView()
     }, [messages])
 
