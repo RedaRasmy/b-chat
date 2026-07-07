@@ -2,10 +2,12 @@ import { useState, useEffect, type ReactNode, useCallback } from "react"
 import type { Profile } from "@bchat/types"
 import { fetchMe, logoutRequest } from "./requests"
 import { AuthContext } from "./context"
+import { useQueryClient } from "@tanstack/react-query"
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<Profile | null>(null)
     const [loading, setLoading] = useState(true)
+    const queryClient = useQueryClient()
 
     const set = useCallback((user: Profile) => {
         setUser(user)
@@ -19,6 +21,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             console.error("Logout failed", err)
         } finally {
             setUser(null)
+            queryClient.clear()
+            localStorage.removeItem("REACT_QUERY_OFFLINE_CACHE")
         }
     }, [])
 
