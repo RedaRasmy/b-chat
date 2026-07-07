@@ -23,6 +23,11 @@ export function useConnectionListener() {
 
             console.log("sync messages...")
             socket.emit("sync_messages", highestOrder)
+
+            // get missing requests if any
+            queryClient.invalidateQueries({
+                queryKey: ["requests"],
+            })
         }
 
         socket.on("connect", onConnect)
