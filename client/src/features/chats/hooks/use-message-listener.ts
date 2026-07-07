@@ -76,37 +76,47 @@ export default function useMessageListener() {
         }
     })
 
+    // TODO: may need an optimization later
     useSocketListener("missing_messages", (messages) => {
         console.log("missing messages :", messages)
         const chats = queryClient.getQueryData<Channels>(["chats"]) ?? []
 
-        // Update last messages
-        queryClient.setQueryData(["chats"], (old: Channels = []) =>
-            old.map((chat) => {
-                const newMessages = messages[chat.id]
-                if (!newMessages || newMessages.length === 0) return chat
+        const ids = chats.map((c) => c.id)
+        const newChat = !!Object.keys(messages).find((id) => !ids.includes(id))
 
-                const lastMessage = newMessages.at(-1)! // not empty
+        if (newChat) {
+            queryClient.invalidateQueries({
+                queryKey: ["chats"],
+            })
+        } else {
+            // Update last messages
+            queryClient.setQueryData(["chats"], (old: Channels = []) =>
+                old.map((chat) => {
+                    const newMessages = messages[chat.id]
+                    if (!newMessages || newMessages.length === 0) return chat
 
-                return {
-                    ...chat,
-                    lastMessage: {
-                        ...lastMessage,
-                        receipts:
-                            chat.id === currentChannelId
-                                ? lastMessage.receipts.map((r) =>
-                                      r.userId === user.id
-                                          ? {
-                                                ...r,
-                                                seenAt: new Date(),
-                                            }
-                                          : r,
-                                  )
-                                : lastMessage.receipts,
-                    },
-                }
-            }),
-        )
+                    const lastMessage = newMessages.at(-1)! // not empty
+
+                    return {
+                        ...chat,
+                        lastMessage: {
+                            ...lastMessage,
+                            receipts:
+                                chat.id === currentChannelId
+                                    ? lastMessage.receipts.map((r) =>
+                                          r.userId === user.id
+                                              ? {
+                                                    ...r,
+                                                    seenAt: new Date(),
+                                                }
+                                              : r,
+                                      )
+                                    : lastMessage.receipts,
+                        },
+                    }
+                }),
+            )
+        }
 
         Object.entries(messages).forEach(([channelId, newMessages]) => {
             const isChatOpen = channelId === currentChannelId
