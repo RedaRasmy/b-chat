@@ -119,21 +119,8 @@ export default function useMessageListener() {
         }
 
         Object.entries(messages).forEach(([channelId, newMessages]) => {
-            const isChatOpen = channelId === currentChannelId
             const chat = chats.find((c) => c.id === channelId)
             if (!chat) return
-
-            // Notifications
-            if (!isSidebarOpen && !isChatOpen) {
-                newMessages.forEach((message) => {
-                    toast.info(
-                        `new message from ${getChatName(chat, user.id)}`,
-                        {
-                            description: message.content,
-                        },
-                    )
-                })
-            }
 
             // Push new messages
             queryClient.setQueryData(
@@ -142,6 +129,7 @@ export default function useMessageListener() {
             )
 
             // Delivery
+            // TODO: update this to support many messages at once (Array)
             newMessages.forEach((message) => {
                 socket.emit("get_message", {
                     messageId: message.id,
