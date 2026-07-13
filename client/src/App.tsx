@@ -1,3 +1,4 @@
+import AppHotkeys from "@/components/app-hotkeys"
 import { AppSidebar } from "@/components/app-sidebar"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { Toaster } from "@/components/ui/sonner"
@@ -11,7 +12,8 @@ import { Outlet } from "react-router-dom"
 export function App() {
     return (
         <UserProvider>
-            <SidebarProvider>
+            <AppHotkeys />
+            <SidebarProvider >
                 <SocketProvider>
                     <GlobalListeners />
                     <Toaster position="top-right" closeButton theme="light" />

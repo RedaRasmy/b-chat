@@ -33,6 +33,7 @@
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
         "react-hook-form": "^7.71.1",
+        "react-hotkeys-hook": "^5.3.3",
         "react-router-dom": "^7.13.0",
         "shadcn": "^3.8.1",
         "socket.io-client": "^4.8.3",
