@@ -3,10 +3,11 @@ import { acceptFriendship } from "@/features/friendships/requests"
 import { UserCheck01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 
 export default function AcceptButton({
     friendshipId,
-    className
+    className,
 }: {
     className?: string
     friendshipId: string
@@ -23,6 +24,7 @@ export default function AcceptButton({
             })
         },
     })
+    const { t } = useTranslation("friends")
     return (
         <Button
             disabled={acceptMutation.isPending}
@@ -32,7 +34,7 @@ export default function AcceptButton({
             className={className}
         >
             <HugeiconsIcon icon={UserCheck01Icon} />
-            accept
+            {t("buttons.accept")}
         </Button>
     )
 }

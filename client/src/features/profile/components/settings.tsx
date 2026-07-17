@@ -14,6 +14,15 @@ import {
     FieldGroup,
     FieldLabel,
 } from "@/components/ui/field"
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { useAuth } from "@/features/auth/use-auth"
 import { useUser } from "@/features/auth/use-user"
@@ -26,6 +35,14 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
 import { useEffect } from "react"
 import { Controller, useForm } from "react-hook-form"
+import { Label } from "@/components/ui/label"
+import { useTranslation } from "react-i18next"
+
+const langs = [
+    // { label: "Select a fruit", value: null },
+    { label: "English", value: "en" },
+    { label: "Français", value: "fr" },
+]
 
 export default function Settings() {
     const { logout } = useAuth()
@@ -75,11 +92,14 @@ export default function Settings() {
         mutation.mutate({ name })
     }
 
+    const { t, i18n } = useTranslation(["profile"])
+    // if (!i18n.isInitialized) return null
+
     return (
         <div className={"grid md:grid-cols-2 gap-2 p-1"}>
             <Card className="">
                 <CardHeader>
-                    <CardTitle>Update Your Profile</CardTitle>
+                    <CardTitle>{t("profile:profileUpdating.title")}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <form
@@ -93,13 +113,17 @@ export default function Settings() {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="name">
-                                            Name
+                                            {t(
+                                                "profile:profileUpdating.name.label",
+                                            )}
                                         </FieldLabel>
                                         <Input
                                             {...field}
                                             id="name"
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="Enter your new name"
+                                            placeholder={t(
+                                                "profile:profileUpdating.name.placeholder",
+                                            )}
                                             autoComplete="off"
                                             type="text"
                                             className="max-w-100"
@@ -122,26 +146,72 @@ export default function Settings() {
                             disabled={nameUnchanged}
                             onClick={reset}
                         >
-                            Reset
+                            {t("common:buttons.reset")}
                         </Button>
                         <Button
                             type="submit"
                             disabled={mutation.isPending || nameUnchanged}
                             form="update-profile"
                         >
-                            Submit
+                            {t("common:buttons.submit")}
                         </Button>
                     </Field>
+                </CardFooter>
+            </Card>
+            <Card className="flex">
+                <CardHeader>
+                    <CardTitle className="">
+                        {t("profile:preferences.title")}
+                    </CardTitle>
+                    <CardDescription></CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="select-lang">
+                            {t("profile:preferences.language.label")}
+                        </Label>
+                        <Select
+                            items={langs}
+                            value={i18n.language ?? "en"}
+                            id="select-lang"
+                            onValueChange={(lang) => {
+                                i18n.changeLanguage(lang ?? "en")
+                            }}
+                        >
+                            <SelectTrigger className="w-full max-w-48">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectLabel>
+                                        {t(
+                                            "profile:preferences.language.label",
+                                        )}
+                                    </SelectLabel>
+                                    {langs.map((item) => (
+                                        <SelectItem
+                                            key={item.value}
+                                            value={item.value}
+                                        >
+                                            {item.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </CardContent>
+                <CardFooter>
+                    <Field orientation="horizontal"></Field>
                 </CardFooter>
             </Card>
             <Card className="">
                 <CardHeader>
                     <CardTitle className="text-de">
-                        Delete Your Account
+                        {t("profile:accountDeletion.title")}
                     </CardTitle>
                     <CardDescription>
-                        This will permanently delete your account and all
-                        associated data. This action cannot be undone.
+                        {t("profile:accountDeletion.description")}
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -149,7 +219,9 @@ export default function Settings() {
                         action={deleteMutation.mutate}
                         requireAreYouSure
                         triggerElement={
-                            <Button variant={"destructive"}>Delete</Button>
+                            <Button variant={"destructive"}>
+                                {t("common:buttons.delete")}
+                            </Button>
                         }
                     />
                 </CardContent>

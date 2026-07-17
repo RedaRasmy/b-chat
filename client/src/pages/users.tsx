@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils"
 import LoadingPage from "@/pages/loading"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 
 export default function UsersPage() {
     const [name, setName] = useState("")
@@ -43,12 +44,14 @@ export default function UsersPage() {
         queryFn: fetchReceivedRequests,
     })
 
+    const { t } = useTranslation("friends")
+
     return (
         <div className="w-full h-screen grid grid-rows-[auto_1fr]">
             <PageHeader>
-                <h1>Users</h1>
+                <h1>{t("usersPage.title")}</h1>
                 <p className="text-muted-foreground text-sm">
-                    Find new friends here!
+                    {t("usersPage.description")}
                 </p>
             </PageHeader>
             <main
@@ -61,7 +64,7 @@ export default function UsersPage() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="py-5 px-5 rounded-2xl"
-                    placeholder="Find users by name"
+                    placeholder={t("usersPage.searchPlaceholder")}
                 />
                 <section
                     className={cn("p-1 space-y-2 overflow-y-auto", {

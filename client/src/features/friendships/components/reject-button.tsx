@@ -3,10 +3,11 @@ import { rejectFriendship } from "@/features/friendships/requests"
 import { UserRemove01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 
 export default function RejectButton({
     friendshipId,
-    className
+    className,
 }: {
     friendshipId: string
     className?: string
@@ -20,6 +21,7 @@ export default function RejectButton({
             })
         },
     })
+    const { t } = useTranslation("friends")
     return (
         <Button
             disabled={rejectMutation.isPending}
@@ -30,7 +32,7 @@ export default function RejectButton({
             className={className}
         >
             <HugeiconsIcon icon={UserRemove01Icon} />
-            reject
+            {t("buttons.reject")}
         </Button>
     )
 }

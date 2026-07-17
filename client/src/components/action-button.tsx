@@ -18,11 +18,12 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { LoadingSwap } from "@/components/loading-swap"
+import { useTranslation } from "react-i18next"
 
 export function ActionButton({
     action,
     requireAreYouSure = false,
-    areYouSureDescription = "This action cannot be undone.",
+    areYouSureDescription,
     triggerElement,
     ...props
 }: ComponentProps<typeof Button> & {
@@ -41,6 +42,11 @@ export function ActionButton({
         setOpen(false)
     }
 
+    const { t } = useTranslation()
+
+    const description =
+        areYouSureDescription ?? t("confirmation.defaultDescription")
+
     if (requireAreYouSure) {
         return (
             <AlertDialog open={open || isLoading} onOpenChange={setOpen}>
@@ -49,19 +55,25 @@ export function ActionButton({
                 ></AlertDialogTrigger>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                        <AlertDialogTitle>
+                            {t("confirmation.title")}
+                        </AlertDialogTitle>
                         <AlertDialogDescription>
-                            {areYouSureDescription}
+                            {description}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogCancel>
+                            {t("buttons.cancel")}
+                        </AlertDialogCancel>
                         <AlertDialogAction
                             disabled={isLoading}
                             onClick={performAction}
                             variant={"destructive"}
                         >
-                            <LoadingSwap isLoading={isLoading}>Yes</LoadingSwap>
+                            <LoadingSwap isLoading={isLoading}>
+                                {t("buttons.yes")}
+                            </LoadingSwap>
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

@@ -21,6 +21,7 @@ import {
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useQuery } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 
 export function AppSidebar() {
@@ -41,6 +42,8 @@ export function AppSidebar() {
     })
     const { setOpenMobile } = useSidebar()
 
+    const { t } = useTranslation(["profile", "friends", "chats"])
+
     return (
         <Sidebar>
             <SidebarHeader className="">
@@ -50,7 +53,7 @@ export function AppSidebar() {
                     className="flex relative items-center gap-2 rounded-md px-2 py-1 hover:bg-accent"
                 >
                     <HugeiconsIcon icon={User02Icon} />
-                    <span>Profile</span>
+                    <span>{t("profile:pageTitle")}</span>
                     {requestCount > 0 && (
                         <div className="size-4 bg-destructive text-white rounded-full font-mono flex items-center justify-center text-sm">
                             {requestCount}
@@ -71,14 +74,14 @@ export function AppSidebar() {
                     className="flex relative items-center gap-2 rounded-md px-2 py-1 hover:bg-accent"
                 >
                     <HugeiconsIcon icon={UserMultiple03Icon} />
-                    <span>Users</span>
+                    <span>{t("friends:usersPage.title")}</span>
                 </Link>
             </SidebarHeader>
             <SidebarSeparator />
             <SidebarContent>
                 <SidebarGroup className="space-y-1">
                     <SidebarGroupLabel className="flex justify-between items-center">
-                        <h1>Chats</h1>
+                        <h1>{t("chats:chats")}</h1>
                         <GroupFormDialog />
                     </SidebarGroupLabel>
                     <SidebarGroupContent className="grid gap-1 overflow-auto p-2 -mt-2">

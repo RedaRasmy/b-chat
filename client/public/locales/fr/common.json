@@ -1,0 +1,13 @@
+{
+    "buttons": {
+        "reset": "Réinitialiser",
+        "submit": "Soumettre",
+        "delete": "Supprimer",
+        "cancel": "Annuler",
+        "yes": "Oui"
+    },
+    "confirmation": {
+        "title": "Es-tu sûr?",
+        "defaultDescription": "Cette action est irréversible."
+    }
+}

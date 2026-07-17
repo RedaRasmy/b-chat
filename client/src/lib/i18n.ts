@@ -1,8 +1,10 @@
 import i18n from "i18next"
 import LanguageDetector from "i18next-browser-languagedetector"
 import { initReactI18next } from "react-i18next"
+import Backend from "i18next-http-backend"
 
 i18n.use(LanguageDetector)
+    .use(Backend)
     .use(initReactI18next)
     .init({
         fallbackLng: "en",
@@ -11,6 +13,17 @@ i18n.use(LanguageDetector)
         interpolation: {
             escapeValue: false, // not needed for react!!
         },
+        defaultNS: "common",
+
+        ns: ["common"],
+
+        backend: {
+            // Path to your JSON files
+            loadPath: "/locales/{{lng}}/{{ns}}.json",
+        },
+
+        supportedLngs: ["en", "fr"],
+        cleanCode: true,
 
         // react i18next special options (optional)
         // override if needed - omit if ok with defaults

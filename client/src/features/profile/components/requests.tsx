@@ -4,6 +4,7 @@ import RejectButton from "@/features/friendships/components/reject-button"
 import { fetchReceivedRequests } from "@/features/friendships/requests"
 import LoadingPage from "@/pages/loading"
 import { useQuery } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 
 export default function Requests() {
     const { data, isLoading } = useQuery({
@@ -11,13 +12,13 @@ export default function Requests() {
         queryFn: fetchReceivedRequests,
     })
 
+    const { t } = useTranslation("friends")
+
     if (isLoading || !data) return <LoadingPage className="h-full" />
     if (data?.length === 0)
         return (
             <div className="text-center flex items-center h-full justify-center font-semibold text-xl">
-                <h1 className="max-w-50 lg:max-w-100">
-                    You don't have any pending requests
-                </h1>
+                <h1 className="max-w-50 lg:max-w-100">{t("noRequests")}</h1>
             </div>
         )
 

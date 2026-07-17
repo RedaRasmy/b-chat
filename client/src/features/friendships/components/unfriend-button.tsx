@@ -4,6 +4,7 @@ import { unfriend } from "@/features/friendships/requests"
 import { UserMinus01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 
 export default function UnfriendButton({
     friendshipId,
@@ -21,6 +22,7 @@ export default function UnfriendButton({
             })
         },
     })
+    const { t } = useTranslation("friends")
     return (
         <ActionButton
             action={() => {
@@ -34,7 +36,7 @@ export default function UnfriendButton({
                     className={className}
                 >
                     <HugeiconsIcon icon={UserMinus01Icon} />
-                    unfriend
+                    {t("buttons.unfriend")}
                 </Button>
             }
         />

@@ -1,0 +1,19 @@
+{
+    "buttons": {
+        "addFriend": "add friend",
+        "cancelRequest": "pending",
+        "unfriend": "unfriend",
+        "accept": "accept",
+        "reject": "reject"
+    },
+    "usersPage": {
+        "title": "Users",
+        "searchPlaceholder": "Find users by name",
+        "description": "Find new friends here!"
+    },
+    "noFriends": {
+        "title": "You don't have any friends yet",
+        "link": "Add new friend"
+    },
+    "noRequests": "You don't have any pending requests"
+}

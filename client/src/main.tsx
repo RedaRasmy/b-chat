@@ -5,6 +5,7 @@ import { router } from "@/routes.tsx"
 import { AuthProvider } from "@/features/auth/provider"
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client"
 import { persister, queryClient } from "@/lib/query-client"
+import "@/lib/i18n"
 
 createRoot(document.getElementById("root")!).render(
     <PersistQueryClientProvider

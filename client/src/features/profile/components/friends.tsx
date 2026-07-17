@@ -5,6 +5,7 @@ import UnfriendButton from "@/features/friendships/components/unfriend-button"
 import { fetchFriends } from "@/features/friendships/requests"
 import LoadingPage from "@/pages/loading"
 import { useQuery } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 
 export default function Friends() {
@@ -13,15 +14,18 @@ export default function Friends() {
         queryFn: fetchFriends,
     })
 
+    const { t } = useTranslation("friends")
+
     if (isLoading || !data) return <LoadingPage className="h-full" />
+
     if (data.length === 0)
         return (
             <div className="text-center flex items-center flex-col gap-2 h-full justify-center font-semibold text-xl">
                 <h1 className="max-w-50 lg:max-w-100">
-                    You don't have any friends yet
+                    {t("noFriends.title")}
                 </h1>
                 <Link to={"/users"}>
-                    <Button>Add new friend</Button>
+                    <Button>{t("noFriends.link")}</Button>
                 </Link>
             </div>
         )

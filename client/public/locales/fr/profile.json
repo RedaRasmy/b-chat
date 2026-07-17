@@ -1,0 +1,26 @@
+{
+    "pageTitle": "Profil",
+    "tabs": {
+        "friends": "Amis",
+        "myPosts": "Mes publications",
+        "requests": "Demandes",
+        "settings": "Paramètres"
+    },
+    "preferences": {
+        "title": "Préférences",
+        "language": {
+            "label": "Langue"
+        }
+    },
+    "profileUpdating": {
+        "title": "Mettre à jour votre profil",
+        "name": {
+            "label": "Nom",
+            "placeholder": "Saisissez votre nouveau nom"
+        }
+    },
+    "accountDeletion": {
+        "title": "Supprimer Votre Compte",
+        "description": "Cette action supprimera définitivement votre compte et toutes les données associées. Cette action est irréversible."
+    }
+}

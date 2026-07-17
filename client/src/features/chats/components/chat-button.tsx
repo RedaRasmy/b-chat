@@ -4,6 +4,7 @@ import { createDM } from "@/features/chats/requests"
 import { Message01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 
 export default function ChatButton({
@@ -29,6 +30,7 @@ export default function ChatButton({
             console.error(error.message)
         },
     })
+    const { t } = useTranslation("chats")
 
     function handleClick() {
         if (!data) return
@@ -52,7 +54,7 @@ export default function ChatButton({
             className={className}
         >
             <HugeiconsIcon icon={Message01Icon} />
-            chat
+            {t("buttons.chat")}
         </Button>
     )
 }

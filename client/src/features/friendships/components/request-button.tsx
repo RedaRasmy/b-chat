@@ -3,8 +3,15 @@ import { requestFriendship } from "@/features/friendships/requests"
 import { UserAdd01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 
-export default function RequestButton({ userId ,className}: { userId: string ,className?:string}) {
+export default function RequestButton({
+    userId,
+    className,
+}: {
+    userId: string
+    className?: string
+}) {
     const queryClient = useQueryClient()
 
     const mutation = useMutation({
@@ -15,6 +22,7 @@ export default function RequestButton({ userId ,className}: { userId: string ,cl
             })
         },
     })
+    const { t } = useTranslation("friends")
     return (
         <Button
             disabled={mutation.isPending}
@@ -24,7 +32,7 @@ export default function RequestButton({ userId ,className}: { userId: string ,cl
             className={className}
         >
             <HugeiconsIcon icon={UserAdd01Icon} />
-            add friend
+            {t("buttons.addFriend")}
         </Button>
     )
 }

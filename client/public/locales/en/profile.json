@@ -1,0 +1,26 @@
+{
+    "pageTitle": "Profile",
+    "tabs": {
+        "friends": "Friends",
+        "myPosts": "My Posts",
+        "requests": "Requests",
+        "settings": "Settings"
+    },
+    "preferences": {
+        "title": "Preferences",
+        "language": {
+            "label": "Language"
+        }
+    },
+    "profileUpdating": {
+        "title": "Update Your Profile",
+        "name": {
+            "label": "Name",
+            "palceholder": "Enter your new name"
+        }
+    },
+    "accountDeletion": {
+        "title": "Delete Your Account",
+        "description": "This will permanently delete your account and all associated data. This action cannot be undone."
+    }
+}

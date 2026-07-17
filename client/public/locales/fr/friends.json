@@ -1,0 +1,19 @@
+{
+    "buttons": {
+        "addFriend": "Ajouter",
+        "cancelRequest": "En attente",
+        "unfriend": "Retirer des amis",
+        "accept": "Accepter",
+        "reject": "Refuser"
+    },
+    "usersPage": {
+        "title": "Utilisateurs",
+        "searchPlaceholder": "Rechercher des utilisateurs par nom",
+        "description": "Trouvez de nouveaux amis ici !"
+    },
+    "noFriends": {
+        "title": "Vous n'avez pas encore d'amis",
+        "link": "Ajouter un ami"
+    },
+    "noRequests": "Vous n'avez aucune demande en attente"
+}

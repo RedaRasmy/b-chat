@@ -1,0 +1,13 @@
+{
+    "buttons": {
+        "reset": "Reset",
+        "submit": "Submit",
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "yes": "Yes"
+    },
+    "confirmation": {
+        "title": "Are you sure?",
+        "defaultDescription": "This action cannot be undone."
+    }
+}

@@ -3,10 +3,11 @@ import { cancelRequest } from "@/features/friendships/requests"
 import { UserTime01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 
 export default function CancelButton({
     friendshipId,
-    className
+    className,
 }: {
     friendshipId: string
     className?: string
@@ -21,6 +22,7 @@ export default function CancelButton({
             })
         },
     })
+    const { t } = useTranslation("friends")
     return (
         <Button
             disabled={mutation.isPending}
@@ -31,7 +33,7 @@ export default function CancelButton({
             className={className}
         >
             <HugeiconsIcon icon={UserTime01Icon} />
-            pending
+            {t("buttons.cancelRequest")}
         </Button>
     )
 }
