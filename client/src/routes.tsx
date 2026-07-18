@@ -1,10 +1,10 @@
 import { createBrowserRouter } from "react-router-dom"
 import { lazy, Suspense } from "react"
-import App from "@/App"
 import NotFound from "@/pages/not-found"
 import { ErrorBoundary } from "@/pages/error"
 import LoadingPage from "@/pages/loading"
 const ChatPage = lazy(() => import("@/pages/chat"))
+const App = lazy(() => import("@/App"))
 const ProfilePage = lazy(() => import("@/pages/profile"))
 const LoginPage = lazy(() => import("@/pages/auth/login"))
 const RegisterPage = lazy(() => import("@/pages/auth/register"))
@@ -15,7 +15,11 @@ const AuthLayout = lazy(() => import("@/pages/auth"))
 export const router = createBrowserRouter([
     {
         path: "/",
-        element: <App />,
+        element: (
+            <Suspense fallback={<LoadingPage />}>
+                <App />
+            </Suspense>
+        ),
         ErrorBoundary,
         children: [
             {
