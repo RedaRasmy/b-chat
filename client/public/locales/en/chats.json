@@ -25,5 +25,8 @@
     "membersForm": {
         "title": "Add New Members",
         "noFriends": "No friends yet"
-    }
+    },
+    "typing": "typing...",
+    "userIsTyping": "{{name}} is typing...",
+    "styledUserIsTyping": "<0>{{name}}</0> is typing..."
 }

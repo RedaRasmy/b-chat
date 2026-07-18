@@ -3,6 +3,7 @@ import { useUser } from "@/features/auth/use-user"
 import { getChatAvatar, getChatName } from "@/features/chats/utils/chats"
 import { getTime } from "@/features/chats/utils/get-time"
 import type { DMChat } from "@bchat/types"
+import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 
 export default function DMCard({ chat }: { chat: DMChat }) {
@@ -23,6 +24,8 @@ export default function DMCard({ chat }: { chat: DMChat }) {
     const friend = chat.members.find((m) => m.id !== user.id)
 
     if (!friend) throw new Error("User is the only member in DM!")
+
+    const { t } = useTranslation("chats")
 
     return (
         <Link
@@ -49,7 +52,7 @@ export default function DMCard({ chat }: { chat: DMChat }) {
             </section>
             <span className="text-xs text-muted-foreground text-nowrap overflow-hidden text-ellipsis">
                 {typingUser ? (
-                    <span className="text-primary">typing...</span>
+                    <span className="text-primary">{t("typing")}</span>
                 ) : (
                     lastMessage?.content
                 )}

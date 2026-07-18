@@ -2,6 +2,7 @@ import Avatar from "@/components/avatar"
 import { useUser } from "@/features/auth/use-user"
 import { getTime } from "@/features/chats/utils/get-time"
 import type { GroupChat } from "@bchat/types"
+import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 
 export default function GroupCard({ chat }: { chat: GroupChat }) {
@@ -17,6 +18,8 @@ export default function GroupCard({ chat }: { chat: GroupChat }) {
         lastMessage.receipts.find(
             (rec) => rec.userId === user.id && rec.seenAt === null,
         )
+
+    const { t } = useTranslation("chats")
 
     return (
         <Link
@@ -43,7 +46,7 @@ export default function GroupCard({ chat }: { chat: GroupChat }) {
             <span className="text-xs text-muted-foreground text-nowrap overflow-hidden text-ellipsis">
                 {typingUser ? (
                     <span className="text-primary">
-                        {typingUser} is typing...
+                        {t("userIsTyping", { name: typingUser })}
                     </span>
                 ) : (
                     lastMessage?.content

@@ -25,5 +25,8 @@
     "membersForm": {
         "title": "Ajouter de nouveaux membres",
         "noFriends": "Pas encore d'amis"
-    }
+    },
+    "typing": "écrit...",
+    "userIsTyping": "{{name}} écrit...",
+    "styledUserIsTyping": "<0>{{name}}</0> écrit..."
 }

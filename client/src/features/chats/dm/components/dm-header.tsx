@@ -7,6 +7,7 @@ import { getTime } from "@/features/chats/utils/get-time"
 import { cn } from "@/lib/utils"
 import { Delete02Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
+import { useTranslation } from "react-i18next"
 
 export default function DMHeader() {
     const { friend, chat } = useDM()
@@ -17,6 +18,8 @@ export default function DMHeader() {
 
     const status =
         chat.status === "online" ? "online" : `${chat.status} ${lastSeen}`
+
+    const { t } = useTranslation("chats")
 
     return (
         <PageHeader>
@@ -39,7 +42,7 @@ export default function DMHeader() {
             <div className="flex gap-2 items-center">
                 {chat.typingUser && (
                     <span className="text-xs text-muted-foreground">
-                        typing...
+                        {t("typing")}
                     </span>
                 )}
 
