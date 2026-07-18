@@ -42,7 +42,7 @@ export function AppSidebar() {
     })
     const { setOpenMobile } = useSidebar()
 
-    const { t } = useTranslation(["profile", "friends", "chats"])
+    const { t } = useTranslation(["profile", "friends", "chats", "posts"])
 
     return (
         <Sidebar>
@@ -66,7 +66,7 @@ export function AppSidebar() {
                     className="flex relative items-center gap-2 rounded-md px-2 py-1 hover:bg-accent"
                 >
                     <HugeiconsIcon icon={Files01Icon} />
-                    <span>Posts</span>
+                    <span>{t("posts:posts")}</span>
                 </Link>
                 <Link
                     onClick={() => setOpenMobile(false)}

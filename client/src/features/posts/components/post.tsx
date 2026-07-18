@@ -9,6 +9,7 @@ import {
 import { getTime } from "@/features/chats/utils/get-time"
 import type { PostWithAuthor } from "@bchat/types"
 import type { ReactNode } from "react"
+import { useTranslation } from "react-i18next"
 
 export default function Post({
     post,
@@ -18,6 +19,9 @@ export default function Post({
     children?: ReactNode
 }) {
     const date = getTime(post.createdAt)
+
+    const { t } = useTranslation("posts")
+
     return (
         <Card className="w-full max-w-200">
             <CardHeader>
@@ -26,9 +30,11 @@ export default function Post({
                     <section>
                         {post.author.name}
                         <div className="text-xs text-muted-foreground">
-                            posted at <span>{date}</span>
+                            {t("post.postedAt")} <span>{date}</span>
                             {post.isEdited && (
-                                <span className="ml-2">(edited)</span>
+                                <span className="ml-2">
+                                    ({t("post.edited")})
+                                </span>
                             )}
                         </div>
                     </section>

@@ -9,6 +9,7 @@ import LoadingPage from "@/pages/loading"
 import { Delete03Icon, Edit04Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 
 export default function MyPosts() {
     const user = useUser()
@@ -36,14 +37,14 @@ export default function MyPosts() {
         },
     })
 
+    const { t } = useTranslation("posts")
+
     if (isLoading || !data) return <LoadingPage className="h-full" />
 
     if (data.length === 0)
         return (
             <div className="text-center flex items-center h-full justify-center font-semibold text-xl">
-                <h1 className="max-w-50 lg:max-w-100">
-                    You don't have any posts yet
-                </h1>
+                <h1 className="max-w-50 lg:max-w-100">{t("posts:noPosts")}</h1>
             </div>
         )
 
@@ -72,7 +73,7 @@ export default function MyPosts() {
                             })
                         }
                         initialData={post}
-                        title="Update Your Post"
+                        title={t("form.update.title")}
                         triggerElement={
                             <Button size={"icon-sm"}>
                                 <HugeiconsIcon icon={Edit04Icon} />

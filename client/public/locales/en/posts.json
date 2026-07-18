@@ -1,0 +1,20 @@
+{
+    "noPosts": "You don't have any posts yet",
+    "posts": "Posts",
+    "buttons": {
+        "addPost": "New Post"
+    },
+    "form": {
+        "create": {
+            "title": "Add New Post"
+        },
+        "update": {
+            "title": "Update Your Post"
+        },
+        "placeholder": "Share your thoughts with others..."
+    },
+    "post": {
+        "postedAt": "posted at",
+        "edited": "edited"
+    }
+}

@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button"
 import axios from "axios"
 import { InsertPostSchema, type PostFormData } from "@bchat/shared/validation"
 import type { ReactElement } from "react"
+import { useTranslation } from "react-i18next"
 
 type Props = {
     title: string
@@ -61,6 +62,8 @@ export function PostForm({
         }
     }
 
+    const { t } = useTranslation(["posts"])
+
     const error = form.formState.errors.root?.message
 
     return (
@@ -87,7 +90,7 @@ export function PostForm({
                                 <Textarea
                                     {...field}
                                     aria-invalid={fieldState.invalid}
-                                    placeholder="Share your thoughts with others..."
+                                    placeholder={t("posts:form.placeholder")}
                                     autoComplete="off"
                                     className="max-h-100"
                                 />
@@ -102,12 +105,12 @@ export function PostForm({
                         <DialogClose
                             render={
                                 <Button type="button" variant="outline">
-                                    Cancel
+                                    {t("common:buttons.cancel")}
                                 </Button>
                             }
                         ></DialogClose>
                         <Button type="submit" disabled={isSubmitting}>
-                            Submit
+                            {t("common:buttons.submit")}
                         </Button>
                     </div>
                 </form>

@@ -1,0 +1,20 @@
+{
+    "noPosts": "Vous n'avez pas encore de publications",
+    "posts": "Publications",
+    "buttons": {
+        "addPost": "Nouvelle publication"
+    },
+    "form": {
+        "create": {
+            "title": "Ajouter une publication"
+        },
+        "update": {
+            "title": "Modifier votre publication"
+        },
+        "placeholder": "Partagez vos pensées avec les autres..."
+    },
+    "post": {
+        "postedAt": "publié le",
+        "edited": "modifié"
+    }
+}

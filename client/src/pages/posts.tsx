@@ -5,6 +5,7 @@ import { PostForm } from "@/features/posts/components/post-form"
 import { fetchPost, fetchPosts } from "@/features/posts/requests"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 
 export default function PostsPage() {
     const [open, setOpen] = useState(false)
@@ -27,18 +28,21 @@ export default function PostsPage() {
             setOpen(false)
         },
     })
+
+    const { t } = useTranslation("posts")
+
     if (!data) return null
     return (
         <div className="w-full h-screen grid grid-rows-[auto_1fr]">
             <PageHeader>
-                <h1>Posts</h1>
+                <h1>{t("posts")}</h1>
                 <PostForm
                     open={open}
                     onOpenChange={setOpen}
-                    title="Add New Post"
+                    title={t("form.create.title")}
                     onSubmit={addMutation.mutateAsync}
                     isSubmitting={addMutation.isPending}
-                    triggerElement={<Button>New Post</Button>}
+                    triggerElement={<Button>{t("buttons.addPost")}</Button>}
                 />
             </PageHeader>
             <main className="p-3 space-y-2 overflow-y-auto justify-items-center">
