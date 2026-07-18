@@ -35,5 +35,11 @@
         "admin": "administrateur",
         "member": "membre"
     },
-    "deleteMemberDescription": "Supprimer le membre : {{name}}"
+    "deleteMemberDescription": "Supprimer le membre : {{name}}",
+    "notifications": {
+        "newMessage": "nouveau message de {{name}}"
+    },
+    "errors": {
+        "chatNotFound": "Discussion introuvable !"
+    }
 }

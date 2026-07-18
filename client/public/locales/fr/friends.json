@@ -15,5 +15,9 @@
         "title": "Vous n'avez pas encore d'amis",
         "link": "Ajouter un ami"
     },
-    "noRequests": "Vous n'avez aucune demande en attente"
+    "noRequests": "Vous n'avez aucune demande en attente",
+    "notifications": {
+        "requestAccepted": "{{name}} a accepté votre demande d'ami",
+        "newRequest": "{{name}} vous a envoyé une demande d'ami"
+    }
 }

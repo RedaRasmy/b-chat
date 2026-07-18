@@ -35,5 +35,11 @@
         "admin": "admin",
         "member": "member"
     },
-    "deleteMemberDescription": "Delete member : {{name}}"
+    "deleteMemberDescription": "Delete member : {{name}}",
+    "notifications": {
+        "newMessage": "new message from {{name}}"
+    },
+    "errors": {
+        "chatNotFound": "Chat not found!"
+    }
 }

@@ -7,6 +7,7 @@ import type { Channels, ChatMessage } from "@bchat/types"
 import { useQueryClient } from "@tanstack/react-query"
 import { useParams } from "react-router-dom"
 import { toast } from "sonner"
+import { useTranslation } from "react-i18next"
 
 export default function useMessageListener() {
     const socket = useSocket()
@@ -14,9 +15,9 @@ export default function useMessageListener() {
     const queryClient = useQueryClient()
     const currentChannelId = useParams().id
     const { open: isSidebarOpen } = useSidebar()
+    const { t } = useTranslation("chats")
 
     useSocketListener("new_message", (message) => {
-        console.log("new msg :", message)
         const chats = queryClient.getQueryData<Channels>(["chats"]) ?? []
         const chat = chats.find((c) => c.id === message.channelId)
 
@@ -56,7 +57,10 @@ export default function useMessageListener() {
         const isChatOpen = message.channelId === currentChannelId
 
         if (!isSidebarOpen && !isChatOpen && chat) {
-            toast.info(`new message from ${getChatName(chat, user.id)}`, {
+            const notification = t("notifications.newMessage", {
+                name: getChatName(chat, user.id),
+            })
+            toast.info(notification, {
                 description: message.content,
             })
         }

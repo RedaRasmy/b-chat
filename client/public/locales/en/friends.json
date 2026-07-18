@@ -15,5 +15,9 @@
         "title": "You don't have any friends yet",
         "link": "Add new friend"
     },
-    "noRequests": "You don't have any pending requests"
+    "noRequests": "You don't have any pending requests",
+    "notifications": {
+        "requestAccepted": "{{name}} accepted your friend request",
+        "newRequest": "{{name}} sent you a friend request"
+    }
 }
