@@ -35,6 +35,7 @@ import CancelButton from "@/features/friendships/components/cancel-button"
 import RejectButton from "@/features/friendships/components/reject-button"
 import AcceptButton from "@/features/friendships/components/accept-button"
 import RequestButton from "@/features/friendships/components/request-button"
+import { useTranslation } from "react-i18next"
 
 export default function Member({ member }: { member: ChatMember }) {
     const { isOwner, isAdmin, isMember } = useGroup()
@@ -74,6 +75,8 @@ export default function Member({ member }: { member: ChatMember }) {
 
     const isNew = !friend && !sentReq && !req
 
+    const { t } = useTranslation("chats")
+
     return (
         <UserCard
             key={member.id}
@@ -98,7 +101,9 @@ export default function Member({ member }: { member: ChatMember }) {
                             })
                         }
                         requireAreYouSure
-                        areYouSureDescription={`Delete member : ${member.name}`}
+                        areYouSureDescription={t("deleteMemberDescription", {
+                            name: member.name,
+                        })}
                         triggerElement={
                             <Button variant={"destructive"} size={"icon"}>
                                 <HugeiconsIcon icon={Delete02Icon} />
@@ -112,7 +117,7 @@ export default function Member({ member }: { member: ChatMember }) {
                         member.chatRole === "owner" ? "destructive" : "default"
                     }
                 >
-                    {member.chatRole}
+                    {t(`roles.${member.chatRole}`, t("roles.member"))}
                 </Badge>
             )}
             {!isUser && (
@@ -198,7 +203,9 @@ export default function Member({ member }: { member: ChatMember }) {
                         <DropdownMenuGroup>
                             <DropdownMenuSeparator />
                             <DropdownMenuLabel>
-                                joined {getTime(member.joinedAt)}
+                                {t("joinedAt", {
+                                    date: getTime(member.joinedAt),
+                                })}
                             </DropdownMenuLabel>
                         </DropdownMenuGroup>
                     </DropdownMenuContent>

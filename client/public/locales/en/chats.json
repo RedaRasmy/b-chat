@@ -28,5 +28,12 @@
     },
     "typing": "typing...",
     "userIsTyping": "{{name}} is typing...",
-    "styledUserIsTyping": "<0>{{name}}</0> is typing..."
+    "styledUserIsTyping": "<0>{{name}}</0> is typing...",
+    "joinedAt": "joined {{date}}",
+    "roles": {
+        "owner": "owner",
+        "admin": "admin",
+        "member": "member"
+    },
+    "deleteMemberDescription": "Delete member : {{name}}"
 }

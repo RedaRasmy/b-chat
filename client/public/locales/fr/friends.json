@@ -2,7 +2,7 @@
     "buttons": {
         "addFriend": "Ajouter",
         "cancelRequest": "En attente",
-        "unfriend": "Retirer des amis",
+        "unfriend": "Retirer",
         "accept": "Accepter",
         "reject": "Refuser"
     },

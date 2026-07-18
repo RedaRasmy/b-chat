@@ -28,5 +28,12 @@
     },
     "typing": "écrit...",
     "userIsTyping": "{{name}} écrit...",
-    "styledUserIsTyping": "<0>{{name}}</0> écrit..."
+    "styledUserIsTyping": "<0>{{name}}</0> écrit...",
+    "joinedAt": "a rejoint le {{date}}",
+    "roles": {
+        "owner": "propriétaire",
+        "admin": "administrateur",
+        "member": "membre"
+    },
+    "deleteMemberDescription": "Supprimer le membre : {{name}}"
 }

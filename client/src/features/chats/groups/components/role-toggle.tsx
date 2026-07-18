@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { updateMember } from "@/features/chats/requests"
 import type { ChatMember } from "@bchat/types"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useTranslation } from "react-i18next"
 
 export default function RoleToggle({
     member,
@@ -28,6 +29,8 @@ export default function RoleToggle({
     const role = member.chatRole
     const newRole = member.chatRole === "admin" ? "member" : "admin"
 
+    const { t } = useTranslation("chats")
+
     return (
         <ActionButton
             action={() =>
@@ -41,7 +44,7 @@ export default function RoleToggle({
             areYouSureDescription={`Change ${member.name} role to : ${newRole}`}
             triggerElement={
                 <Button variant={role === "member" ? "outline" : "default"}>
-                    {member.chatRole}
+                    {t(`roles.${member.chatRole}`, t("roles.member"))}
                 </Button>
             }
         ></ActionButton>
