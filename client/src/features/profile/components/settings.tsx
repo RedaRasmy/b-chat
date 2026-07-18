@@ -14,15 +14,6 @@ import {
     FieldGroup,
     FieldLabel,
 } from "@/components/ui/field"
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { useAuth } from "@/features/auth/use-auth"
 import { useUser } from "@/features/auth/use-user"
@@ -37,12 +28,7 @@ import { useEffect } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { Label } from "@/components/ui/label"
 import { useTranslation } from "react-i18next"
-
-const langs = [
-    // { label: "Select a fruit", value: null },
-    { label: "English", value: "en" },
-    { label: "Français", value: "fr" },
-]
+import LangSelector from "@/components/lang-selector"
 
 export default function Settings() {
     const { logout } = useAuth()
@@ -92,8 +78,7 @@ export default function Settings() {
         mutation.mutate({ name })
     }
 
-    const { t, i18n } = useTranslation(["profile"])
-    // if (!i18n.isInitialized) return null
+    const { t } = useTranslation(["profile"])
 
     return (
         <div className={"grid md:grid-cols-2 gap-2 p-1"}>
@@ -170,35 +155,7 @@ export default function Settings() {
                         <Label htmlFor="select-lang">
                             {t("profile:preferences.language.label")}
                         </Label>
-                        <Select
-                            items={langs}
-                            value={i18n.language ?? "en"}
-                            id="select-lang"
-                            onValueChange={(lang) => {
-                                i18n.changeLanguage(lang ?? "en")
-                            }}
-                        >
-                            <SelectTrigger className="w-full max-w-48">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>
-                                        {t(
-                                            "profile:preferences.language.label",
-                                        )}
-                                    </SelectLabel>
-                                    {langs.map((item) => (
-                                        <SelectItem
-                                            key={item.value}
-                                            value={item.value}
-                                        >
-                                            {item.label}
-                                        </SelectItem>
-                                    ))}
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
+                        <LangSelector />
                     </div>
                 </CardContent>
                 <CardFooter>
