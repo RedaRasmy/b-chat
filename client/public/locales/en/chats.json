@@ -1,6 +1,29 @@
 {
     "buttons": {
-        "chat": "chat"
+        "chat": "chat",
+        "send": "Send",
+        "exitGroup": "Exit Group",
+        "deleteChat": "Delete Chat",
+        "addMembers": "Add Members"
     },
-    "chats": "Chats"
+    "chats": "Chats",
+    "groupForm": {
+        "title": "Create New Group",
+        "description": "Make a chat room to talk with your friends.",
+        "name": "Name",
+        "link": "Add new friends",
+        "update": {
+            "groupName": "Group Name"
+        }
+    },
+    "members": "Members",
+    "settings": "Settings",
+    "message": {
+        "seen": "seen",
+        "delivered": "delivered"
+    },
+    "membersForm": {
+        "title": "Add New Members",
+        "noFriends": "No friends yet"
+    }
 }

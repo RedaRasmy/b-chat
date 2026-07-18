@@ -1,6 +1,29 @@
 {
     "buttons": {
-        "chat": "Discuter"
+        "chat": "Discuter",
+        "send": "Envoyer",
+        "exitGroup": "Quitter le groupe",
+        "deleteChat": "Supprimer la conversation",
+        "addMembers": "Ajouter des membres"
     },
-    "chats": "Discussions"
+    "chats": "Discussions",
+    "groupForm": {
+        "title": "Créer un nouveau groupe",
+        "description": "Créez un salon de discussion pour parler avec vos amis.",
+        "name": "Nom",
+        "link": "Ajouter de nouveaux amis",
+        "update": {
+            "groupName": "Nom du groupe"
+        }
+    },
+    "members": "Membres",
+    "settings": "Paramètres",
+    "message": {
+        "seen": "lu",
+        "delivered": "distribué"
+    },
+    "membersForm": {
+        "title": "Ajouter de nouveaux membres",
+        "noFriends": "Pas encore d'amis"
+    }
 }

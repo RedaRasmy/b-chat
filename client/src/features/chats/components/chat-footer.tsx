@@ -5,6 +5,7 @@ import { useChat } from "@/features/chats/hooks/use-chat"
 import { useMessage } from "@/features/chats/hooks/use-message"
 import { useSocket } from "@/features/chats/hooks/use-socket"
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 
 export default function ChatFooter() {
     const [message, setMessage] = useState("")
@@ -29,6 +30,8 @@ export default function ChatFooter() {
         })
     }
 
+    const { t } = useTranslation("chats")
+
     return (
         <footer className="bg- h-12 p-2 border-t flex items-center justify-center gap-1">
             <Input
@@ -45,7 +48,7 @@ export default function ChatFooter() {
                 aria-label="Message"
             />
             <Button onClick={handleSend} disabled={!message.trim()}>
-                Send
+                {t("buttons.send")}
             </Button>
         </footer>
     )

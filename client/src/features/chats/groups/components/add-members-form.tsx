@@ -18,6 +18,7 @@ import { PlusSignIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState, type SyntheticEvent } from "react"
+import { useTranslation } from "react-i18next"
 
 export function AddMembersForm({
     channelId,
@@ -54,23 +55,25 @@ export function AddMembersForm({
         })
     }
 
+    const { t } = useTranslation("chats")
+
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger
                 render={
                     <Button variant="outline" className={"w-full"} size={"lg"}>
                         <HugeiconsIcon icon={PlusSignIcon} />
-                        Add Members
+                        {t("buttons.addMembers")}
                     </Button>
                 }
             />
             <DialogContent className="sm:max-w-sm">
                 <form onSubmit={onSubmit} className="space-y-3">
                     <DialogHeader>
-                        <DialogTitle>Add New Members</DialogTitle>
+                        <DialogTitle>{t("membersForm.title")}</DialogTitle>
                     </DialogHeader>
                     <FieldGroup>
-                        {friends ? (
+                        {friends?.length ? (
                             <div className="grid gap-1 max-h-70 overflow-auto">
                                 {friends.map((friend) => (
                                     <div
@@ -114,15 +117,21 @@ export function AddMembersForm({
                                 ))}
                             </div>
                         ) : (
-                            <div>No friends yet</div>
+                            <div className="text-center my-2">
+                                {t("membersForm.noFriends")}
+                            </div>
                         )}
                     </FieldGroup>
                     <DialogFooter>
                         <DialogClose
-                            render={<Button variant="outline">Cancel</Button>}
+                            render={
+                                <Button variant="outline">
+                                    {t("common:buttons.cancel")}
+                                </Button>
+                            }
                         />
                         <Button type="submit" disabled={mutation.isPending}>
-                            Submit
+                            {t("common:buttons.submit")}
                         </Button>
                     </DialogFooter>
                 </form>

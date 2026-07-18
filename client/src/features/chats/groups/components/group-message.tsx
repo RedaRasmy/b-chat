@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { getTime } from "@/features/chats/utils/get-time"
 import { useGroup } from "@/features/chats/groups/use-group"
+import { useTranslation } from "react-i18next"
 
 export default function GroupMessage({
     message,
@@ -41,6 +42,8 @@ export default function GroupMessage({
     const targetRole = sender.chatRole
 
     const canDelete = isUser || isOwner || (isAdmin && targetRole === "member")
+
+    const { t } = useTranslation("chats")
 
     return (
         <div
@@ -108,14 +111,16 @@ export default function GroupMessage({
                             onClick={() => onDelete(message.id)}
                         >
                             <HugeiconsIcon icon={Delete02Icon} />
-                            Delete
+                            {t("common:buttons.delete")}
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
                     {(isSeen || isDelivered) && isUser && (
                         <DropdownMenuGroup>
                             <DropdownMenuSeparator />
                             <DropdownMenuLabel className={"text-end"}>
-                                {isSeen ? "seen" : "delivered"}{" "}
+                                {isSeen
+                                    ? t("message.seen")
+                                    : t("message.delivered")}{" "}
                             </DropdownMenuLabel>
                         </DropdownMenuGroup>
                     )}

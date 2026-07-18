@@ -27,6 +27,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
+import { useTranslation } from "react-i18next"
 import { Link, useNavigate } from "react-router-dom"
 
 export function GroupFormDialog() {
@@ -65,6 +66,8 @@ export function GroupFormDialog() {
         mutation.mutate(data)
     }
 
+    const { t } = useTranslation("chats")
+
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger
@@ -80,9 +83,9 @@ export function GroupFormDialog() {
                     className="space-y-3"
                 >
                     <DialogHeader>
-                        <DialogTitle>Create New Group</DialogTitle>
+                        <DialogTitle>{t("groupForm.title")}</DialogTitle>
                         <DialogDescription>
-                            Make a chat room to talk with your friends.
+                            {t("groupForm.description")}
                         </DialogDescription>
                     </DialogHeader>
                     <FieldGroup>
@@ -92,13 +95,12 @@ export function GroupFormDialog() {
                             render={({ field, fieldState }) => (
                                 <Field data-invalid={fieldState.invalid}>
                                     <FieldLabel htmlFor="group-name">
-                                        Name
+                                        {t("groupForm.name")}
                                     </FieldLabel>
                                     <Input
                                         {...field}
                                         id="group-name"
                                         aria-invalid={fieldState.invalid}
-                                        placeholder=""
                                         autoComplete="off"
                                     />
                                     {fieldState.invalid && (
@@ -114,7 +116,7 @@ export function GroupFormDialog() {
                             control={form.control}
                             render={({ field, fieldState }) => (
                                 <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel>Members</FieldLabel>
+                                    <FieldLabel>{t("members")}</FieldLabel>
                                     {friends && friends.length > 0 ? (
                                         <div className="grid gap-1 max-h-70 overflow-auto">
                                             {friends.map((friend) => (
@@ -167,7 +169,9 @@ export function GroupFormDialog() {
                                                             size={"sm"}
                                                             variant={"link"}
                                                         >
-                                                            Add new friends
+                                                            {t(
+                                                                "groupForm.link",
+                                                            )}
                                                         </Button>
                                                     </Link>
                                                 }
@@ -185,10 +189,14 @@ export function GroupFormDialog() {
                     </FieldGroup>
                     <DialogFooter>
                         <DialogClose
-                            render={<Button variant="outline">Cancel</Button>}
+                            render={
+                                <Button variant="outline">
+                                    {t("common:buttons.cancel")}
+                                </Button>
+                            }
                         />
                         <Button type="submit" disabled={mutation.isPending}>
-                            Create
+                            {t("common:buttons.create")}
                         </Button>
                     </DialogFooter>
                 </form>

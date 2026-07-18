@@ -1,10 +1,12 @@
 {
     "buttons": {
+        "create": "Create",
         "reset": "Reset",
         "submit": "Submit",
         "delete": "Delete",
         "cancel": "Cancel",
-        "yes": "Yes"
+        "yes": "Yes",
+        "update": "Update"
     },
     "confirmation": {
         "title": "Are you sure?",

@@ -1,10 +1,12 @@
 {
     "buttons": {
+        "create": "Créer",
         "reset": "Réinitialiser",
         "submit": "Soumettre",
         "delete": "Supprimer",
         "cancel": "Annuler",
-        "yes": "Oui"
+        "yes": "Oui",
+        "update": "Mise à jour"
     },
     "confirmation": {
         "title": "Es-tu sûr?",

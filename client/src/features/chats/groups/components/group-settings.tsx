@@ -38,6 +38,7 @@ import { useNavigate } from "react-router-dom"
 import { sortMembers } from "@/features/chats/utils/sort-members"
 import { useUser } from "@/features/auth/use-user"
 import Member from "@/features/chats/groups/components/member"
+import { useTranslation } from "react-i18next"
 
 export function GroupSettings() {
     const { chat, isAdmin, isOwner } = useGroup()
@@ -77,6 +78,8 @@ export function GroupSettings() {
         })
     }
 
+    const { t } = useTranslation("chats")
+
     return (
         <Sheet>
             <SheetTrigger
@@ -95,8 +98,12 @@ export function GroupSettings() {
                     className="w-full h-full p-2 grid grid-rows-[auto_1fr] "
                 >
                     <TabsList className={"w-full"}>
-                        <TabsTrigger value="members">Members</TabsTrigger>
-                        <TabsTrigger value="settings">Settings</TabsTrigger>
+                        <TabsTrigger value="members">
+                            {t("members")}
+                        </TabsTrigger>
+                        <TabsTrigger value="settings">
+                            {t("settings")}
+                        </TabsTrigger>
                     </TabsList>
                     <TabsContent
                         value="members"
@@ -120,7 +127,9 @@ export function GroupSettings() {
                         {isOwner && (
                             <Card className="">
                                 <CardHeader>
-                                    <CardTitle>Group Name</CardTitle>
+                                    <CardTitle>
+                                        {t("groupForm.update.groupName")}
+                                    </CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <form
@@ -142,7 +151,6 @@ export function GroupSettings() {
                                                         aria-invalid={
                                                             fieldState.invalid
                                                         }
-                                                        placeholder=""
                                                         autoComplete="off"
                                                         type="text"
                                                         className="max-w-100"
@@ -166,7 +174,7 @@ export function GroupSettings() {
                                             disabled={updateMutation.isPending}
                                             form="update-group"
                                         >
-                                            Update
+                                            {t("common:buttons.update")}
                                         </Button>
                                     </Field>
                                 </CardFooter>
@@ -191,7 +199,7 @@ export function GroupSettings() {
                                         size={"lg"}
                                     >
                                         <HugeiconsIcon icon={Logout02Icon} />
-                                        Exit Group
+                                        {t("buttons.exitGroup")}
                                     </Button>
                                 }
                             ></ActionButton>
@@ -204,7 +212,7 @@ export function GroupSettings() {
                                     size={"lg"}
                                 >
                                     <HugeiconsIcon icon={Delete02Icon} />
-                                    Delete Chat
+                                    {t("buttons.deleteChat")}
                                 </Button>
                             </DeleteChat>
                         )}

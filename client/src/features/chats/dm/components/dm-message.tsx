@@ -18,6 +18,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { getTime } from "@/features/chats/utils/get-time"
+import { useTranslation } from "react-i18next"
 
 export default function DMMessage({
     message,
@@ -35,6 +36,8 @@ export default function DMMessage({
     const isRetry = isUser && message.status === "failed"
     const isSeen = message.receipts.every((rec) => rec.seenAt)
     const isDelivered = message.receipts.every((rec) => rec.deliveredAt)
+
+    const { t } = useTranslation("chats")
 
     return (
         <div
@@ -102,14 +105,16 @@ export default function DMMessage({
                             onClick={() => onDelete(message.id)}
                         >
                             <HugeiconsIcon icon={Delete02Icon} />
-                            Delete
+                            {t("common:buttons.delete")}
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
                     {(isSeen || isDelivered) && (
                         <DropdownMenuGroup>
                             <DropdownMenuSeparator />
                             <DropdownMenuLabel className={"text-end"}>
-                                {isSeen ? "seen" : "delivered"}{" "}
+                                {isSeen
+                                    ? t("message.seen")
+                                    : t("message.delivered")}{" "}
                             </DropdownMenuLabel>
                         </DropdownMenuGroup>
                     )}
