@@ -7,6 +7,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { cn } from "@/lib/utils"
 import { useTranslation } from "react-i18next"
 
 const langs = [
@@ -14,8 +15,8 @@ const langs = [
     { label: "Français", value: "fr" },
 ]
 
-export default function LangSelector() {
-    const { t, i18n } = useTranslation()
+export default function LangSelector({ className }: { className?: string }) {
+    const { t, i18n } = useTranslation("profile")
     return (
         <Select
             items={langs}
@@ -25,14 +26,12 @@ export default function LangSelector() {
                 i18n.changeLanguage(lang ?? "en")
             }}
         >
-            <SelectTrigger className="w-full max-w-48">
+            <SelectTrigger className={cn("w-full max-w-48", className)}>
                 <SelectValue />
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>
-                    <SelectLabel>
-                        {t("profile:preferences.language.label")}
-                    </SelectLabel>
+                    <SelectLabel>{t("preferences.language.label")}</SelectLabel>
                     {langs.map((item) => (
                         <SelectItem key={item.value} value={item.value}>
                             {item.label}

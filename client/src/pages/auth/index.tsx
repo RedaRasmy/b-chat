@@ -1,3 +1,4 @@
+import LangSelector from "@/components/lang-selector"
 import { useAuth } from "@/features/auth/use-auth"
 import LoadingPage from "@/pages/loading"
 import { Navigate, Outlet } from "react-router-dom"
@@ -10,5 +11,10 @@ export default function AuthLayout() {
         return <Navigate to={"/"} replace />
     }
 
-    return <Outlet />
+    return (
+        <div>
+            <LangSelector className="absolute top-5 right-5 max-w-40" />
+            <Outlet />
+        </div>
+    )
 }

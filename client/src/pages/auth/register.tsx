@@ -28,6 +28,7 @@ import {
     ViewIcon,
     ViewOffIcon,
 } from "@hugeicons/core-free-icons"
+import { useTranslation } from "react-i18next"
 
 const Schema = RegisterSchema.extend({
     confirmPassword: z.string(),
@@ -79,6 +80,8 @@ export default function RegisterPage() {
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
+    const { t } = useTranslation("auth")
+
     return (
         <div className="w-full h-screen bg-linear-to-br from-primary/10 via-background to-secondary/10 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
@@ -96,10 +99,10 @@ export default function RegisterPage() {
                 <Card className="shadow-xl">
                     <CardHeader className="text-center">
                         <CardTitle className="text-2xl font-bold">
-                            Create Account
+                            {t("registerForm.title")}
                         </CardTitle>
                         <CardDescription>
-                            Join us today and start your journey
+                            {t("registerForm.description")}
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
@@ -116,7 +119,7 @@ export default function RegisterPage() {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="name">
-                                            Name
+                                            {t("registerForm.name.label")}
                                         </FieldLabel>
                                         <div className="relative">
                                             <HugeiconsIcon
@@ -126,7 +129,9 @@ export default function RegisterPage() {
                                             <Input
                                                 id={field.name}
                                                 type="string"
-                                                placeholder="Enter your name"
+                                                placeholder={t(
+                                                    "registerForm.name.placeholder",
+                                                )}
                                                 className="pl-10"
                                                 aria-invalid={
                                                     fieldState.invalid
@@ -149,7 +154,7 @@ export default function RegisterPage() {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="email">
-                                            Email
+                                            {t("registerForm.email.label")}
                                         </FieldLabel>
                                         <div className="relative">
                                             <HugeiconsIcon
@@ -159,7 +164,9 @@ export default function RegisterPage() {
                                             <Input
                                                 id={field.name}
                                                 type="email"
-                                                placeholder="Enter your email"
+                                                placeholder={t(
+                                                    "registerForm.email.placeholder",
+                                                )}
                                                 className="pl-10"
                                                 aria-invalid={
                                                     fieldState.invalid
@@ -183,7 +190,7 @@ export default function RegisterPage() {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="password">
-                                            Password
+                                            {t("registerForm.password.label")}
                                         </FieldLabel>
                                         <div className="relative">
                                             <HugeiconsIcon
@@ -197,7 +204,9 @@ export default function RegisterPage() {
                                                         ? "text"
                                                         : "password"
                                                 }
-                                                placeholder="Create a password"
+                                                placeholder={t(
+                                                    "registerForm.password.placeholder",
+                                                )}
                                                 className="pl-10 pr-10"
                                                 aria-invalid={
                                                     fieldState.invalid
@@ -244,7 +253,9 @@ export default function RegisterPage() {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="confirmPassword">
-                                            Confirm Password
+                                            {t(
+                                                "registerForm.confirmPassword.label",
+                                            )}
                                         </FieldLabel>
                                         <div className="relative">
                                             <HugeiconsIcon
@@ -258,7 +269,9 @@ export default function RegisterPage() {
                                                         ? "text"
                                                         : "password"
                                                 }
-                                                placeholder="Confirm your password"
+                                                placeholder={t(
+                                                    "registerForm.confirmPassword.placeholder",
+                                                )}
                                                 className="pl-10 pr-10"
                                                 aria-invalid={
                                                     fieldState.invalid
@@ -304,7 +317,7 @@ export default function RegisterPage() {
                                 className="cursor-pointer w-full mt-3"
                                 disabled={mutation.isPending}
                             >
-                                Create Account
+                                {t("buttons.register")}
                             </Button>
                         </form>
                         <div className="relative">
@@ -313,7 +326,7 @@ export default function RegisterPage() {
                             </div>
                             <div className="relative flex justify-center text-xs uppercase">
                                 <span className="bg-card px-2 text-muted-foreground">
-                                    Or sign up with
+                                    {t("registerForm.seperator")}
                                 </span>
                             </div>
                         </div>
@@ -345,10 +358,12 @@ export default function RegisterPage() {
                         {/* Sign In Link */}
                         <div className="text-center text-sm">
                             <span className="text-muted-foreground">
-                                Already have an account?
+                                {t("registerForm.question")}
                             </span>
                             <Link to="/auth/login">
-                                <Button variant={"link"}>Sign in</Button>
+                                <Button variant={"link"}>
+                                    {t("registerForm.link")}
+                                </Button>
                             </Link>
                         </div>
                     </CardContent>

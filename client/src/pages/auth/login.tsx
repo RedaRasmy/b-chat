@@ -27,6 +27,7 @@ import {
 } from "@hugeicons/core-free-icons"
 import GoogleIcon from "@/components/google-icon"
 import GithubIcon from "@/components/github-icon"
+import { useTranslation } from "react-i18next"
 
 export default function LoginPage() {
     const form = useForm({
@@ -68,6 +69,8 @@ export default function LoginPage() {
 
     const [showPassword, setShowPassword] = useState(false)
 
+    const { t } = useTranslation("auth")
+
     return (
         <div className="w-full h-screen bg-linear-to-br from-primary/10 via-background to-secondary/10 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
@@ -85,10 +88,10 @@ export default function LoginPage() {
                 <Card className="shadow-xl">
                     <CardHeader className="text-center">
                         <CardTitle className="text-2xl font-bold">
-                            Welcome Back
+                            {t("loginForm.title")}
                         </CardTitle>
                         <CardDescription>
-                            Sign in to your account
+                            {t("loginForm.description")}
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
@@ -105,7 +108,7 @@ export default function LoginPage() {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="email">
-                                            Email
+                                            {t("loginForm.email.label")}
                                         </FieldLabel>
                                         <div className="relative">
                                             <HugeiconsIcon
@@ -119,7 +122,9 @@ export default function LoginPage() {
                                                 aria-invalid={
                                                     fieldState.invalid
                                                 }
-                                                placeholder="Enter your email"
+                                                placeholder={t(
+                                                    "loginForm.email.placeholder",
+                                                )}
                                                 className="pl-10"
                                             />
                                         </div>
@@ -139,7 +144,7 @@ export default function LoginPage() {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="password">
-                                            Password
+                                            {t("loginForm.password.label")}
                                         </FieldLabel>
 
                                         <div className="relative">
@@ -158,7 +163,9 @@ export default function LoginPage() {
                                                         ? "text"
                                                         : "password"
                                                 }
-                                                placeholder="Enter your password"
+                                                placeholder={t(
+                                                    "loginForm.password.placeholder",
+                                                )}
                                                 className="pl-10 pr-10"
                                             />
 
@@ -202,7 +209,7 @@ export default function LoginPage() {
                                 size="lg"
                                 disabled={mutation.isPending}
                             >
-                                Sign in
+                                {t("buttons.signin")}
                             </Button>
                         </form>
                         <div className="relative">
@@ -211,7 +218,7 @@ export default function LoginPage() {
                             </div>
                             <div className="relative flex justify-center text-xs uppercase">
                                 <span className="bg-card px-2 text-muted-foreground">
-                                    Or sign in with
+                                    {t("loginForm.seperator")}
                                 </span>
                             </div>
                         </div>
@@ -243,10 +250,12 @@ export default function LoginPage() {
                         {/* Sign Up Link */}
                         <div className="text-center text-sm">
                             <span className="text-muted-foreground">
-                                Don't have an account?
+                                {t("loginForm.question")}
                             </span>
                             <Link to="/auth/register">
-                                <Button variant={"link"}>Sign up</Button>
+                                <Button variant={"link"}>
+                                    {t("loginForm.link")}
+                                </Button>
                             </Link>
                         </div>
                     </CardContent>
