@@ -5,6 +5,7 @@ import GroupChat from "@/features/chats/groups/components/group-chat"
 import { GroupProvider } from "@/features/chats/groups/components/group-provider"
 import { useChats } from "@/features/chats/queries"
 import LoadingPage from "@/pages/loading"
+import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { Navigate, useParams } from "react-router-dom"
 import { toast } from "sonner"
@@ -20,15 +21,20 @@ export default function ChatPage() {
     }
     const { data: chats, isLoading } = useChats()
 
-    if (isLoading) return <LoadingPage />
-
     const chat = chats ? chats.find((c) => c.id === channelId) : undefined
 
+    useEffect(() => {
+        if (!isLoading && !chat) {
+            const notif = t("errors.chatNotFound")
+            toast.error(notif, {
+                richColors: true,
+            })
+        }
+    }, [chat, isLoading, t])
+
+    if (isLoading) return <LoadingPage />
+
     if (!chat) {
-        const notif = t("errors.chatNotFound")
-        toast.error(notif, {
-            richColors: true,
-        })
         return <Navigate to={"/"} />
     }
 
