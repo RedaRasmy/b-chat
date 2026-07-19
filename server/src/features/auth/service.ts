@@ -25,7 +25,7 @@ export const authService = {
         })
 
         if (exist) {
-            throw new ConflictError("Email already in use")
+            throw new ConflictError("emailExist")
         }
 
         const [user] = await db

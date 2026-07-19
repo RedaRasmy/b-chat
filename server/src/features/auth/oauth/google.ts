@@ -97,6 +97,6 @@ export const googleCallback = makeEndpoint(async (req, res) => {
         res.redirect(`${base}/`)
     } catch (err) {
         logger.error(err, "Google OAuth error:")
-        return res.redirect(`${base}/auth/login?error=google_auth_failed`)
+        return res.redirect(`${base}/auth/login?error=unkownError`)
     }
 })

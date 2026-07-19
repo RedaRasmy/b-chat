@@ -33,7 +33,7 @@ import { useTranslation } from "react-i18next"
 const Schema = RegisterSchema.extend({
     confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
+    message: "errors.passwordsMatch",
     path: ["confirmPassword"],
 })
 
@@ -47,10 +47,15 @@ export default function RegisterPage() {
             confirmPassword: "",
         },
     })
+    const { t } = useTranslation("auth")
 
     const navigate = useNavigate()
     const [params] = useSearchParams()
-    const error = params.get("error")
+
+    const urlError = params.get("error")
+    const error = urlError
+        ? t(`errors:${urlError}`, { defaultValue: urlError })
+        : null
 
     const { setUser } = useAuth()
 
@@ -61,9 +66,16 @@ export default function RegisterPage() {
             navigate("/")
         },
         onError: (err) => {
-            const message =
-                (err.response?.data?.message as string) ||
-                "Something went wrong , Please try again."
+            const unkownError = t("errors.unkownError")
+
+            const errorKey = err.response?.data.message
+
+            const message = errorKey
+                ? t(`errors.${errorKey}`, {
+                      defaultValue: unkownError,
+                  })
+                : unkownError
+
             form.setError("root", {
                 message,
             })
@@ -79,8 +91,6 @@ export default function RegisterPage() {
 
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-
-    const { t } = useTranslation("auth")
 
     return (
         <div className="w-full h-screen bg-linear-to-br from-primary/10 via-background to-secondary/10 flex items-center justify-center p-4">
@@ -139,9 +149,16 @@ export default function RegisterPage() {
                                                 {...field}
                                             />
                                         </div>
-                                        {fieldState.invalid && (
+                                        {fieldState.error?.message && (
                                             <FieldError
-                                                errors={[fieldState.error]}
+                                                errors={[
+                                                    {
+                                                        message: t(
+                                                            fieldState.error
+                                                                ?.message!,
+                                                        ),
+                                                    },
+                                                ]}
                                             />
                                         )}
                                     </Field>
@@ -174,9 +191,16 @@ export default function RegisterPage() {
                                                 {...field}
                                             />
                                         </div>
-                                        {fieldState.invalid && (
+                                        {fieldState.error?.message && (
                                             <FieldError
-                                                errors={[fieldState.error]}
+                                                errors={[
+                                                    {
+                                                        message: t(
+                                                            fieldState.error
+                                                                ?.message!,
+                                                        ),
+                                                    },
+                                                ]}
                                             />
                                         )}
                                     </Field>
@@ -237,9 +261,16 @@ export default function RegisterPage() {
                                                 )}
                                             </Button>
                                         </div>
-                                        {fieldState.invalid && (
+                                        {fieldState.error?.message && (
                                             <FieldError
-                                                errors={[fieldState.error]}
+                                                errors={[
+                                                    {
+                                                        message: t(
+                                                            fieldState.error
+                                                                ?.message!,
+                                                        ),
+                                                    },
+                                                ]}
                                             />
                                         )}
                                     </Field>
@@ -302,9 +333,16 @@ export default function RegisterPage() {
                                                 )}
                                             </Button>
                                         </div>
-                                        {fieldState.invalid && (
+                                        {fieldState.error?.message && (
                                             <FieldError
-                                                errors={[fieldState.error]}
+                                                errors={[
+                                                    {
+                                                        message: t(
+                                                            fieldState.error
+                                                                ?.message!,
+                                                        ),
+                                                    },
+                                                ]}
                                             />
                                         )}
                                     </Field>

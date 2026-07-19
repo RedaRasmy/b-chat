@@ -126,6 +126,6 @@ export const githubCallback = makeEndpoint(async (req, res) => {
         res.redirect(`${base}/`)
     } catch (err) {
         logger.error(err, "GitHub OAuth error:")
-        return res.redirect(`${base}/auth/login?error=github_auth_failed`)
+        return res.redirect(`${base}/auth/login?error=unkownError`)
     }
 })

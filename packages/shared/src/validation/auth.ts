@@ -2,20 +2,20 @@ import { z } from "zod"
 
 export const NameSchema = z
     .string()
-    .min(1, "Name is required")
-    .min(3, "Name must be between 3 and 15 characters")
-    .max(15, "Name must be between 3 and 15 characters")
-    
+    .min(1, "errors.nameRequired")
+    .min(3, "errors.nameLength")
+    .max(15, "errors.nameLength")
+
 export const EmailSchema = z
     .string()
-    .min(1, "Email is required")
-    .pipe(z.email())
+    .min(1, "errors.emailRequired")
+    .pipe(z.email("errors.emailInvalid"))
 
 export const PasswordSchema = z
     .string()
-    .min(1, "Password is required")
-    .min(8, "Password must be at least 8 characters")
-    .max(50, "Password must be at most 50 characters")
+    .min(1, "errors.passwordRequired")
+    .min(8, "errors.passwordMinLength")
+    .max(50, "errors.passwordMaxLength")
 
 export const LoginSchema = z.object({
     email: EmailSchema,
