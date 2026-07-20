@@ -4,6 +4,16 @@ https://github.com/user-attachments/assets/4251c443-443b-4e54-b6ae-4b36695a6053
 
 A full-stack real-time chat application built with the PERN stack and Socket.io.
 
+## Features
+
+- 🔐 **Authentication** — Register/login with credentials or OAuth (Github & Google).
+- 👥 **Friends** — Send, accept, and manage friend requests.
+- 💬 **Direct Messages** — Real-time 1-on-1 conversations.
+- 🏠 **Groups** — Create and manage group chats with multiple members.
+- 📝 **Posts** — Share posts.
+- ⚡ **Real-time** — Instant messaging, typing indicators, and online presence.
+- 🌐 **i18n** — Supporting English and French
+
 ## Tech Stack
 
 **Frontend**
@@ -14,6 +24,7 @@ A full-stack real-time chat application built with the PERN stack and Socket.io.
 - React Query
 - Socket.io Client
 - Zod + react-hook-form
+- i18next + react-i18next
 
 **Backend**
 
@@ -22,15 +33,6 @@ A full-stack real-time chat application built with the PERN stack and Socket.io.
 - Socket.io
 - JWT + bcryptjs
 - Zod + drizzle-zod
-
-## Features
-
-- 🔐 **Authentication** — Register/login with credentials or OAuth (Github & Google).
-- 👥 **Friends** — Send, accept, and manage friend requests.
-- 💬 **Direct Messages** — Real-time 1-on-1 conversations.
-- 🏠 **Groups** — Create and manage group chats with multiple members.
-- 📝 **Posts** — Share posts.
-- ⚡ **Real-time** — Instant messaging, typing indicators, and online presence.
 
 ## Getting Started
 
