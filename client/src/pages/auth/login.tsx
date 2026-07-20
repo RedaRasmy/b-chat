@@ -81,9 +81,6 @@ export default function LoginPage() {
 
     const [showPassword, setShowPassword] = useState(false)
 
-    console.log(form.getFieldState("email").error?.message)
-    console.log(form.getFieldState("password").error?.message)
-
     return (
         <div className="w-full h-screen bg-linear-to-br from-primary/10 via-background to-secondary/10 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
