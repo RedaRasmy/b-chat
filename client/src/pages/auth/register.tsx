@@ -54,7 +54,7 @@ export default function RegisterPage() {
 
     const urlError = params.get("error")
     const error = urlError
-        ? t(`errors:${urlError}`, { defaultValue: urlError })
+        ? t(`errors.${urlError}`, { defaultValue: urlError })
         : null
 
     const { setUser } = useAuth()

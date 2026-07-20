@@ -42,7 +42,7 @@ export default function LoginPage() {
 
     const urlError = params.get("error")
     const error = urlError
-        ? t(`errors:${urlError}`, { defaultValue: urlError })
+        ? t(`errors.${urlError}`, { defaultValue: urlError })
         : null
 
     const navigate = useNavigate()
@@ -80,6 +80,9 @@ export default function LoginPage() {
     const message = errors.root?.message ?? error ?? null
 
     const [showPassword, setShowPassword] = useState(false)
+
+    console.log(form.getFieldState("email").error?.message)
+    console.log(form.getFieldState("password").error?.message)
 
     return (
         <div className="w-full h-screen bg-linear-to-br from-primary/10 via-background to-secondary/10 flex items-center justify-center p-4">
