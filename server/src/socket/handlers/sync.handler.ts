@@ -1,11 +1,11 @@
 import { messageService } from "@/features/messages/service"
-import { emitToUser, TypedServer, TypedSocket } from "@/socket"
+import { emitToUser, TypedSocket } from "@/socket"
 import z from "zod"
 import logger from "@/lib/logger"
 
 const schema = z.int().min(0)
 
-export function handleSyncMessages(io: TypedServer, socket: TypedSocket) {
+export function handleSyncMessages(socket: TypedSocket) {
     return async (data: unknown) => {
         const result = schema.safeParse(data)
         if (!result.success) {

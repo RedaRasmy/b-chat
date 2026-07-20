@@ -2,9 +2,9 @@ import { GetMessageSchema, SeeChatSchema } from "@bchat/shared/validation"
 import logger from "@/lib/logger"
 import { messageService } from "@/features/messages/service"
 import { channelService } from "@/features/channels/service"
-import { TypedServer, TypedSocket } from "@/socket"
+import { emitToUser, TypedSocket } from "@/socket"
 
-export function handleGetMessage(io: TypedServer, socket: TypedSocket) {
+export function handleGetMessage(socket: TypedSocket) {
     return async (data: unknown) => {
         try {
             const { channelId, messageId, senderId } =
@@ -21,7 +21,7 @@ export function handleGetMessage(io: TypedServer, socket: TypedSocket) {
 
             await messageService.markAsDelivered(messageId, user.id)
 
-            io.to(`user:${senderId}`).emit("message_delivered", {
+            emitToUser(senderId, "message_delivered", {
                 messageId,
                 receiverId: user.id,
                 deliveredAt: new Date(),
@@ -33,7 +33,7 @@ export function handleGetMessage(io: TypedServer, socket: TypedSocket) {
     }
 }
 
-export function handleSeeChat(io: TypedServer, socket: TypedSocket) {
+export function handleSeeChat(socket: TypedSocket) {
     return async (data: unknown) => {
         try {
             const { channelId } = SeeChatSchema.parse(data)
@@ -59,7 +59,7 @@ export function handleSeeChat(io: TypedServer, socket: TypedSocket) {
                 )
 
                 unreadMessages.forEach((msg) => {
-                    io.to(`user:${msg.senderId}`).emit("chat_seen", {
+                    emitToUser(msg.senderId, "chat_seen", {
                         messageId: msg.id,
                         userId: user.id,
                         seenAt: new Date(),

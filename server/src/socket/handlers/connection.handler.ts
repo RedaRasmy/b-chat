@@ -2,10 +2,9 @@ import logger from "@/lib/logger"
 import { channelService } from "@/features/channels/service"
 import { userService } from "@/features/users/service"
 import { friendService } from "@/features/friendships/service"
-import { SERVER_EVENTS } from "@bchat/shared/events"
-import { TypedServer, TypedSocket } from "@/socket"
+import { emitToUser, TypedSocket } from "@/socket"
 
-export async function handleConnection(io: TypedServer, socket: TypedSocket) {
+export async function handleConnection(socket: TypedSocket) {
     const user = socket.data.user
     logger.info(user, "User connected:")
 
@@ -20,7 +19,7 @@ export async function handleConnection(io: TypedServer, socket: TypedSocket) {
 
     const friendIds = await friendService.getFriendsIds(user.id)
     friendIds.forEach((friendId) => {
-        io.to(`user:${friendId}`).emit(SERVER_EVENTS.USER_STATUS_CHANGED, {
+        emitToUser(friendId, "user_status_changed", {
             userId: user.id,
             status: "online",
             lastSeen: new Date(),
@@ -28,10 +27,7 @@ export async function handleConnection(io: TypedServer, socket: TypedSocket) {
     })
 }
 
-export async function handleDisconnection(
-    io: TypedServer,
-    socket: TypedSocket,
-) {
+export async function handleDisconnection(socket: TypedSocket) {
     const user = socket.data.user
     logger.info(user, "User disconnected:")
 
@@ -40,7 +36,7 @@ export async function handleDisconnection(
 
         const friendIds = await friendService.getFriendsIds(user.id)
         friendIds.forEach((friendId) => {
-            io.to(`user:${friendId}`).emit(SERVER_EVENTS.USER_STATUS_CHANGED, {
+            emitToUser(friendId, "user_status_changed", {
                 userId: user.id,
                 status: "offline",
                 lastSeen: new Date(),

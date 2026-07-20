@@ -49,14 +49,14 @@ export function setupSocketIO(server: HTTPServer) {
     io.use(socketAuthMiddleware)
 
     io.on("connection", async (socket) => {
-        await handleConnection(io, socket)
+        await handleConnection(socket)
 
-        socket.on("send_message", handleSendMessage(io, socket))
-        socket.on("sync_messages", handleSyncMessages(io, socket))
-        socket.on("get_message", handleGetMessage(io, socket))
-        socket.on("see_chat", handleSeeChat(io, socket))
-        socket.on("send_typing", handleTyping(io, socket))
-        socket.on("disconnect", () => handleDisconnection(io, socket))
+        socket.on("send_message", handleSendMessage(socket))
+        socket.on("sync_messages", handleSyncMessages(socket))
+        socket.on("get_message", handleGetMessage(socket))
+        socket.on("see_chat", handleSeeChat(socket))
+        socket.on("send_typing", handleTyping(socket))
+        socket.on("disconnect", () => handleDisconnection(socket))
 
         socket.onAny((event) => {
             if (socket.listeners(event).length === 0) {

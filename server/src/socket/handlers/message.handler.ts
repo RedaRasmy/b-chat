@@ -2,10 +2,10 @@ import { MessageAck } from "@bchat/types"
 import { SendMessageData, SendMessageSchema } from "@bchat/shared/validation"
 import { messageService } from "@/features/messages/service"
 import { channelService } from "@/features/channels/service"
-import { TypedServer, TypedSocket } from "@/socket"
+import { emitToChannel, TypedSocket } from "@/socket"
 import logger from "@/lib/logger"
 
-export function handleSendMessage(io: TypedServer, socket: TypedSocket) {
+export function handleSendMessage(socket: TypedSocket) {
     return async (
         msg: SendMessageData,
         callback: (response: MessageAck) => void,
@@ -42,6 +42,7 @@ export function handleSendMessage(io: TypedServer, socket: TypedSocket) {
 
             const member = channel.members.find((m) => m.userId === user.id)
             if (!member || member.status === "removed") {
+                logger.warn("user is not a member")
                 throw new Error("You are not a member")
             }
 
@@ -56,7 +57,11 @@ export function handleSendMessage(io: TypedServer, socket: TypedSocket) {
                 recipientIds: recipients.map((r) => r.userId),
             })
 
-            io.to(`channel:${channelId}`).emit("new_message", message)
+            logger.info("message saved")
+
+            emitToChannel(channelId, "new_message", message)
+
+            logger.info(`message sent to channel : ${channelId}`)
 
             callback({
                 success: true,
