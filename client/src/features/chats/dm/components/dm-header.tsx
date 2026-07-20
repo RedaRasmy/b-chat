@@ -11,15 +11,18 @@ import { useTranslation } from "react-i18next"
 
 export default function DMHeader() {
     const { friend, chat } = useDM()
+
+    const { t } = useTranslation("chats")
+
     const lastSeen =
         chat.lastSeen && chat.status === "offline"
-            ? "since " + getTime(chat.lastSeen)
+            ? getTime(chat.lastSeen)
             : null
 
     const status =
-        chat.status === "online" ? "online" : `${chat.status} ${lastSeen}`
-
-    const { t } = useTranslation("chats")
+        chat.status === "online"
+            ? t("status.online")
+            : t("status.offline", { date: lastSeen })
 
     return (
         <PageHeader>

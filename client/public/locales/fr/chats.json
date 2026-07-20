@@ -41,5 +41,9 @@
     },
     "errors": {
         "chatNotFound": "Discussion introuvable !"
+    },
+    "status": {
+        "online": "En ligne",
+        "offline": "Hors ligne depuis le {{date}}"
     }
 }

@@ -41,5 +41,9 @@
     },
     "errors": {
         "chatNotFound": "المحادثة غير موجودة!"
+    },
+    "status": {
+        "online": "متصل",
+        "offline": "غير متصل منذ {{date}}"
     }
 }

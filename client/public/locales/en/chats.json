@@ -41,5 +41,9 @@
     },
     "errors": {
         "chatNotFound": "Chat not found!"
+    },
+    "status": {
+        "online": "online",
+        "offline": "offline since {{date}}"
     }
 }
