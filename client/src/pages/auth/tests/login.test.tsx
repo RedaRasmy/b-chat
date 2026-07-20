@@ -111,7 +111,7 @@ describe("LoginPage", () => {
             await user.type(screen.getByLabelText("Email"), "notanemail")
 
             expect(
-                await screen.findByText(/invalid email/i),
+                await screen.findByText(/email is invalid/i),
             ).toBeInTheDocument()
         })
 
@@ -156,7 +156,7 @@ describe("LoginPage", () => {
             server.use(
                 http.post("/api/auth/login", () =>
                     HttpResponse.json(
-                        { message: "Invalid credentials" },
+                        { message: "unkown error" },
                         { status: 400 },
                     ),
                 ),
@@ -171,7 +171,7 @@ describe("LoginPage", () => {
             )
 
             expect(
-                await screen.findByText(/invalid credentials/i),
+                await screen.findByText(/something went wrong/i),
             ).toBeInTheDocument()
         })
 

@@ -118,7 +118,7 @@ describe("RegisterPage", () => {
             await user.type(screen.getByLabelText("Email"), "notanemail")
 
             expect(
-                await screen.findByText(/invalid email/i),
+                await screen.findByText(/email is invalid/i),
             ).toBeInTheDocument()
         })
 
@@ -177,7 +177,7 @@ describe("RegisterPage", () => {
             server.use(
                 http.post("/api/auth/register", () =>
                     HttpResponse.json(
-                        { message: "Email already in use" },
+                        { message: "emailExist" },
                         { status: 409 },
                     ),
                 ),

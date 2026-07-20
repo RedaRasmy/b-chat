@@ -3,6 +3,7 @@ import { afterEach, beforeAll, afterAll } from "vitest"
 import { cleanup } from "@testing-library/react"
 import { server } from "./mocks/server"
 import { db } from "@/test/mocks/db"
+import "./i18n"
 
 beforeAll(() => server.listen({ onUnhandledRequest: "error" }))
 
