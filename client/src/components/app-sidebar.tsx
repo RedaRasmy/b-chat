@@ -42,10 +42,13 @@ export function AppSidebar() {
     })
     const { setOpenMobile } = useSidebar()
 
-    const { t } = useTranslation(["profile", "friends", "chats", "posts"])
+    const { t, i18n } = useTranslation(["profile", "friends", "chats", "posts"])
+
+    const dir = i18n.dir(i18n.language)
+    const side = dir === "rtl" ? "right" : "left"
 
     return (
-        <Sidebar>
+        <Sidebar side={side}>
             <SidebarHeader className="">
                 <Link
                     onClick={() => setOpenMobile(false)}
