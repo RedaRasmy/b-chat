@@ -1,0 +1,23 @@
+{
+    "buttons": {
+        "addFriend": "إضافة صديق",
+        "cancelRequest": "قيد الانتظار",
+        "unfriend": "إلغاء الصداقة",
+        "accept": "قبول",
+        "reject": "رفض"
+    },
+    "usersPage": {
+        "title": "المستخدمون",
+        "searchPlaceholder": "البحث عن مستخدمين بالاسم",
+        "description": "اعثر على أصدقاء جدد هنا!"
+    },
+    "noFriends": {
+        "title": "ليس لديك أي أصدقاء بعد",
+        "link": "إضافة صديق جديد"
+    },
+    "noRequests": "ليس لديك أي طلبات معلقة",
+    "notifications": {
+        "requestAccepted": "قبل {{name}} طلب الصداقة الخاص بك",
+        "newRequest": "أرسل لك {{name}} طلب صداقة"
+    }
+}

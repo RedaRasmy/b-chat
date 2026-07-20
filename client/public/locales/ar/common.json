@@ -1,0 +1,15 @@
+{
+    "buttons": {
+        "create": "إنشاء",
+        "reset": "إعادة ضبط",
+        "submit": "إرسال",
+        "delete": "حذف",
+        "cancel": "إلغاء",
+        "yes": "نعم",
+        "update": "تحديث"
+    },
+    "confirmation": {
+        "title": "هل أنت متأكد؟",
+        "defaultDescription": "لا يمكن التراجع عن هذا الإجراء."
+    }
+}

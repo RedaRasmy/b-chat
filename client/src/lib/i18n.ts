@@ -22,7 +22,7 @@ i18n.use(LanguageDetector)
             loadPath: "/locales/{{lng}}/{{ns}}.json",
         },
 
-        supportedLngs: ["en", "fr"],
+        supportedLngs: ["en", "fr", "ar"],
         cleanCode: true,
 
         // react i18next special options (optional)

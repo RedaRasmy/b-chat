@@ -1,0 +1,45 @@
+{
+    "buttons": {
+        "chat": "محادثة",
+        "send": "إرسال",
+        "exitGroup": "مغادرة المجموعة",
+        "deleteChat": "حذف المحادثة",
+        "addMembers": "إضافة أعضاء"
+    },
+    "chats": "المحادثات",
+    "groupForm": {
+        "title": "إنشاء مجموعة جديدة",
+        "description": "أنشئ غرفة محادثة للتواصل مع أصدقائك.",
+        "name": "الاسم",
+        "link": "إضافة أصدقاء جدد",
+        "update": {
+            "groupName": "اسم المجموعة"
+        }
+    },
+    "members": "الأعضاء",
+    "settings": "الإعدادات",
+    "message": {
+        "seen": "تمت المشاهدة",
+        "delivered": "تم التسليم"
+    },
+    "membersForm": {
+        "title": "إضافة أعضاء جدد",
+        "noFriends": "لا يوجد أصدقاء بعد"
+    },
+    "typing": "يكتب الآن...",
+    "userIsTyping": "يكتب {{name}} الآن...",
+    "styledUserIsTyping": "يكتب <0>{{name}}</0> الآن...",
+    "joinedAt": "انضم في {{date}}",
+    "roles": {
+        "owner": "المالك",
+        "admin": "مشرف",
+        "member": "عضو"
+    },
+    "deleteMemberDescription": "حذف العضو : {{name}}",
+    "notifications": {
+        "newMessage": "رسالة جديدة من {{name}}"
+    },
+    "errors": {
+        "chatNotFound": "المحادثة غير موجودة!"
+    }
+}

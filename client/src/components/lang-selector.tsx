@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next"
 const langs = [
     { label: "English", value: "en" },
     { label: "Français", value: "fr" },
+    { label: "العربية", value: "ar" },
 ]
 
 export default function LangSelector({ className }: { className?: string }) {

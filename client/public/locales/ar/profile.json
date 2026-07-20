@@ -1,0 +1,26 @@
+{
+    "pageTitle": "الملف الشخصي",
+    "tabs": {
+        "friends": "الأصدقاء",
+        "myPosts": "منشوراتي",
+        "requests": "الطلبات",
+        "settings": "الإعدادات"
+    },
+    "preferences": {
+        "title": "التفضيلات",
+        "language": {
+            "label": "اللغة"
+        }
+    },
+    "profileUpdating": {
+        "title": "تحديث ملفك الشخصي",
+        "name": {
+            "label": "الاسم",
+            "palceholder": "أدخل اسمك الجديد"
+        }
+    },
+    "accountDeletion": {
+        "title": "حذف حسابك",
+        "description": "سيؤدي هذا إلى حذف حسابك وجميع البيانات المرتبطة به نهائيًا. لا يمكن التراجع عن هذا الإجراء."
+    }
+}
