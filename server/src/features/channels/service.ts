@@ -132,7 +132,10 @@ export const channelService = {
                 { channelId: channel.id, userId: friendId },
             ])
 
-            return dm
+            return {
+                channel,
+                dm,
+            }
         })
     },
 
@@ -181,8 +184,9 @@ export const channelService = {
                 ),
             )
             return {
-                ...group,
-                members: validMembers,
+                group,
+                validMembers,
+                channel,
             }
         })
     },

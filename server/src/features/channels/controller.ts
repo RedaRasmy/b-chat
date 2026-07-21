@@ -1,5 +1,6 @@
 import { channelService } from "@/features/channels/service"
-import { getUserSocket } from "@/socket"
+import logger from "@/lib/logger"
+import { emitToUsers } from "@/socket"
 import { makeEndpoint } from "@/utils/make-endpoint"
 import {
     InsertDMSchema,
@@ -18,18 +19,12 @@ export const createDM = makeEndpoint(
         const { friendId } = req.body
 
         try {
-            const dm = await channelService.createDM(userId, friendId)
+            const { channel, dm } = await channelService.createDM(
+                userId,
+                friendId,
+            )
 
-            const creatorSocket = getUserSocket(userId)
-            const friendSocket = getUserSocket(friendId)
-
-            if (creatorSocket) {
-                creatorSocket.join(`channel:${dm.channelId}`)
-            }
-
-            if (friendSocket) {
-                friendSocket.join(`channel:${dm.channelId}`)
-            }
+            emitToUsers([userId, friendId], "new_chat", channel)
 
             res.status(201).json(dm)
         } catch (err) {
@@ -47,18 +42,14 @@ export const createGroup = makeEndpoint(
         const { name, members } = req.body
 
         try {
-            const group = await channelService.createGroup({
-                name,
-                membersIds: members,
-                userId,
-            })
+            const { group, validMembers, channel } =
+                await channelService.createGroup({
+                    name,
+                    membersIds: members,
+                    userId,
+                })
 
-            group.members.forEach((memberId) => {
-                const memberSocket = getUserSocket(memberId)
-                if (memberSocket) {
-                    memberSocket.join(`channel:${group.channelId}`)
-                }
-            })
+            emitToUsers(validMembers, "new_chat", channel)
 
             res.status(201).json(group)
         } catch (err) {

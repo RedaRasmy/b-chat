@@ -1,5 +1,5 @@
 import { memberService } from "@/features/members/service"
-import { emitToChannel, getUserSocket } from "@/socket"
+import { emitToChannel, leaveChannel } from "@/socket"
 import { makeEndpoint } from "@/utils/make-endpoint"
 import {
     InsertMembersSchema,
@@ -90,11 +90,7 @@ export const deleteMember = makeEndpoint(
                 userName: member.user.name,
             })
 
-            const socket = getUserSocket(targetId)
-
-            if (socket) {
-                socket.leave(`channel:${channelId}`)
-            }
+            leaveChannel(targetId, channelId)
 
             res.sendStatus(204)
         } catch (err) {
@@ -115,11 +111,7 @@ export const exitChannel = makeEndpoint(
         try {
             const member = await memberService.exitGroup(user.id, channelId)
 
-            const socket = getUserSocket(user.id)
-
-            if (socket) {
-                socket.leave(`channel:${channelId}`)
-            }
+            leaveChannel(user.id, channelId)
 
             emitToChannel(channelId, "member_left", {
                 userId: member.userId,

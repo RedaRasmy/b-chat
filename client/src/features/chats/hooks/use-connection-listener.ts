@@ -11,8 +11,8 @@ export function useConnectionListener() {
         const onConnect = () => {
             const chats = queryClient.getQueryData<Channels>(["chats"])
 
-            if (!chats || chats.length === 0) {
-                console.log("Skipping sync: Chats cache is empty or loading.")
+            if (!chats) {
+                console.warn("Skipping sync: chats cache is not defined")
                 return
             }
 

@@ -17,7 +17,15 @@ export default function useMessageListener() {
     const { open: isSidebarOpen } = useSidebar()
     const { t } = useTranslation("chats")
 
+    useSocketListener("new_chat", (channel) => {
+        console.log("new_chat, joining channel...")
+        socket.emit("join_channel", {
+            channelId: channel.id,
+        })
+    })
+
     useSocketListener("new_message", (message) => {
+        console.log("new message : ", message)
         const chats = queryClient.getQueryData<Channels>(["chats"]) ?? []
         const chat = chats.find((c) => c.id === message.channelId)
 

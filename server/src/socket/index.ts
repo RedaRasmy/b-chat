@@ -77,18 +77,8 @@ export function getIO() {
     return io
 }
 
-export function getUserSocket(userId: string) {
-    console.log("getUserSocket runs")
-    const sockets = Array.from(getIO().sockets.sockets.values())
-
-    const socketsNum = sockets.filter((s) => s.data.user.id === userId).length
-
-    logger.info(`There is ${socketsNum} sockets for the same user`)
-    if (socketsNum > 1) {
-        logger.warn("There is multiple sockets for the same user")
-    }
-
-    return sockets.find((s) => s.data.user.id === userId)
+export function leaveChannel(userId: string, channelId: string) {
+    getIO().in(`user:${userId}`).socketsLeave(`channel:${channelId}`)
 }
 
 export function emitToUsers<T extends ServerEvent>(
