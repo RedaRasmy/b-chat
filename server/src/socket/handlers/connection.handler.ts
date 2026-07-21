@@ -2,7 +2,8 @@ import logger from "@/lib/logger"
 import { channelService } from "@/features/channels/service"
 import { userService } from "@/features/users/service"
 import { friendService } from "@/features/friendships/service"
-import { emitToUser, TypedSocket } from "@/socket"
+import { emitToUser, emitToUsers , TypedSocket } from "@/socket"
+import { buildHandler } from "@/utils/build-handler"
 
 export async function handleConnection(socket: TypedSocket) {
     const user = socket.data.user
@@ -46,3 +47,47 @@ export async function handleDisconnection(socket: TypedSocket) {
         logger.error(err, "Error handling disconnection:")
     }
 }
+
+// export const handleConnection = buildHandler(
+//     async (user, { joinSelf, joinChannels }) => {
+//         logger.info(user, "User connected:")
+
+//         try {
+//             await userService.updateStatus(user.id, "online")
+
+//             joinSelf()
+
+//             const channels = await channelService.getUserChannelsIds(user.id)
+
+//             joinChannels(channels)
+
+//             const friendIds = await friendService.getFriendsIds(user.id)
+
+//             emitToUsers(friendIds, "user_status_changed", {
+//                 userId: user.id,
+//                 status: "online",
+//                 lastSeen: new Date(),
+//             })
+//         } catch (error) {
+//             logger.error(error, "Error in Connection Handler")
+//         }
+//     },
+// )
+
+// export const handleDisconnection = buildHandler(async (user) => {
+//     logger.info(user, "User disconnected:")
+
+//     try {
+//         await userService.updateStatus(user.id, "offline")
+
+//         const friendIds = await friendService.getFriendsIds(user.id)
+
+//         emitToUsers(friendIds, "user_status_changed", {
+//             userId: user.id,
+//             status: "offline",
+//             lastSeen: new Date(),
+//         })
+//     } catch (err) {
+//         logger.error(err, "Error in Disconnection Handler:")
+//     }
+// })
