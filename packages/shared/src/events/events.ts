@@ -4,6 +4,7 @@ export const CLIENT_EVENTS = {
     SEE_CHAT: "see_chat",
     SEND_TYPING: "send_typing",
     SYNC_MESSAGES: "sync_messages",
+    JOIN_CHANNEL : "join_channel"
 } as const
 
 export const SERVER_EVENTS = {
@@ -20,6 +21,7 @@ export const SERVER_EVENTS = {
     MEMBER_LEFT: "member_left",
     FRIEND_REQUEST: "friend_request",
     REQUEST_ACCEPTED: "request_accepted",
+    NEW_CHAT: "new_chat",
 } as const
 
 export const SOCKET_EVENTS = {

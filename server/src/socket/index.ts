@@ -18,6 +18,7 @@ import { allowedOrigins } from "@/config/allowed-origins"
 import { Profile } from "@bchat/types"
 import logger from "@/lib/logger"
 import { handleSyncMessages } from "@/socket/handlers/sync.handler"
+import { handleJoinChannel } from "@/socket/handlers/join-handler"
 
 export type TypedServer = SocketIOServer<
     ClientToServerEvents,
@@ -56,6 +57,7 @@ export function setupSocketIO(server: HTTPServer) {
         socket.on("get_message", handleGetMessage(socket))
         socket.on("see_chat", handleSeeChat(socket))
         socket.on("send_typing", handleTyping(socket))
+        socket.on("join_channel", handleJoinChannel(socket))
         socket.on("disconnect", () => handleDisconnection(socket))
 
         socket.onAny((event) => {
@@ -76,7 +78,16 @@ export function getIO() {
 }
 
 export function getUserSocket(userId: string) {
+    console.log("getUserSocket runs")
     const sockets = Array.from(getIO().sockets.sockets.values())
+
+    const socketsNum = sockets.filter((s) => s.data.user.id === userId).length
+
+    logger.info(`There is ${socketsNum} sockets for the same user`)
+    if (socketsNum > 1) {
+        logger.warn("There is multiple sockets for the same user")
+    }
+
     return sockets.find((s) => s.data.user.id === userId)
 }
 

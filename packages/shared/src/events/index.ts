@@ -1,4 +1,5 @@
 import type {
+    Channel,
     ChatMessage,
     ChatSeenData,
     FriendRequestData,
@@ -43,6 +44,7 @@ export type ServerToClientEvents = {
     [SERVER_EVENTS.MISSING_MESSAGES]: (
         payload: Record<string, ChatMessage[]>,
     ) => void
+    [SERVER_EVENTS.NEW_CHAT]: (payload: Channel) => void
 }
 
 export type ClientToServerEvents = {
@@ -58,6 +60,8 @@ export type ClientToServerEvents = {
     [CLIENT_EVENTS.SEND_TYPING]: (payload: SendTypingData) => void
 
     [CLIENT_EVENTS.SYNC_MESSAGES]: (payload: number) => void
+
+    [CLIENT_EVENTS.JOIN_CHANNEL]: (payload: { channelId: string }) => void
 }
 
 // Utility Types
