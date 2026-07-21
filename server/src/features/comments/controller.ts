@@ -1,14 +1,11 @@
 import { commentService } from "@/features/comments/service"
 import { makeEndpoint } from "@/utils/make-endpoint"
-import { UpdateCommentSchema } from "@bchat/shared/validation"
-import z from "zod"
+import { IdParam, UpdateCommentSchema } from "@bchat/shared/validation"
 
 export const updateComment = makeEndpoint(
     {
         body: UpdateCommentSchema,
-        params: z.object({
-            id: z.uuid(),
-        }),
+        params: IdParam,
     },
     async (req, res, next) => {
         try {
@@ -26,9 +23,7 @@ export const updateComment = makeEndpoint(
 
 export const deleteComment = makeEndpoint(
     {
-        params: z.object({
-            id: z.uuid(),
-        }),
+        params: IdParam,
     },
     async (req, res, next) => {
         try {

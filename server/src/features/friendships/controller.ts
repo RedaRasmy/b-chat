@@ -2,6 +2,7 @@ import { friendService } from "@/features/friendships/service"
 import { userService } from "@/features/users/service"
 import { emitToUsers } from "@/socket"
 import { makeEndpoint } from "@/utils/make-endpoint"
+import { IdParam } from "@bchat/shared/validation"
 import z from "zod"
 
 export const getReceivedRequests = makeEndpoint(async (req, res, next) => {
@@ -75,9 +76,7 @@ export const request = makeEndpoint(
 
 export const accept = makeEndpoint(
     {
-        params: z.object({
-            id: z.uuid(),
-        }),
+        params: IdParam,
     },
     async (req, res, next) => {
         const userId = req.user!.id
@@ -102,9 +101,7 @@ export const accept = makeEndpoint(
 
 export const block = makeEndpoint(
     {
-        params: z.object({
-            id: z.uuid(),
-        }),
+        params: IdParam,
     },
     async (req, res, next) => {
         const user = req.user!
@@ -122,9 +119,7 @@ export const block = makeEndpoint(
 
 export const remove = makeEndpoint(
     {
-        params: z.object({
-            id: z.uuid(),
-        }),
+        params: IdParam,
     },
     async (req, res, next) => {
         const user = req.user!

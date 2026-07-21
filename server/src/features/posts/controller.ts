@@ -2,6 +2,7 @@ import { getPaginatedData } from "@/utils/get-paginated-data"
 import db from "@bchat/database"
 import { comments, posts } from "@bchat/database/tables"
 import {
+    IdParam,
     InsertCommentSchema,
     InsertPostSchema,
     PaginationSchema,
@@ -11,7 +12,6 @@ import {
 import { count, eq, ilike } from "drizzle-orm"
 import { postService } from "@/features/posts/service"
 import { makeEndpoint } from "@/utils/make-endpoint"
-import z from "zod"
 
 export const getPosts = makeEndpoint(
     {
@@ -52,9 +52,7 @@ export const getPosts = makeEndpoint(
 
 export const getPost = makeEndpoint(
     {
-        params: z.object({
-            id: z.uuid(),
-        }),
+        params: IdParam,
     },
     async (req, res, next) => {
         try {
@@ -88,9 +86,7 @@ export const addPost = makeEndpoint(
 export const updatePost = makeEndpoint(
     {
         body: UpdatePostSchema,
-        params: z.object({
-            id: z.uuid(),
-        }),
+        params: IdParam,
     },
     async (req, res, next) => {
         const { content } = req.body
@@ -113,9 +109,7 @@ export const updatePost = makeEndpoint(
 
 export const deletePost = makeEndpoint(
     {
-        params: z.object({
-            id: z.uuid(),
-        }),
+        params: IdParam,
     },
     async (req, res, next) => {
         const postId = req.params.id
@@ -134,9 +128,7 @@ export const deletePost = makeEndpoint(
 export const getPostComments = makeEndpoint(
     {
         query: PaginationSchema,
-        params: z.object({
-            id: z.uuid(),
-        }),
+        params: IdParam,
     },
     async (req, res, next) => {
         const { page, perPage } = req.query
@@ -177,9 +169,7 @@ export const getPostComments = makeEndpoint(
 export const addComment = makeEndpoint(
     {
         body: InsertCommentSchema,
-        params: z.object({
-            id: z.uuid(),
-        }),
+        params: IdParam,
     },
     async (req, res, next) => {
         const postId = req.params.id

@@ -1,14 +1,13 @@
 import { channelService } from "@/features/channels/service"
-import logger from "@/lib/logger"
 import { emitToUsers } from "@/socket"
 import { makeEndpoint } from "@/utils/make-endpoint"
 import {
+    IdParam,
     InsertDMSchema,
     InsertGroupSchema,
     UpdateGroupSchema,
 } from "@bchat/shared/validation"
 import { Channels, ChatMember } from "@bchat/types"
-import z from "zod"
 
 export const createDM = makeEndpoint(
     {
@@ -111,9 +110,7 @@ export const getChannels = makeEndpoint(async (req, res, next) => {
 
 export const getMessages = makeEndpoint(
     {
-        params: z.object({
-            id: z.uuid(),
-        }),
+        params: IdParam,
     },
     async (req, res, next) => {
         const channelId = req.params.id
@@ -134,9 +131,7 @@ export const getMessages = makeEndpoint(
 
 export const deleteChannel = makeEndpoint(
     {
-        params: z.object({
-            id: z.uuid(),
-        }),
+        params: IdParam,
     },
     async (req, res, next) => {
         const channelId = req.params.id
@@ -155,9 +150,7 @@ export const deleteChannel = makeEndpoint(
 export const updateGroup = makeEndpoint(
     {
         body: UpdateGroupSchema,
-        params: z.object({
-            id: z.uuid(),
-        }),
+        params: IdParam,
     },
     async (req, res, next) => {
         const channelId = req.params.id

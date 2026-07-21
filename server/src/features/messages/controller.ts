@@ -1,13 +1,11 @@
 import { messageService } from "@/features/messages/service"
 import { emitToChannel } from "@/socket"
 import { makeEndpoint } from "@/utils/make-endpoint"
-import z from "zod"
+import { IdParam } from "@bchat/shared/validation"
 
 export const deleteMessage = makeEndpoint(
     {
-        params: z.object({
-            id: z.uuid(),
-        }),
+        params: IdParam,
     },
     async (req, res, next) => {
         const id = req.params.id
