@@ -12,7 +12,7 @@ A full-stack real-time chat application built with the PERN stack and Socket.io.
 - 🏠 **Groups** — Create and manage group chats with multiple members.
 - 📝 **Posts** — Share posts.
 - ⚡ **Real-time** — Instant messaging, typing indicators, and online presence.
-- 🌐 **i18n** — Supporting English and French
+- 🌐 **i18n** — Supporting English/Arabic/French
 
 ## Tech Stack
 
