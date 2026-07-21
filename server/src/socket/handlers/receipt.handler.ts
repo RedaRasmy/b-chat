@@ -2,7 +2,7 @@ import { GetMessageSchema, SeeChatSchema } from "@bchat/shared/validation"
 import logger from "@/lib/logger"
 import { messageService } from "@/features/messages/service"
 import { channelService } from "@/features/channels/service"
-import { emitToUser, TypedSocket } from "@/socket"
+import { emitToUsers, TypedSocket } from "@/socket"
 
 export function handleGetMessage(socket: TypedSocket) {
     return async (data: unknown) => {
@@ -21,7 +21,7 @@ export function handleGetMessage(socket: TypedSocket) {
 
             await messageService.markAsDelivered(messageId, user.id)
 
-            emitToUser(senderId, "message_delivered", {
+            emitToUsers(senderId, "message_delivered", {
                 messageId,
                 receiverId: user.id,
                 deliveredAt: new Date(),
@@ -59,7 +59,7 @@ export function handleSeeChat(socket: TypedSocket) {
                 )
 
                 unreadMessages.forEach((msg) => {
-                    emitToUser(msg.senderId, "chat_seen", {
+                    emitToUsers(msg.senderId, "chat_seen", {
                         messageId: msg.id,
                         userId: user.id,
                         seenAt: new Date(),

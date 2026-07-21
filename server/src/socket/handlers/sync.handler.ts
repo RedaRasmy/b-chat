@@ -1,5 +1,5 @@
 import { messageService } from "@/features/messages/service"
-import { emitToUser, TypedSocket } from "@/socket"
+import { emitToUsers, TypedSocket } from "@/socket"
 import z from "zod"
 import logger from "@/lib/logger"
 
@@ -23,7 +23,7 @@ export function handleSyncMessages(socket: TypedSocket) {
                 order,
             )
 
-            emitToUser(user.id, "missing_messages", missingMessages)
+            emitToUsers(user.id, "missing_messages", missingMessages)
         } catch (err) {
             logger.error(err, "Failed to get missing messages:")
         }

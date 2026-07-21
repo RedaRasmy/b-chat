@@ -2,7 +2,7 @@ import logger from "@/lib/logger"
 import { channelService } from "@/features/channels/service"
 import { userService } from "@/features/users/service"
 import { friendService } from "@/features/friendships/service"
-import { emitToUser, emitToUsers , TypedSocket } from "@/socket"
+import { emitToUsers, TypedSocket } from "@/socket"
 import { buildHandler } from "@/utils/build-handler"
 
 export async function handleConnection(socket: TypedSocket) {
@@ -19,12 +19,11 @@ export async function handleConnection(socket: TypedSocket) {
     })
 
     const friendIds = await friendService.getFriendsIds(user.id)
-    friendIds.forEach((friendId) => {
-        emitToUser(friendId, "user_status_changed", {
-            userId: user.id,
-            status: "online",
-            lastSeen: new Date(),
-        })
+
+    emitToUsers(friendIds, "user_status_changed", {
+        userId: user.id,
+        status: "online",
+        lastSeen: new Date(),
     })
 }
 
@@ -36,12 +35,11 @@ export async function handleDisconnection(socket: TypedSocket) {
         await userService.updateStatus(user.id, "offline")
 
         const friendIds = await friendService.getFriendsIds(user.id)
-        friendIds.forEach((friendId) => {
-            emitToUser(friendId, "user_status_changed", {
-                userId: user.id,
-                status: "offline",
-                lastSeen: new Date(),
-            })
+
+        emitToUsers(friendIds, "user_status_changed", {
+            userId: user.id,
+            status: "offline",
+            lastSeen: new Date(),
         })
     } catch (err) {
         logger.error(err, "Error handling disconnection:")

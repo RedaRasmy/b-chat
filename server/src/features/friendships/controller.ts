@@ -1,6 +1,6 @@
 import { friendService } from "@/features/friendships/service"
 import { userService } from "@/features/users/service"
-import { emitToUser } from "@/socket"
+import { emitToUsers } from "@/socket"
 import { makeEndpoint } from "@/utils/make-endpoint"
 import z from "zod"
 
@@ -62,7 +62,7 @@ export const request = makeEndpoint(
             const userName = await userService.getUserName(userId)
             const friendship = await friendService.request(userId, targetId)
 
-            emitToUser(targetId, "friend_request", {
+            emitToUsers(targetId, "friend_request", {
                 userName,
             })
 
@@ -89,7 +89,7 @@ export const accept = makeEndpoint(
                 friendshipId,
             )
 
-            emitToUser(friendship.requesterId, "request_accepted", {
+            emitToUsers(friendship.requesterId, "request_accepted", {
                 userName,
             })
 
