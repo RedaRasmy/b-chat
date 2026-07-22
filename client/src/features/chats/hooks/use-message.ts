@@ -6,18 +6,18 @@ import type { Channels, ClientMessage, MessageAck } from "@bchat/types"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useCallback } from "react"
 
-type TempMessage = Omit<ClientMessage, "order">
-
 export function useMessage() {
     const queryClient = useQueryClient()
     const socket = useSocket()
     const user = useUser()
     const {
-        chat: { id: channelId, members },
+        chat: { id: channelId, members, lastMessage },
     } = useChat()
 
+    const nextOrder = (lastMessage?.order ?? 0) + 1
+
     const handleAck = useCallback(
-        (tempMessage: TempMessage, res: MessageAck) => {
+        (tempMessage: ClientMessage, res: MessageAck) => {
             if (res.success) {
                 queryClient.setQueryData(
                     ["messages", channelId],
@@ -68,7 +68,7 @@ export function useMessage() {
             const sentAt = Date.now()
             const tempId = `temp-${sentAt}`
 
-            const tempMessage: TempMessage = {
+            const tempMessage: ClientMessage = {
                 id: tempId,
                 content: msg,
                 createdAt: new Date(),
@@ -76,6 +76,7 @@ export function useMessage() {
                 channelId: channelId,
                 updatedAt: new Date(),
                 status: "sending",
+                order: nextOrder,
                 receipts: members
                     .filter((m) => m.id !== user.id && m.status === "active")
                     .map((mem) => ({
