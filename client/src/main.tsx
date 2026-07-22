@@ -8,6 +8,7 @@ import { persister, queryClient } from "@/lib/query-client"
 import "@/lib/i18n"
 import i18n from "i18next"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 
 const updateHtmlAttributes = (lng: string) => {
     const dir = i18n.dir(lng)
@@ -32,6 +33,7 @@ createRoot(document.getElementById("root")!).render(
             },
         }}
     >
+        <ReactQueryDevtools initialIsOpen={false} />
         <AuthProvider>
             <TooltipProvider>
                 <RouterProvider router={router} />
