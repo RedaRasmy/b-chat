@@ -32,26 +32,6 @@ export function useMessage() {
                                 : msg,
                         ),
                 )
-                queryClient.setQueryData(["chats"], (old: Channels = []) =>
-                    old.map((chat) =>
-                        chat.id === channelId
-                            ? {
-                                  ...chat,
-                                  lastMessage: {
-                                      ...tempMessage,
-                                      id: res.messageId,
-                                      status: undefined,
-                                      receipts: tempMessage.receipts.map(
-                                          (r) => ({
-                                              ...r,
-                                              messageId: res.messageId,
-                                          }),
-                                      ),
-                                  },
-                              }
-                            : chat,
-                    ),
-                )
             } else {
                 queryClient.setQueryData(
                     ["messages", channelId],

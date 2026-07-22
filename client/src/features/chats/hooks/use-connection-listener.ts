@@ -13,6 +13,8 @@ export function useConnectionListener() {
 
             if (!chats) {
                 console.warn("Skipping sync: chats cache is not defined")
+                console.warn("Invalidating chats...")
+                queryClient.invalidateQueries({ queryKey: ["chats"] })
                 return
             }
 
@@ -21,7 +23,8 @@ export function useConnectionListener() {
                 0,
             )
 
-            console.log("sync messages...")
+            console.log("syncing messages... order:", highestOrder)
+
             socket.emit("sync_messages", highestOrder)
 
             // get missing requests if any
