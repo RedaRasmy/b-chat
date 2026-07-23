@@ -68,10 +68,11 @@ export const getPost = makeEndpoint(
 export const addPost = makeEndpoint(
     {
         body: InsertPostSchema,
+        user: true,
     },
     async (req, res, next) => {
         const { content } = req.body
-        const user = req.user!
+        const user = req.user
 
         try {
             const post = await postService.createPost(user.id, content)
@@ -87,10 +88,11 @@ export const updatePost = makeEndpoint(
     {
         body: UpdatePostSchema,
         params: IdParam,
+        user: true,
     },
     async (req, res, next) => {
         const { content } = req.body
-        const userId = req.user!.id
+        const userId = req.user.id
         const postId = req.params.id
 
         try {
@@ -110,10 +112,11 @@ export const updatePost = makeEndpoint(
 export const deletePost = makeEndpoint(
     {
         params: IdParam,
+        user: true,
     },
     async (req, res, next) => {
         const postId = req.params.id
-        const user = req.user!
+        const user = req.user
 
         try {
             await postService.deletePost({ user, postId })
@@ -170,11 +173,12 @@ export const addComment = makeEndpoint(
     {
         body: InsertCommentSchema,
         params: IdParam,
+        user: true,
     },
     async (req, res, next) => {
         const postId = req.params.id
         const { content } = req.body
-        const userId = req.user!.id
+        const userId = req.user.id
 
         try {
             const comment = await postService.createComment({

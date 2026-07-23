@@ -6,10 +6,11 @@ import { IdParam } from "@bchat/shared/validation"
 export const deleteMessage = makeEndpoint(
     {
         params: IdParam,
+        user: true,
     },
     async (req, res, next) => {
         const id = req.params.id
-        const user = req.user!
+        const user = req.user
 
         try {
             const { channelId, messageId } =

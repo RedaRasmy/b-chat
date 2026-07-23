@@ -5,58 +5,71 @@ import { makeEndpoint } from "@/utils/make-endpoint"
 import { IdParam } from "@bchat/shared/validation"
 import z from "zod"
 
-export const getReceivedRequests = makeEndpoint(async (req, res, next) => {
-    const user = req.user!
+export const getReceivedRequests = makeEndpoint(
+    { user: true },
+    async (req, res, next) => {
+        const user = req.user
 
-    try {
-        const data = await friendService.getReceivedRequests(user.id)
-        res.json(data)
-    } catch (err) {
-        next(err)
-    }
-})
+        try {
+            const data = await friendService.getReceivedRequests(user.id)
+            res.json(data)
+        } catch (err) {
+            next(err)
+        }
+    },
+)
 
-export const getSentRequests = makeEndpoint(async (req, res, next) => {
-    const user = req.user!
+export const getSentRequests = makeEndpoint(
+    { user: true },
+    async (req, res, next) => {
+        const user = req.user
 
-    try {
-        const data = await friendService.getSentRequests(user.id)
-        res.json(data)
-    } catch (err) {
-        next(err)
-    }
-})
+        try {
+            const data = await friendService.getSentRequests(user.id)
+            res.json(data)
+        } catch (err) {
+            next(err)
+        }
+    },
+)
 
-export const getFriends = makeEndpoint(async (req, res, next) => {
-    const user = req.user!
+export const getFriends = makeEndpoint(
+    { user: true },
+    async (req, res, next) => {
+        const user = req.user
 
-    try {
-        const friends = await friendService.getFriends(user.id)
-        res.json(friends)
-    } catch (err) {
-        next(err)
-    }
-})
+        try {
+            const friends = await friendService.getFriends(user.id)
+            res.json(friends)
+        } catch (err) {
+            next(err)
+        }
+    },
+)
 
-export const getBlocked = makeEndpoint(async (req, res, next) => {
-    const user = req.user!
+export const getBlocked = makeEndpoint(
+    { user: true },
+    async (req, res, next) => {
+        const user = req.user
 
-    try {
-        const blocked = await friendService.getBlocked(user.id)
-        res.json(blocked)
-    } catch (err) {
-        next(err)
-    }
-})
+        try {
+            const blocked = await friendService.getBlocked(user.id)
+            res.json(blocked)
+        } catch (err) {
+            next(err)
+        }
+    },
+)
 
 export const request = makeEndpoint(
     {
         params: z.object({
             userId: z.uuid(),
         }),
+        user: true,
     },
     async (req, res, next) => {
-        const userId = req.user!.id
+        const userId = req.user.id
         const targetId = req.params.userId
 
         try {
@@ -77,9 +90,10 @@ export const request = makeEndpoint(
 export const accept = makeEndpoint(
     {
         params: IdParam,
+        user: true,
     },
     async (req, res, next) => {
-        const userId = req.user!.id
+        const userId = req.user.id
         const friendshipId = req.params.id
 
         try {
@@ -102,9 +116,10 @@ export const accept = makeEndpoint(
 export const block = makeEndpoint(
     {
         params: IdParam,
+        user: true,
     },
     async (req, res, next) => {
-        const user = req.user!
+        const user = req.user
         const friendshipId = req.params.id
 
         try {
@@ -120,9 +135,10 @@ export const block = makeEndpoint(
 export const remove = makeEndpoint(
     {
         params: IdParam,
+        user: true,
     },
     async (req, res, next) => {
-        const user = req.user!
+        const user = req.user
         const id = req.params.id
 
         try {

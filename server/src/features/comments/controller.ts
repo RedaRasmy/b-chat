@@ -6,11 +6,12 @@ export const updateComment = makeEndpoint(
     {
         body: UpdateCommentSchema,
         params: IdParam,
+        user: true,
     },
     async (req, res, next) => {
         try {
             const comment = await commentService.updateComment({
-                userId: req.user!.id,
+                userId: req.user.id,
                 commentId: req.params.id,
                 content: req.body.content,
             })
@@ -24,10 +25,11 @@ export const updateComment = makeEndpoint(
 export const deleteComment = makeEndpoint(
     {
         params: IdParam,
+        user: true,
     },
     async (req, res, next) => {
         try {
-            await commentService.deleteComment(req.user!, req.params.id)
+            await commentService.deleteComment(req.user, req.params.id)
             res.sendStatus(204)
         } catch (err) {
             next(err)

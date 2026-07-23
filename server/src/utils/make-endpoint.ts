@@ -97,10 +97,15 @@ export function makeEndpoint<Params, Query, Body, U extends boolean>(
         if (user) {
             if (!req.user) {
                 logger.fatal(
-                    "req.user is undefined, you must use auth middleware",
+                    "makeEndpoint: req.user is undefined, you must use auth middleware",
                 )
                 return res.sendStatus(500)
             }
+        }
+        if (user === false && req.user !== undefined) {
+            logger.warn(
+                "makeEndoint: req.user is defined where user is set to false",
+            )
         }
 
         return handler(

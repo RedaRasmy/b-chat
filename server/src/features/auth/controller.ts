@@ -106,8 +106,8 @@ export const logout = makeEndpoint(async (req, res, next) => {
     }
 })
 
-export const fetchMe = makeEndpoint(async (req, res, next) => {
-    const user = req.user!
+export const fetchMe = makeEndpoint({ user: true }, async (req, res, next) => {
+    const user = req.user
 
     try {
         const profile = await authService.getProfile(user.id)

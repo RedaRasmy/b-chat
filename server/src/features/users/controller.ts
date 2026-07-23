@@ -5,10 +5,11 @@ import { makeEndpoint } from "@/utils/make-endpoint"
 export const getUsers = makeEndpoint(
     {
         query: QueryUsersSchema,
+        user: true,
     },
     async (req, res, next) => {
         const { search } = req.query
-        const user = req.user!
+        const user = req.user
 
         try {
             const users = await userService.getUsers({

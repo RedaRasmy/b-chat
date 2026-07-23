@@ -13,9 +13,10 @@ export const addMembers = makeEndpoint(
             channelId: z.uuid(),
         }),
         body: InsertMembersSchema,
+        user: true,
     },
     async (req, res, next) => {
-        const userId = req.user!.id
+        const userId = req.user.id
         const channelId = req.params.channelId
         const membersIds = req.body
         try {
@@ -41,9 +42,10 @@ export const updateMember = makeEndpoint(
             userId: z.uuid(),
         }),
         body: UpdateMemberSchema,
+        user: true,
     },
     async (req, res, next) => {
-        const user = req.user!
+        const user = req.user
         const { channelId, userId } = req.params
         const { role } = req.body
         try {
@@ -74,10 +76,11 @@ export const deleteMember = makeEndpoint(
             channelId: z.uuid(),
             userId: z.uuid(),
         }),
+        user: true,
     },
     async (req, res, next) => {
         const { channelId, userId: targetId } = req.params
-        const user = req.user!
+        const user = req.user
         try {
             const member = await memberService.deleteMember({
                 userId: user.id,
@@ -104,10 +107,11 @@ export const exitChannel = makeEndpoint(
         params: z.object({
             channelId: z.uuid(),
         }),
+        user: true,
     },
     async (req, res, next) => {
         const { channelId } = req.params
-        const user = req.user!
+        const user = req.user
         try {
             const member = await memberService.exitGroup(user.id, channelId)
 
