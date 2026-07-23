@@ -10,6 +10,11 @@
         "title": "التفضيلات",
         "language": {
             "label": "اللغة"
+        },
+        "theme": {
+            "label": " المظهر",
+            "light": "فاتح",
+            "dark": "داكن"
         }
     },
     "profileUpdating": {

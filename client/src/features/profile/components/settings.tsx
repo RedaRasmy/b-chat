@@ -29,6 +29,7 @@ import { Controller, useForm } from "react-hook-form"
 import { Label } from "@/components/ui/label"
 import { useTranslation } from "react-i18next"
 import LangSelector from "@/components/lang-selector"
+import ThemeSelector from "@/components/theme-selector"
 
 export default function Settings() {
     const { logout } = useAuth()
@@ -150,12 +151,18 @@ export default function Settings() {
                     </CardTitle>
                     <CardDescription></CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="space-y-4">
                     <div className="flex flex-col gap-2">
                         <Label htmlFor="select-lang">
                             {t("profile:preferences.language.label")}
                         </Label>
                         <LangSelector />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="select-theme">
+                            {t("profile:preferences.theme.label")}
+                        </Label>
+                        <ThemeSelector />
                     </div>
                 </CardContent>
                 <CardFooter>

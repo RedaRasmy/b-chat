@@ -10,6 +10,11 @@
         "title": "Préférences",
         "language": {
             "label": "Langue"
+        },
+        "theme": {
+            "label": "Thème",
+            "light": "Clair",
+            "dark": "Sombre"
         }
     },
     "profileUpdating": {
