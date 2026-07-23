@@ -28,7 +28,7 @@ export default function LangSelector({ className }: { className?: string }) {
             }}
         >
             <SelectTrigger className={cn("w-full max-w-48", className)}>
-                <SelectValue />
+                <SelectValue aria-label="current-lang" />
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>

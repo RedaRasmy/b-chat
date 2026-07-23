@@ -12,6 +12,8 @@ import { AuthProvider } from "@/features/auth/provider"
 import { UserProvider } from "@/features/auth/user-provider"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import SocketProvider from "@/features/chats/components/socket-provider"
+import { TooltipProvider } from "@/components/ui/tooltip"
+import { ThemeProvider } from "@/components/theme-provider"
 
 export function createTestQueryClient() {
     return new QueryClient({
@@ -26,7 +28,14 @@ function MainProviders({ children }: { children: ReactNode }) {
     return (
         <QueryClientProvider client={createTestQueryClient()}>
             <AuthProvider>
-                <BrowserRouter>{children}</BrowserRouter>
+                <TooltipProvider>
+                    <ThemeProvider
+                        defaultTheme="light"
+                        storageKey="vite-ui-theme"
+                    >
+                        <BrowserRouter>{children}</BrowserRouter>
+                    </ThemeProvider>
+                </TooltipProvider>
             </AuthProvider>
         </QueryClientProvider>
     )
