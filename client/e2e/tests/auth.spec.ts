@@ -58,4 +58,9 @@ test.describe("Auth flow", () => {
             register.page.getByText(/email already in use/i),
         ).toBeVisible()
     })
+    test("auto redirect to login page", async ({ profile, page }) => {
+        await profile.goto()
+
+        await expect(page).toHaveURL("/auth/login")
+    })
 })
