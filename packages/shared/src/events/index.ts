@@ -15,7 +15,7 @@ import {
     type ClientEvent,
     SERVER_EVENTS,
     type ServerEvent,
-} from "./events"
+} from "./events.js"
 import type {
     GetMessageData,
     MemberDeletedData,
@@ -24,9 +24,9 @@ import type {
     SeeChatData,
     SendMessageData,
     SendTypingData,
-} from "../validation"
+} from "../validation/index.js"
 
-export * from "./events"
+export * from "./events.js"
 
 export type ServerToClientEvents = {
     [SERVER_EVENTS.NEW_MESSAGE]: (payload: ChatMessage) => void

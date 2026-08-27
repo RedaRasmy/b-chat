@@ -18,7 +18,7 @@ export const hasPermission = (
     permission: Permission,
 ): boolean => {
     const userPermissions = rolePermissions[role]
-    return userPermissions.includes(permission)
+    return !!userPermissions && userPermissions.includes(permission)
 }
 
-export * from "./groups"
+export * from "./groups.js"

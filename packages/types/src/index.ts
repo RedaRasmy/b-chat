@@ -1,10 +1,10 @@
-export * from "./global"
-export * from "./auth"
-export * from "./friendships"
-export * from "./users"
-export * from "./posts"
-export * from "./channels"
-export * from "./messages"
+export * from "./global.js"
+export * from "./auth.js"
+export * from "./friendships.js"
+export * from "./users.js"
+export * from "./posts.js"
+export * from "./channels.js"
+export * from "./messages.js"
 
 export type {
     User,

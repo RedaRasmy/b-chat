@@ -1,5 +1,5 @@
 import { pgTable, uuid, varchar } from "drizzle-orm/pg-core"
-import { channels } from "./channels"
+import { channels } from "./channels.js"
 import { type InferSelectModel, relations } from "drizzle-orm"
 
 export const groups = pgTable("groups", {

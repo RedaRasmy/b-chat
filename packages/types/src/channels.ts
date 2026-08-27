@@ -1,6 +1,6 @@
 import type { Channel, User } from "@bchat/database/tables"
-import type { ChatMember } from "./users"
-import type { ChatMessage } from "./messages"
+import type { ChatMember } from "./users.js"
+import type { ChatMessage } from "./messages.js"
 
 export type DMChat = {
     id: Channel["id"]

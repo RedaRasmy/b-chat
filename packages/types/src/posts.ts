@@ -1,6 +1,6 @@
 import type { Comment, Post } from "@bchat/database/tables"
-import type { OtherUser } from "./users"
-import type { Prettify } from "./global"
+import type { OtherUser } from "./users.js"
+import type { Prettify } from "./global.js"
 
 export type CommentWithAuthor = Prettify<
     Comment & {

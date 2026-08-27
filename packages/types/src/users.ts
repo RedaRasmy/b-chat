@@ -1,5 +1,5 @@
 import type { Member, User } from "@bchat/database/tables"
-import type { Prettify } from "./global"
+import type { Prettify } from "./global.js"
 
 export type OtherUser = Pick<User, "id" | "name" | "avatar" | "role">
 

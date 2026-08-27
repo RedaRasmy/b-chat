@@ -1,18 +1,11 @@
 {
+    "extends": "@bchat/ts-config/base.json",
     "compilerOptions": {
-        "composite": true,
-        "declaration": true,
-        "target": "ES2022",
-        "module": "ESNext",
-        "moduleResolution": "bundler",
+        "rootDir": "./src",
         "outDir": "./dist",
-        "strict": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true,
         "types": ["node"]
     },
-    "include": ["src/**/*", "drizzle.config.ts"],
+    "include": ["src/**/*"],
     "exclude": ["node_modules"]
 }

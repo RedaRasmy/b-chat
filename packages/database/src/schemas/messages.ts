@@ -1,9 +1,9 @@
 import { index, pgTable, bigserial, text, uuid } from "drizzle-orm/pg-core"
-import { channels } from "./channels"
-import { users } from "./users"
-import { createdAt, updatedAt } from "../timestamps"
+import { channels } from "./channels.js"
+import { users } from "./users.js"
+import { createdAt, updatedAt } from "../timestamps.js"
 import { type InferSelectModel, relations } from "drizzle-orm"
-import { messageReceipts } from "./message-receipts"
+import { messageReceipts } from "./message-receipts.js"
 
 export const messages = pgTable(
     "messages",

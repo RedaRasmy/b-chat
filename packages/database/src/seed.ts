@@ -2,8 +2,8 @@ import "dotenv/config"
 import { drizzle } from "drizzle-orm/node-postgres"
 import { Client } from "pg"
 import bcrypt from "bcryptjs"
-import { users } from "./schemas/users"
-import { channels } from "./schemas/channels"
+import { users } from "./schemas/users.js"
+import { channels } from "./schemas/channels.js"
 
 async function seed() {
     const client = new Client({

@@ -6,8 +6,8 @@ import {
     timestamp,
     uuid,
 } from "drizzle-orm/pg-core"
-import { channels } from "./channels"
-import { users } from "./users"
+import { channels } from "./channels.js"
+import { users } from "./users.js"
 import {
     type InferInsertModel,
     type InferSelectModel,

@@ -1,12 +1,12 @@
 import { type InferSelectModel, relations } from "drizzle-orm"
 import { pgTable, varchar, uuid, pgEnum, timestamp } from "drizzle-orm/pg-core"
-import { refreshTokens } from "./refresh-tokens"
-import { friendships } from "./friendships"
-import { posts } from "./posts"
-import { comments } from "./comments"
-import { messages } from "./messages"
-import { members } from "./members"
-import { messageReceipts } from "./message-receipts"
+import { refreshTokens } from "./refresh-tokens.js"
+import { friendships } from "./friendships.js"
+import { posts } from "./posts.js"
+import { comments } from "./comments.js"
+import { messages } from "./messages.js"
+import { members } from "./members.js"
+import { messageReceipts } from "./message-receipts.js"
 
 export const role = pgEnum("role", ["admin", "user"])
 export const userStatus = pgEnum("user_status", ["online", "offline"])

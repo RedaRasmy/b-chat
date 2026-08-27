@@ -1,0 +1,28 @@
+import { MONTH } from "@/utils/periods.js"
+import { Request, CookieOptions } from "express"
+
+function getCookieOptions<P, ResBody, ReqBody, ReqQuery>(
+    req: Request<P, ResBody, ReqBody, ReqQuery>,
+    maxAge: number,
+): CookieOptions {
+    const isProduction = process.env.NODE_ENV === "production"
+
+    return {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: "lax",
+        maxAge,
+    }
+}
+
+export function getAccessTokenOptions<P, ResBody, ReqBody, ReqQuery>(
+    req: Request<P, ResBody, ReqBody, ReqQuery>,
+) {
+    return getCookieOptions(req, 15 * 60 * 1000)
+}
+
+export function getRefreshTokenOptions<P, ResBody, ReqBody, ReqQuery>(
+    req: Request<P, ResBody, ReqBody, ReqQuery>,
+) {
+    return getCookieOptions(req, MONTH)
+}

@@ -1,0 +1,151 @@
+import { friendService } from "@/features/friendships/service.js"
+import { userService } from "@/features/users/service.js"
+import { emitToUsers } from "@/socket/index.js"
+import { makeEndpoint } from "@/utils/make-endpoint.js"
+import { IdParam } from "@bchat/shared/validation"
+import z from "zod"
+
+export const getReceivedRequests = makeEndpoint(
+    { user: true },
+    async (req, res, next) => {
+        const user = req.user
+
+        try {
+            const data = await friendService.getReceivedRequests(user.id)
+            res.json(data)
+        } catch (err) {
+            next(err)
+        }
+    },
+)
+
+export const getSentRequests = makeEndpoint(
+    { user: true },
+    async (req, res, next) => {
+        const user = req.user
+
+        try {
+            const data = await friendService.getSentRequests(user.id)
+            res.json(data)
+        } catch (err) {
+            next(err)
+        }
+    },
+)
+
+export const getFriends = makeEndpoint(
+    { user: true },
+    async (req, res, next) => {
+        const user = req.user
+
+        try {
+            const friends = await friendService.getFriends(user.id)
+            res.json(friends)
+        } catch (err) {
+            next(err)
+        }
+    },
+)
+
+export const getBlocked = makeEndpoint(
+    { user: true },
+    async (req, res, next) => {
+        const user = req.user
+
+        try {
+            const blocked = await friendService.getBlocked(user.id)
+            res.json(blocked)
+        } catch (err) {
+            next(err)
+        }
+    },
+)
+
+export const request = makeEndpoint(
+    {
+        params: z.object({
+            userId: z.uuid(),
+        }),
+        user: true,
+    },
+    async (req, res, next) => {
+        const userId = req.user.id
+        const targetId = req.params.userId
+
+        try {
+            const userName = await userService.getUserName(userId)
+            const friendship = await friendService.request(userId, targetId)
+
+            emitToUsers(targetId, "friend_request", {
+                userName,
+            })
+
+            res.status(201).json(friendship)
+        } catch (err) {
+            next(err)
+        }
+    },
+)
+
+export const accept = makeEndpoint(
+    {
+        params: IdParam,
+        user: true,
+    },
+    async (req, res, next) => {
+        const userId = req.user.id
+        const friendshipId = req.params.id
+
+        try {
+            const { friendship, userName } = await friendService.accept(
+                userId,
+                friendshipId,
+            )
+
+            emitToUsers(friendship.requesterId, "request_accepted", {
+                userName,
+            })
+
+            res.json(friendship)
+        } catch (err) {
+            next(err)
+        }
+    },
+)
+
+export const block = makeEndpoint(
+    {
+        params: IdParam,
+        user: true,
+    },
+    async (req, res, next) => {
+        const user = req.user
+        const friendshipId = req.params.id
+
+        try {
+            const friendship = await friendService.block(user.id, friendshipId)
+
+            res.json(friendship)
+        } catch (err) {
+            next(err)
+        }
+    },
+)
+
+export const remove = makeEndpoint(
+    {
+        params: IdParam,
+        user: true,
+    },
+    async (req, res, next) => {
+        const user = req.user
+        const id = req.params.id
+
+        try {
+            await friendService.remove(user.id, id)
+            res.sendStatus(204)
+        } catch (err) {
+            next(err)
+        }
+    },
+)

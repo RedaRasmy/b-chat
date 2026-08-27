@@ -5,18 +5,31 @@
     "description": "",
     "type": "module",
     "exports": {
-        "./validation": "./src/validation/index.ts",
-        "./permissions": "./src/permissions/index.ts",
-        "./events": "./src/events/index.ts"
+        "./validation": {
+            "types": "./dist/validation/index.d.ts",
+            "default": "./dist/validation/index.js"
+        },
+        "./permissions": {
+            "types": "./dist/permissions/index.d.ts",
+            "default": "./dist/permissions/index.js"
+        },
+        "./events": {
+            "types": "./dist/events/index.d.ts",
+            "default": "./dist/events/index.js"
+        }
+    },
+    "scripts": {
+        "build": "tsc",
+        "check-types": "tsc --noEmit"
     },
     "license": "ISC",
-    "packageManager": "pnpm@10.28.2",
     "dependencies": {
         "@bchat/database": "workspace:*",
         "drizzle-zod": "^0.8.3",
         "zod": "^4.3.6"
     },
     "devDependencies": {
+        "@bchat/ts-config": "workspace:*",
         "@bchat/types": "workspace:*",
         "typescript": "~5.9.3"
     }

@@ -1,0 +1,14 @@
+{
+    "extends": "@bchat/ts-config/base.json",
+    "compilerOptions": {
+        "resolveJsonModule": true,
+        "types": ["node"],
+        "paths": {
+            "@/*": ["./src/*"]
+        },
+        "rootDir": "./src",
+        "outDir": "./dist"
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules"]
+}

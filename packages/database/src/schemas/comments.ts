@@ -1,6 +1,6 @@
-import { posts } from "./posts"
-import { users } from "./users"
-import { createdAt, updatedAt } from "../timestamps"
+import { posts } from "./posts.js"
+import { users } from "./users.js"
+import { createdAt, updatedAt } from "../timestamps.js"
 import { relations, type InferSelectModel } from "drizzle-orm"
 import { boolean, index, pgTable, text, uuid } from "drizzle-orm/pg-core"
 

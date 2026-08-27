@@ -1,6 +1,6 @@
 import type { Friendship, User } from "@bchat/database/tables"
-import type { Prettify } from "./global"
-import type { OtherUser } from "./users"
+import type { Prettify } from "./global.js"
+import type { OtherUser } from "./users.js"
 
 export type FriendshipRequest = Prettify<
     Friendship & {

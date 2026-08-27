@@ -1,5 +1,5 @@
 import type { Message, MessageReceipt } from "@bchat/database/tables"
-import type { Prettify } from "./global"
+import type { Prettify } from "./global.js"
 
 export type ChatMessage = Prettify<
     Message & {
