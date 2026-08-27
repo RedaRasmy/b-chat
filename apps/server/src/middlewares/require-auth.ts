@@ -17,9 +17,7 @@ export const requireAuth = (requiredRole?: User["role"]) => {
 
             // Check role if specified
             if (requiredRole && decoded.role !== requiredRole) {
-                return res
-                    .status(403)
-                    .json({ message: `${requiredRole} access required` })
+                return res.status(403).json({ message: `${requiredRole} access required` })
             }
 
             next()

@@ -1,19 +1,11 @@
 import { Server as HTTPServer } from "http"
 import { Server as SocketIOServer, Socket, DefaultEventsMap } from "socket.io"
 import { socketAuthMiddleware } from "./middlewares/auth.js"
-import {
-    handleConnection,
-    handleDisconnection,
-} from "./handlers/connection.handler.js"
+import { handleConnection, handleDisconnection } from "./handlers/connection.handler.js"
 import { handleSendMessage } from "./handlers/message.handler.js"
 import { handleGetMessage, handleSeeChat } from "./handlers/receipt.handler.js"
 import { handleTyping } from "./handlers/typing.handler.js"
-import {
-    Args,
-    ClientToServerEvents,
-    ServerEvent,
-    ServerToClientEvents,
-} from "@bchat/shared/events"
+import { Args, ClientToServerEvents, ServerEvent, ServerToClientEvents } from "@bchat/shared/events"
 import { allowedOrigins } from "@/config/allowed-origins.js"
 import { Profile } from "@bchat/types"
 import logger from "@/lib/logger.js"

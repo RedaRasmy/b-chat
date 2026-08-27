@@ -7,9 +7,7 @@ describe("Language Selector", () => {
         renderWithMain(<LangSelector />)
         const user = userEvent.setup()
 
-        expect(screen.getByLabelText("current-lang")).toHaveTextContent(
-            /english/i,
-        )
+        expect(screen.getByLabelText("current-lang")).toHaveTextContent(/english/i)
 
         const trigger = screen.getByRole("combobox")
         await user.click(trigger)
@@ -20,9 +18,7 @@ describe("Language Selector", () => {
 
         await user.click(frenchOption)
 
-        expect(screen.getByLabelText("current-lang")).toHaveTextContent(
-            /français/i,
-        )
+        expect(screen.getByLabelText("current-lang")).toHaveTextContent(/français/i)
 
         await user.click(trigger)
 
@@ -32,8 +28,6 @@ describe("Language Selector", () => {
 
         await user.click(englishOption)
 
-        expect(screen.getByLabelText("current-lang")).toHaveTextContent(
-            /english/i,
-        )
+        expect(screen.getByLabelText("current-lang")).toHaveTextContent(/english/i)
     })
 })

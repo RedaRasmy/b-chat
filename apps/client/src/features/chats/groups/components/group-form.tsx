@@ -10,12 +10,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import {
-    Field,
-    FieldError,
-    FieldGroup,
-    FieldLabel,
-} from "@/components/ui/field"
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useSidebar } from "@/components/ui/sidebar"
 import { createGroup } from "@/features/chats/requests"
@@ -78,15 +73,10 @@ export function GroupFormDialog() {
                 }
             />
             <DialogContent className="sm:max-w-sm">
-                <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-3"
-                >
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
                     <DialogHeader>
                         <DialogTitle>{t("groupForm.title")}</DialogTitle>
-                        <DialogDescription>
-                            {t("groupForm.description")}
-                        </DialogDescription>
+                        <DialogDescription>{t("groupForm.description")}</DialogDescription>
                     </DialogHeader>
                     <FieldGroup>
                         <Controller
@@ -104,9 +94,7 @@ export function GroupFormDialog() {
                                         autoComplete="off"
                                     />
                                     {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
+                                        <FieldError errors={[fieldState.error]} />
                                     )}
                                 </Field>
                             )}
@@ -125,38 +113,19 @@ export function GroupFormDialog() {
                                                     className="flex items-center p-2 border rounded-md gap-2"
                                                 >
                                                     <Checkbox
-                                                        checked={
-                                                            !!field.value.includes(
-                                                                friend.id,
-                                                            )
-                                                        }
-                                                        className={
-                                                            "cursor-pointer"
-                                                        }
-                                                        onCheckedChange={(
-                                                            checked,
-                                                        ) => {
-                                                            const newValue =
-                                                                checked
-                                                                    ? [
-                                                                          ...field.value,
-                                                                          friend.id,
-                                                                      ]
-                                                                    : field.value.filter(
-                                                                          (
-                                                                              value: string,
-                                                                          ) =>
-                                                                              value !==
-                                                                              friend.id,
-                                                                      )
-                                                            field.onChange(
-                                                                newValue,
-                                                            )
+                                                        checked={!!field.value.includes(friend.id)}
+                                                        className={"cursor-pointer"}
+                                                        onCheckedChange={(checked) => {
+                                                            const newValue = checked
+                                                                ? [...field.value, friend.id]
+                                                                : field.value.filter(
+                                                                      (value: string) =>
+                                                                          value !== friend.id,
+                                                                  )
+                                                            field.onChange(newValue)
                                                         }}
                                                     />
-                                                    <div className="flex">
-                                                        {friend.name}
-                                                    </div>
+                                                    <div className="flex">{friend.name}</div>
                                                 </div>
                                             ))}
                                         </div>
@@ -165,13 +134,8 @@ export function GroupFormDialog() {
                                             <DialogClose
                                                 render={
                                                     <Link to={"/users"}>
-                                                        <Button
-                                                            size={"sm"}
-                                                            variant={"link"}
-                                                        >
-                                                            {t(
-                                                                "groupForm.link",
-                                                            )}
+                                                        <Button size={"sm"} variant={"link"}>
+                                                            {t("groupForm.link")}
                                                         </Button>
                                                     </Link>
                                                 }
@@ -179,9 +143,7 @@ export function GroupFormDialog() {
                                         </div>
                                     )}
                                     {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
+                                        <FieldError errors={[fieldState.error]} />
                                     )}
                                 </Field>
                             )}
@@ -189,11 +151,7 @@ export function GroupFormDialog() {
                     </FieldGroup>
                     <DialogFooter>
                         <DialogClose
-                            render={
-                                <Button variant="outline">
-                                    {t("common:buttons.cancel")}
-                                </Button>
-                            }
+                            render={<Button variant="outline">{t("common:buttons.cancel")}</Button>}
                         />
                         <Button type="submit" disabled={mutation.isPending}>
                             {t("common:buttons.create")}

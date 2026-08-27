@@ -9,9 +9,7 @@ export function handleTyping(socket: TypedSocket) {
             const user = socket.data.user
 
             if (!socket.rooms.has(`channel:${channelId}`)) {
-                logger.warn(
-                    `User ${user.id} tried to type in unauthorized channel ${channelId}`,
-                )
+                logger.warn(`User ${user.id} tried to type in unauthorized channel ${channelId}`)
                 return
             }
 

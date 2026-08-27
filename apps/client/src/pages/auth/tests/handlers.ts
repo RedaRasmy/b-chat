@@ -18,15 +18,12 @@ export const authHandlers = [
             return HttpResponse.json(user, { status: 201 })
         },
     ),
-    http.post<Record<string, string>, LoginCredentials>(
-        "/api/auth/login",
-        async ({ request }) => {
-            const data = await request.clone().json()
+    http.post<Record<string, string>, LoginCredentials>("/api/auth/login", async ({ request }) => {
+        const data = await request.clone().json()
 
-            const user = createUser(data)
-            db.addUser(user)
+        const user = createUser(data)
+        db.addUser(user)
 
-            return HttpResponse.json(user)
-        },
-    ),
+        return HttpResponse.json(user)
+    }),
 ]

@@ -21,19 +21,14 @@ export const memberService = {
             throw new NotFoundError("Channel not found")
         }
 
-        const member = channel.members.find(
-            (member) => member.userId === userId,
-        )
+        const member = channel.members.find((member) => member.userId === userId)
 
         if (!member || member.role === "member" || channel.type !== "group") {
             throw new ForbiddenError("Action not allowed")
         }
         const existingMemberIds = new Set(channel.members.map((m) => m.userId))
         const oldMembers = channel.members
-            .filter(
-                (mem) =>
-                    membersIds.includes(mem.userId) && mem.status === "removed",
-            )
+            .filter((mem) => membersIds.includes(mem.userId) && mem.status === "removed")
             .map((m) => m.userId)
         const newMembers = membersIds.filter((id) => !existingMemberIds.has(id))
 
@@ -51,12 +46,7 @@ export const memberService = {
                 .set({
                     status: "active",
                 })
-                .where(
-                    and(
-                        eq(members.channelId, channelId),
-                        inArray(members.userId, oldMembers),
-                    ),
-                )
+                .where(and(eq(members.channelId, channelId), inArray(members.userId, oldMembers)))
         }
     },
 
@@ -95,12 +85,8 @@ export const memberService = {
             throw new NotFoundError("Channel not found")
         }
 
-        const member = channel.members.find(
-            (member) => member.userId === userId,
-        )
-        const targetMember = channel.members.find(
-            (member) => member.userId === targetId,
-        )
+        const member = channel.members.find((member) => member.userId === userId)
+        const targetMember = channel.members.find((member) => member.userId === targetId)
 
         if (!targetMember) {
             throw new NotFoundError("Member not found")
@@ -115,12 +101,7 @@ export const memberService = {
             .set({
                 role,
             })
-            .where(
-                and(
-                    eq(members.channelId, channelId),
-                    eq(members.userId, targetId),
-                ),
-            )
+            .where(and(eq(members.channelId, channelId), eq(members.userId, targetId)))
         return {
             oldMember: targetMember,
         }
@@ -128,8 +109,7 @@ export const memberService = {
 
     async getGroupMembersWithNames(channelId: string) {
         return await db.query.channels.findFirst({
-            where: (chs, { eq, and }) =>
-                and(eq(chs.id, channelId), eq(chs.type, "group")),
+            where: (chs, { eq, and }) => and(eq(chs.id, channelId), eq(chs.type, "group")),
             with: {
                 members: {
                     with: {
@@ -159,9 +139,7 @@ export const memberService = {
             throw new NotFoundError("Group not found")
         }
         const member = group.members.find((mem) => mem.userId === userId)
-        const targetMember = group.members.find(
-            (mem) => mem.userId === targetId,
-        )
+        const targetMember = group.members.find((mem) => mem.userId === targetId)
 
         if (!targetMember || targetMember.status !== "active") {
             throw new NotFoundError("Member not found")
@@ -181,12 +159,7 @@ export const memberService = {
             .set({
                 status: "removed",
             })
-            .where(
-                and(
-                    eq(members.channelId, channelId),
-                    eq(members.userId, targetId),
-                ),
-            )
+            .where(and(eq(members.channelId, channelId), eq(members.userId, targetId)))
 
         return targetMember
     },
@@ -211,12 +184,7 @@ export const memberService = {
             .set({
                 status: "removed",
             })
-            .where(
-                and(
-                    eq(members.channelId, channelId),
-                    eq(members.userId, userId),
-                ),
-            )
+            .where(and(eq(members.channelId, channelId), eq(members.userId, userId)))
 
         return member
     },

@@ -6,10 +6,7 @@ import { emitToChannel, TypedSocket } from "@/socket/index.js"
 import logger from "@/lib/logger.js"
 
 export function handleSendMessage(socket: TypedSocket) {
-    return async (
-        msg: SendMessageData,
-        callback: (response: MessageAck) => void,
-    ) => {
+    return async (msg: SendMessageData, callback: (response: MessageAck) => void) => {
         const result = SendMessageSchema.safeParse(msg)
         if (!result.success) {
             return callback({
@@ -33,8 +30,7 @@ export function handleSendMessage(socket: TypedSocket) {
         }
 
         try {
-            const channel =
-                await channelService.getChannelWithMembers(channelId)
+            const channel = await channelService.getChannelWithMembers(channelId)
 
             if (!channel) {
                 throw new Error("Channel not found")
@@ -46,9 +42,7 @@ export function handleSendMessage(socket: TypedSocket) {
                 throw new Error("You are not a member")
             }
 
-            const recipients = channel.members.filter(
-                (m) => m.userId !== user.id,
-            )
+            const recipients = channel.members.filter((m) => m.userId !== user.id)
 
             const message = await messageService.createMessage({
                 channelId,

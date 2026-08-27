@@ -7,10 +7,7 @@ import { useGroup } from "@/features/chats/groups/use-group"
 import { useChat } from "@/features/chats/hooks/use-chat"
 import { deleteMember } from "@/features/chats/requests"
 import type { ChatMember } from "@bchat/types"
-import {
-    Delete02Icon,
-    MoreVerticalSquare01Icon,
-} from "@hugeicons/core-free-icons"
+import { Delete02Icon, MoreVerticalSquare01Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import {
@@ -112,11 +109,7 @@ export default function Member({ member }: { member: ChatMember }) {
                     ></ActionButton>
                 )}
             {(isMember || isAdmin) && member.chatRole !== "member" && (
-                <Badge
-                    variant={
-                        member.chatRole === "owner" ? "destructive" : "default"
-                    }
-                >
+                <Badge variant={member.chatRole === "owner" ? "destructive" : "default"}>
                     {t(`roles.${member.chatRole}`, t("roles.member"))}
                 </Badge>
             )}
@@ -125,9 +118,7 @@ export default function Member({ member }: { member: ChatMember }) {
                     <DropdownMenuTrigger
                         render={
                             <Button variant="outline" size={"icon"}>
-                                <HugeiconsIcon
-                                    icon={MoreVerticalSquare01Icon}
-                                />
+                                <HugeiconsIcon icon={MoreVerticalSquare01Icon} />
                             </Button>
                         }
                     ></DropdownMenuTrigger>
@@ -138,19 +129,14 @@ export default function Member({ member }: { member: ChatMember }) {
                                 <div className="grid gap-0.5">
                                     <DropdownMenuItem
                                         render={
-                                            <ChatButton
-                                                friendId={member.id}
-                                                className="w-full"
-                                            />
+                                            <ChatButton friendId={member.id} className="w-full" />
                                         }
                                     ></DropdownMenuItem>
                                     <DropdownMenuItem
                                         variant="destructive"
                                         render={
                                             <UnfriendButton
-                                                friendshipId={
-                                                    friend.friendshipId
-                                                }
+                                                friendshipId={friend.friendshipId}
                                                 className="w-full"
                                             />
                                         }
@@ -192,10 +178,7 @@ export default function Member({ member }: { member: ChatMember }) {
                             {isNew && (
                                 <DropdownMenuItem
                                     render={
-                                        <RequestButton
-                                            className={"w-full"}
-                                            userId={member.id}
-                                        />
+                                        <RequestButton className={"w-full"} userId={member.id} />
                                     }
                                 />
                             )}

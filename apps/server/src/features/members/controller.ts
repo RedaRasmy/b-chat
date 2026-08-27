@@ -1,10 +1,7 @@
 import { memberService } from "@/features/members/service.js"
 import { emitToChannel, leaveChannel } from "@/socket/index.js"
 import { makeEndpoint } from "@/utils/make-endpoint.js"
-import {
-    InsertMembersSchema,
-    UpdateMemberSchema,
-} from "@bchat/shared/validation"
+import { InsertMembersSchema, UpdateMemberSchema } from "@bchat/shared/validation"
 import z from "zod"
 
 export const addMembers = makeEndpoint(

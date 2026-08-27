@@ -14,15 +14,10 @@ export default function DMHeader() {
 
     const { t } = useTranslation("chats")
 
-    const lastSeen =
-        chat.lastSeen && chat.status === "offline"
-            ? getTime(chat.lastSeen)
-            : null
+    const lastSeen = chat.lastSeen && chat.status === "offline" ? getTime(chat.lastSeen) : null
 
     const status =
-        chat.status === "online"
-            ? t("status.online")
-            : t("status.offline", { date: lastSeen })
+        chat.status === "online" ? t("status.online") : t("status.offline", { date: lastSeen })
 
     return (
         <PageHeader>
@@ -31,12 +26,9 @@ export default function DMHeader() {
                 <div className="flex flex-col -space-y-0.5">
                     <h1>{friend.name}</h1>
                     <div
-                        className={cn(
-                            "text-[0.7rem] text-muted-foreground flex gap-",
-                            {
-                                "text-primary": chat.status === "online",
-                            },
-                        )}
+                        className={cn("text-[0.7rem] text-muted-foreground flex gap-", {
+                            "text-primary": chat.status === "online",
+                        })}
                     >
                         {status}
                     </div>
@@ -44,9 +36,7 @@ export default function DMHeader() {
             </div>
             <div className="flex gap-2 items-center">
                 {chat.typingUser && (
-                    <span className="text-xs text-muted-foreground">
-                        {t("typing")}
-                    </span>
+                    <span className="text-xs text-muted-foreground">{t("typing")}</span>
                 )}
 
                 <DeleteChat chatId={chat.id}>

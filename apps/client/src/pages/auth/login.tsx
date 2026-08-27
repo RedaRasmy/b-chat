@@ -5,13 +5,7 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useMutation } from "@tanstack/react-query"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useState } from "react"
 import z from "zod"
 import { Separator } from "@/components/ui/separator"
@@ -19,12 +13,7 @@ import { useAuth } from "@/features/auth/use-auth"
 import { loginRequest } from "@/features/auth/requests"
 import { LoginSchema } from "@bchat/shared/validation"
 import { HugeiconsIcon } from "@hugeicons/react"
-import {
-    LockKeyIcon,
-    Mail02Icon,
-    ViewIcon,
-    ViewOffIcon,
-} from "@hugeicons/core-free-icons"
+import { LockKeyIcon, Mail02Icon, ViewIcon, ViewOffIcon } from "@hugeicons/core-free-icons"
 import GoogleIcon from "@/components/google-icon"
 import GithubIcon from "@/components/github-icon"
 import { useTranslation } from "react-i18next"
@@ -41,9 +30,7 @@ export default function LoginPage() {
     const { t } = useTranslation("auth")
 
     const urlError = params.get("error")
-    const error = urlError
-        ? t(`errors.${urlError}`, { defaultValue: urlError })
-        : null
+    const error = urlError ? t(`errors.${urlError}`, { defaultValue: urlError }) : null
 
     const navigate = useNavigate()
 
@@ -97,12 +84,8 @@ export default function LoginPage() {
 
                 <Card className="shadow-xl">
                     <CardHeader className="text-center">
-                        <CardTitle className="text-2xl font-bold">
-                            {t("loginForm.title")}
-                        </CardTitle>
-                        <CardDescription>
-                            {t("loginForm.description")}
-                        </CardDescription>
+                        <CardTitle className="text-2xl font-bold">{t("loginForm.title")}</CardTitle>
+                        <CardDescription>{t("loginForm.description")}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
                         <form
@@ -129,12 +112,8 @@ export default function LoginPage() {
                                                 {...field}
                                                 id="email"
                                                 type="email"
-                                                aria-invalid={
-                                                    fieldState.invalid
-                                                }
-                                                placeholder={t(
-                                                    "loginForm.email.placeholder",
-                                                )}
+                                                aria-invalid={fieldState.invalid}
+                                                placeholder={t("loginForm.email.placeholder")}
                                                 className="pl-10"
                                             />
                                         </div>
@@ -142,10 +121,7 @@ export default function LoginPage() {
                                             <FieldError
                                                 errors={[
                                                     {
-                                                        message: t(
-                                                            fieldState.error
-                                                                ?.message!,
-                                                        ),
+                                                        message: t(fieldState.error?.message!),
                                                     },
                                                 ]}
                                             />
@@ -172,17 +148,9 @@ export default function LoginPage() {
                                             <Input
                                                 {...field}
                                                 id="password"
-                                                aria-invalid={
-                                                    fieldState.invalid
-                                                }
-                                                type={
-                                                    showPassword
-                                                        ? "text"
-                                                        : "password"
-                                                }
-                                                placeholder={t(
-                                                    "loginForm.password.placeholder",
-                                                )}
+                                                aria-invalid={fieldState.invalid}
+                                                type={showPassword ? "text" : "password"}
+                                                placeholder={t("loginForm.password.placeholder")}
                                                 className="pl-10 pr-10"
                                             />
 
@@ -191,11 +159,7 @@ export default function LoginPage() {
                                                 variant="ghost"
                                                 size="sm"
                                                 className="absolute right-0 top-0 h-full px-3"
-                                                onClick={() =>
-                                                    setShowPassword(
-                                                        !showPassword,
-                                                    )
-                                                }
+                                                onClick={() => setShowPassword(!showPassword)}
                                             >
                                                 {showPassword ? (
                                                     <HugeiconsIcon
@@ -214,10 +178,7 @@ export default function LoginPage() {
                                             <FieldError
                                                 errors={[
                                                     {
-                                                        message: t(
-                                                            fieldState.error
-                                                                ?.message!,
-                                                        ),
+                                                        message: t(fieldState.error?.message!),
                                                     },
                                                 ]}
                                             />
@@ -273,13 +234,9 @@ export default function LoginPage() {
 
                         {/* Sign Up Link */}
                         <div className="text-center text-sm">
-                            <span className="text-muted-foreground">
-                                {t("loginForm.question")}
-                            </span>
+                            <span className="text-muted-foreground">{t("loginForm.question")}</span>
                             <Link to="/auth/register">
-                                <Button variant={"link"}>
-                                    {t("loginForm.link")}
-                                </Button>
+                                <Button variant={"link"}>{t("loginForm.link")}</Button>
                             </Link>
                         </div>
                     </CardContent>

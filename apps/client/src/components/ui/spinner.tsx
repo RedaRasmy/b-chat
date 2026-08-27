@@ -2,11 +2,7 @@ import { cn } from "@/lib/utils"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Loading03Icon } from "@hugeicons/core-free-icons"
 
-function Spinner({
-    className,
-    strokeWidth,
-    ...props
-}: React.ComponentProps<"svg">) {
+function Spinner({ className, strokeWidth, ...props }: React.ComponentProps<"svg">) {
     const numericStrokeWidth =
         typeof strokeWidth === "string" ? parseFloat(strokeWidth) : strokeWidth
     return (

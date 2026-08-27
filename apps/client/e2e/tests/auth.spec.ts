@@ -54,9 +54,7 @@ test.describe("Auth flow", () => {
             password: "Password123!",
         })
 
-        await expect(
-            register.page.getByText(/email already in use/i),
-        ).toBeVisible()
+        await expect(register.page.getByText(/email already in use/i)).toBeVisible()
     })
     test("auto redirect to login page", async ({ profile, page }) => {
         await profile.goto()

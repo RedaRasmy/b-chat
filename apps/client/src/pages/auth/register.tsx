@@ -5,13 +5,7 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useMutation } from "@tanstack/react-query"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useState } from "react"
 import { z } from "zod"
 import { useAuth } from "@/features/auth/use-auth"
@@ -53,9 +47,7 @@ export default function RegisterPage() {
     const [params] = useSearchParams()
 
     const urlError = params.get("error")
-    const error = urlError
-        ? t(`errors.${urlError}`, { defaultValue: urlError })
-        : null
+    const error = urlError ? t(`errors.${urlError}`, { defaultValue: urlError }) : null
 
     const { setUser } = useAuth()
 
@@ -111,9 +103,7 @@ export default function RegisterPage() {
                         <CardTitle className="text-2xl font-bold">
                             {t("registerForm.title")}
                         </CardTitle>
-                        <CardDescription>
-                            {t("registerForm.description")}
-                        </CardDescription>
+                        <CardDescription>{t("registerForm.description")}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
                         <form
@@ -139,13 +129,9 @@ export default function RegisterPage() {
                                             <Input
                                                 id={field.name}
                                                 type="string"
-                                                placeholder={t(
-                                                    "registerForm.name.placeholder",
-                                                )}
+                                                placeholder={t("registerForm.name.placeholder")}
                                                 className="pl-10"
-                                                aria-invalid={
-                                                    fieldState.invalid
-                                                }
+                                                aria-invalid={fieldState.invalid}
                                                 {...field}
                                             />
                                         </div>
@@ -153,10 +139,7 @@ export default function RegisterPage() {
                                             <FieldError
                                                 errors={[
                                                     {
-                                                        message: t(
-                                                            fieldState.error
-                                                                ?.message!,
-                                                        ),
+                                                        message: t(fieldState.error?.message!),
                                                     },
                                                 ]}
                                             />
@@ -181,13 +164,9 @@ export default function RegisterPage() {
                                             <Input
                                                 id={field.name}
                                                 type="email"
-                                                placeholder={t(
-                                                    "registerForm.email.placeholder",
-                                                )}
+                                                placeholder={t("registerForm.email.placeholder")}
                                                 className="pl-10"
-                                                aria-invalid={
-                                                    fieldState.invalid
-                                                }
+                                                aria-invalid={fieldState.invalid}
                                                 {...field}
                                             />
                                         </div>
@@ -195,10 +174,7 @@ export default function RegisterPage() {
                                             <FieldError
                                                 errors={[
                                                     {
-                                                        message: t(
-                                                            fieldState.error
-                                                                ?.message!,
-                                                        ),
+                                                        message: t(fieldState.error?.message!),
                                                     },
                                                 ]}
                                             />
@@ -223,18 +199,10 @@ export default function RegisterPage() {
                                             />
                                             <Input
                                                 id="password"
-                                                type={
-                                                    showPassword
-                                                        ? "text"
-                                                        : "password"
-                                                }
-                                                placeholder={t(
-                                                    "registerForm.password.placeholder",
-                                                )}
+                                                type={showPassword ? "text" : "password"}
+                                                placeholder={t("registerForm.password.placeholder")}
                                                 className="pl-10 pr-10"
-                                                aria-invalid={
-                                                    fieldState.invalid
-                                                }
+                                                aria-invalid={fieldState.invalid}
                                                 {...field}
                                             />
                                             <Button
@@ -242,11 +210,7 @@ export default function RegisterPage() {
                                                 variant="ghost"
                                                 size="sm"
                                                 className="absolute right-0 top-0 h-full px-3"
-                                                onClick={() =>
-                                                    setShowPassword(
-                                                        !showPassword,
-                                                    )
-                                                }
+                                                onClick={() => setShowPassword(!showPassword)}
                                             >
                                                 {showPassword ? (
                                                     <HugeiconsIcon
@@ -265,10 +229,7 @@ export default function RegisterPage() {
                                             <FieldError
                                                 errors={[
                                                     {
-                                                        message: t(
-                                                            fieldState.error
-                                                                ?.message!,
-                                                        ),
+                                                        message: t(fieldState.error?.message!),
                                                     },
                                                 ]}
                                             />
@@ -284,9 +245,7 @@ export default function RegisterPage() {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="confirmPassword">
-                                            {t(
-                                                "registerForm.confirmPassword.label",
-                                            )}
+                                            {t("registerForm.confirmPassword.label")}
                                         </FieldLabel>
                                         <div className="relative">
                                             <HugeiconsIcon
@@ -295,18 +254,12 @@ export default function RegisterPage() {
                                             />
                                             <Input
                                                 id="confirmPassword"
-                                                type={
-                                                    showConfirmPassword
-                                                        ? "text"
-                                                        : "password"
-                                                }
+                                                type={showConfirmPassword ? "text" : "password"}
                                                 placeholder={t(
                                                     "registerForm.confirmPassword.placeholder",
                                                 )}
                                                 className="pl-10 pr-10"
-                                                aria-invalid={
-                                                    fieldState.invalid
-                                                }
+                                                aria-invalid={fieldState.invalid}
                                                 {...field}
                                             />
                                             <Button
@@ -315,9 +268,7 @@ export default function RegisterPage() {
                                                 size="sm"
                                                 className="absolute right-0 top-0 h-full px-3"
                                                 onClick={() =>
-                                                    setShowConfirmPassword(
-                                                        !showConfirmPassword,
-                                                    )
+                                                    setShowConfirmPassword(!showConfirmPassword)
                                                 }
                                             >
                                                 {showConfirmPassword ? (
@@ -337,10 +288,7 @@ export default function RegisterPage() {
                                             <FieldError
                                                 errors={[
                                                     {
-                                                        message: t(
-                                                            fieldState.error
-                                                                ?.message!,
-                                                        ),
+                                                        message: t(fieldState.error?.message!),
                                                     },
                                                 ]}
                                             />
@@ -399,9 +347,7 @@ export default function RegisterPage() {
                                 {t("registerForm.question")}
                             </span>
                             <Link to="/auth/login">
-                                <Button variant={"link"}>
-                                    {t("registerForm.link")}
-                                </Button>
+                                <Button variant={"link"}>{t("registerForm.link")}</Button>
                             </Link>
                         </div>
                     </CardContent>

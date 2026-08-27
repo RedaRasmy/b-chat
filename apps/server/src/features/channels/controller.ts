@@ -19,10 +19,7 @@ export const createDM = makeEndpoint(
         const { friendId } = req.body
 
         try {
-            const { channel, dm } = await channelService.createDM(
-                userId,
-                friendId,
-            )
+            const { channel, dm } = await channelService.createDM(userId, friendId)
 
             emitToUsers([userId, friendId], "new_chat", channel)
 
@@ -43,12 +40,11 @@ export const createGroup = makeEndpoint(
         const { name, members } = req.body
 
         try {
-            const { group, validMembers, channel } =
-                await channelService.createGroup({
-                    name,
-                    membersIds: members,
-                    userId,
-                })
+            const { group, validMembers, channel } = await channelService.createGroup({
+                name,
+                membersIds: members,
+                userId,
+            })
 
             emitToUsers(validMembers, "new_chat", channel)
 
@@ -59,59 +55,54 @@ export const createGroup = makeEndpoint(
     },
 )
 
-export const getChannels = makeEndpoint(
-    { user: true },
-    async (req, res, next) => {
-        const { id: userId } = req.user
+export const getChannels = makeEndpoint({ user: true }, async (req, res, next) => {
+    const { id: userId } = req.user
 
-        try {
-            const channels = await channelService.getUserChannels(userId)
+    try {
+        const channels = await channelService.getUserChannels(userId)
 
-            const finalData: Channels = channels.map(({ channel }) => {
-                const lastMessage = channel.messages[0] ?? null
-                const members = channel.members.map(
-                    ({ user: u, joinedAt, role, status }): ChatMember => ({
-                        id: u.id,
-                        name: u.name,
-                        role: u.role,
-                        avatar: u.avatar,
-                        joinedAt,
-                        chatRole: role,
-                        status,
-                    }),
-                )
-                if (channel.type === "dm") {
-                    const { user: friend } = channel.members.find(
-                        (m) => m.userId !== userId,
-                    )!
-                    return {
-                        id: channel.id,
-                        type: "dm",
-                        lastMessage,
-                        members,
-                        name: null,
-                        avatar: null,
-                        status: friend.status,
-                        lastSeen: friend.lastSeen,
-                    }
-                } else {
-                    return {
-                        id: channel.id,
-                        type: "group",
-                        lastMessage,
-                        members,
-                        name: channel.group.name,
-                        avatar: channel.group.avatar,
-                    }
+        const finalData: Channels = channels.map(({ channel }) => {
+            const lastMessage = channel.messages[0] ?? null
+            const members = channel.members.map(
+                ({ user: u, joinedAt, role, status }): ChatMember => ({
+                    id: u.id,
+                    name: u.name,
+                    role: u.role,
+                    avatar: u.avatar,
+                    joinedAt,
+                    chatRole: role,
+                    status,
+                }),
+            )
+            if (channel.type === "dm") {
+                const { user: friend } = channel.members.find((m) => m.userId !== userId)!
+                return {
+                    id: channel.id,
+                    type: "dm",
+                    lastMessage,
+                    members,
+                    name: null,
+                    avatar: null,
+                    status: friend.status,
+                    lastSeen: friend.lastSeen,
                 }
-            })
+            } else {
+                return {
+                    id: channel.id,
+                    type: "group",
+                    lastMessage,
+                    members,
+                    name: channel.group.name,
+                    avatar: channel.group.avatar,
+                }
+            }
+        })
 
-            res.json(finalData)
-        } catch (err) {
-            next(err)
-        }
-    },
-)
+        res.json(finalData)
+    } catch (err) {
+        next(err)
+    }
+})
 
 export const getMessages = makeEndpoint(
     {
@@ -123,10 +114,7 @@ export const getMessages = makeEndpoint(
         const user = req.user
 
         try {
-            const messages = await channelService.getChannelMessages(
-                channelId,
-                user.id,
-            )
+            const messages = await channelService.getChannelMessages(channelId, user.id)
 
             res.json(messages)
         } catch (err) {

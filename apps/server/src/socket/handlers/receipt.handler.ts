@@ -7,14 +7,10 @@ import { emitToUsers, TypedSocket } from "@/socket/index.js"
 export function handleGetMessage(socket: TypedSocket) {
     return async (data: unknown) => {
         try {
-            const { channelId, messageId, senderId } =
-                GetMessageSchema.parse(data)
+            const { channelId, messageId, senderId } = GetMessageSchema.parse(data)
             const user = socket.data.user
 
-            const channel = await channelService.verifyUserInChannel(
-                channelId,
-                user.id,
-            )
+            const channel = await channelService.verifyUserInChannel(channelId, user.id)
             if (!channel) {
                 throw new Error("Channel not found")
             }
@@ -39,18 +35,12 @@ export function handleSeeChat(socket: TypedSocket) {
             const { channelId } = SeeChatSchema.parse(data)
             const user = socket.data.user
 
-            const channel = await channelService.verifyUserInChannel(
-                channelId,
-                user.id,
-            )
+            const channel = await channelService.verifyUserInChannel(channelId, user.id)
             if (!channel) {
                 throw new Error("Channel not found")
             }
 
-            const unreadMessages = await messageService.getUnreadMessages(
-                channelId,
-                user.id,
-            )
+            const unreadMessages = await messageService.getUnreadMessages(channelId, user.id)
 
             if (unreadMessages.length > 0) {
                 await messageService.markMessagesAsSeen(

@@ -13,8 +13,7 @@ export const messageService = {
                 channel: {
                     with: {
                         members: {
-                            where: (members, { eq }) =>
-                                eq(members.status, "active"),
+                            where: (members, { eq }) => eq(members.status, "active"),
                         },
                     },
                 },
@@ -25,18 +24,10 @@ export const messageService = {
             throw new NotFoundError("Message not found")
         }
 
-        const userMember = message.channel.members.find(
-            (m) => m.userId === userId,
-        )
-        const senderMember = message.channel.members.find(
-            (m) => m.userId === message.senderId,
-        )
+        const userMember = message.channel.members.find((m) => m.userId === userId)
+        const senderMember = message.channel.members.find((m) => m.userId === message.senderId)
 
-        if (
-            !userMember ||
-            !senderMember ||
-            !canDeleteMessage(userMember, senderMember)
-        ) {
+        if (!userMember || !senderMember || !canDeleteMessage(userMember, senderMember)) {
             throw new ForbiddenError("Cannot delete this message")
         }
 
@@ -97,10 +88,7 @@ export const messageService = {
             .update(messageReceipts)
             .set({ deliveredAt: new Date() })
             .where(
-                and(
-                    eq(messageReceipts.messageId, messageId),
-                    eq(messageReceipts.userId, userId),
-                ),
+                and(eq(messageReceipts.messageId, messageId), eq(messageReceipts.userId, userId)),
             )
     },
 

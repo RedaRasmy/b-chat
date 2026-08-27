@@ -131,9 +131,7 @@ export const authService = {
     },
 
     async logout(refreshToken: string) {
-        const res = await db
-            .delete(refreshTokens)
-            .where(eq(refreshTokens.token, refreshToken))
+        const res = await db.delete(refreshTokens).where(eq(refreshTokens.token, refreshToken))
         if (res.rowCount === 0) {
             logger.info("Token deletion failed")
         }

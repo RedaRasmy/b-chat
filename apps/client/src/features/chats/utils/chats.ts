@@ -8,10 +8,7 @@ export function getChatName(chat: Chat, currentUserId: string): string {
     return otherUser?.name || "Unknown"
 }
 
-export function getChatAvatar(
-    chat: Chat,
-    currentUserId: string,
-): string | null {
+export function getChatAvatar(chat: Chat, currentUserId: string): string | null {
     if (chat.type === "group") {
         return chat.avatar
     }
@@ -19,9 +16,6 @@ export function getChatAvatar(
     return otherUser?.avatar || null
 }
 
-export function getOtherUser(
-    chat: DMChat,
-    currentUserId: string,
-): OtherUser | undefined {
+export function getOtherUser(chat: DMChat, currentUserId: string): OtherUser | undefined {
     return chat.members.find((m) => m.id !== currentUserId)
 }

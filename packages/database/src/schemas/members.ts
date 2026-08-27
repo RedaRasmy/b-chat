@@ -1,18 +1,7 @@
-import {
-    index,
-    pgEnum,
-    pgTable,
-    primaryKey,
-    timestamp,
-    uuid,
-} from "drizzle-orm/pg-core"
+import { index, pgEnum, pgTable, primaryKey, timestamp, uuid } from "drizzle-orm/pg-core"
 import { channels } from "./channels.js"
 import { users } from "./users.js"
-import {
-    type InferInsertModel,
-    type InferSelectModel,
-    relations,
-} from "drizzle-orm"
+import { type InferInsertModel, type InferSelectModel, relations } from "drizzle-orm"
 
 export const chatRole = pgEnum("chat_role", ["owner", "admin", "member"])
 export const memberStatus = pgEnum("member_status", ["active", "removed"])

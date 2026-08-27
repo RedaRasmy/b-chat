@@ -18,10 +18,7 @@ export function useConnectionListener() {
                 return
             }
 
-            const highestOrder = Math.max(
-                ...chats.map((c) => c.lastMessage?.order ?? 0),
-                0,
-            )
+            const highestOrder = Math.max(...chats.map((c) => c.lastMessage?.order ?? 0), 0)
 
             console.log("syncing messages... order:", highestOrder)
 

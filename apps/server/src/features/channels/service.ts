@@ -1,14 +1,7 @@
 import { ForbiddenError, NotFoundError } from "@/errors.js"
 import { friendService } from "@/features/friendships/service.js"
 import db from "@bchat/database"
-import {
-    channels,
-    dms,
-    groups,
-    IMember,
-    members,
-    messages,
-} from "@bchat/database/tables"
+import { channels, dms, groups, IMember, members, messages } from "@bchat/database/tables"
 import { asc, desc, eq } from "drizzle-orm"
 
 export const channelService = {
@@ -79,10 +72,7 @@ export const channelService = {
     async getChannelMessages(channelId: string, userId: string) {
         const member = await db.query.members.findFirst({
             where: (members, { eq, and }) =>
-                and(
-                    eq(members.channelId, channelId),
-                    eq(members.userId, userId),
-                ),
+                and(eq(members.channelId, channelId), eq(members.userId, userId)),
             with: {
                 channel: {
                     with: {
@@ -175,13 +165,11 @@ export const channelService = {
             if (!group) throw new Error("Failed to create group")
 
             await tx.insert(members).values(
-                validMembers.map(
-                    (memberId): IMember => ({
-                        channelId: channel.id,
-                        userId: memberId,
-                        role: memberId === userId ? "owner" : "member",
-                    }),
-                ),
+                validMembers.map((memberId): IMember => ({
+                    channelId: channel.id,
+                    userId: memberId,
+                    role: memberId === userId ? "owner" : "member",
+                })),
             )
             return {
                 group,
@@ -217,8 +205,7 @@ export const channelService = {
                             orderBy: desc(messages.createdAt),
                             with: {
                                 receipts: {
-                                    where: (rec, { eq, and }) =>
-                                        and(eq(rec.userId, userId)),
+                                    where: (rec, { eq, and }) => and(eq(rec.userId, userId)),
                                 },
                             },
                             limit: 1,

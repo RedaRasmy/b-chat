@@ -3,13 +3,7 @@ import { DMContext } from "@/features/chats/dm/dm-context"
 import type { DMChat, OtherUser } from "@bchat/types"
 import type { ReactNode } from "react"
 
-export function DMProvider({
-    chat,
-    children,
-}: {
-    chat: DMChat
-    children: ReactNode
-}) {
+export function DMProvider({ chat, children }: { chat: DMChat; children: ReactNode }) {
     const user = useUser()
     const friendMember = chat.members.find((mem) => mem.id !== user.id)
 

@@ -18,9 +18,7 @@ export function ErrorBoundary() {
     } else if (error instanceof Error) {
         return (
             <div className="h-screen flex flex-col items-center justify-center gap-2">
-                <h1 className="text-2xl font-semibold">
-                    Oops! Something went wrong.
-                </h1>
+                <h1 className="text-2xl font-semibold">Oops! Something went wrong.</h1>
                 <p>{error.name || error.message}</p>
                 <Link to={"/"}>
                     <Button>Home Page</Button>
@@ -30,9 +28,7 @@ export function ErrorBoundary() {
     } else {
         return (
             <div className="h-screen flex flex-col items-center justify-center gap-2">
-                <h1 className="text-2xl font-semibold">
-                    Oops! Something went wrong.
-                </h1>
+                <h1 className="text-2xl font-semibold">Oops! Something went wrong.</h1>
                 <Link to={"/"}>
                     <Button>Home Page</Button>
                 </Link>

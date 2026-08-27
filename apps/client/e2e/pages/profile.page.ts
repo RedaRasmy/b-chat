@@ -59,8 +59,6 @@ export class ProfilePage extends BasePage {
     }
 
     async expectFriend(name: string | RegExp) {
-        await expect(
-            this.page.getByLabel(/friends/i).getByText(name),
-        ).toBeVisible()
+        await expect(this.page.getByLabel(/friends/i).getByText(name)).toBeVisible()
     }
 }

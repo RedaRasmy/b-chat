@@ -1,13 +1,9 @@
 import { api } from "@/lib/api"
-import type {
-    LoginCredentials,
-    Profile,
-    RegisterCredentials,
-} from "@bchat/types"
+import type { LoginCredentials, Profile, RegisterCredentials } from "@bchat/types"
 
 export async function registerRequest(data: RegisterCredentials) {
     const res = await api.post("/auth/register", data)
-    return res.data as Profile 
+    return res.data as Profile
 }
 
 export async function loginRequest(data: LoginCredentials) {

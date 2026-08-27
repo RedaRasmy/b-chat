@@ -17,13 +17,7 @@ export async function createGroup(data: GroupFormData) {
     return res.data as Group
 }
 
-export async function updateGroup({
-    id,
-    data,
-}: {
-    id: string
-    data: UpdateGroupData
-}) {
+export async function updateGroup({ id, data }: { id: string; data: UpdateGroupData }) {
     return await api.patch("/channels/groups/" + id, data)
 }
 
@@ -41,13 +35,7 @@ export async function exitGroup(id: string) {
     return await api.delete("/members/" + id)
 }
 
-export async function deleteMember({
-    channelId,
-    userId,
-}: {
-    channelId: string
-    userId: string
-}) {
+export async function deleteMember({ channelId, userId }: { channelId: string; userId: string }) {
     return await api.delete(`/members/${channelId}/${userId}`)
 }
 

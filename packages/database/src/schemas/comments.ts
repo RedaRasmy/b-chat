@@ -19,11 +19,7 @@ export const comments = pgTable(
         createdAt,
         updatedAt,
     },
-    (table) => [
-        index().on(table.postId),
-        index().on(table.authorId),
-        index().on(table.createdAt),
-    ],
+    (table) => [index().on(table.postId), index().on(table.authorId), index().on(table.createdAt)],
 )
 
 export const commentsRelations = relations(comments, ({ one }) => ({

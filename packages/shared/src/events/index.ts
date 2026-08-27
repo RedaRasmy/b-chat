@@ -10,12 +10,7 @@ import type {
     RequestAcceptedData,
     StatusChangedData,
 } from "@bchat/types"
-import {
-    CLIENT_EVENTS,
-    type ClientEvent,
-    SERVER_EVENTS,
-    type ServerEvent,
-} from "./events.js"
+import { CLIENT_EVENTS, type ClientEvent, SERVER_EVENTS, type ServerEvent } from "./events.js"
 import type {
     GetMessageData,
     MemberDeletedData,
@@ -41,9 +36,7 @@ export type ServerToClientEvents = {
     [SERVER_EVENTS.MEMBER_LEFT]: (payload: MemberLeftData) => void
     [SERVER_EVENTS.FRIEND_REQUEST]: (payload: FriendRequestData) => void
     [SERVER_EVENTS.REQUEST_ACCEPTED]: (payload: RequestAcceptedData) => void
-    [SERVER_EVENTS.MISSING_MESSAGES]: (
-        payload: Record<string, ChatMessage[]>,
-    ) => void
+    [SERVER_EVENTS.MISSING_MESSAGES]: (payload: Record<string, ChatMessage[]>) => void
     [SERVER_EVENTS.NEW_CHAT]: (payload: Channel) => void
 }
 
@@ -82,21 +75,20 @@ export type Payload<E extends ServerEvent | ClientEvent> = E extends ServerEvent
           : never
       : never
 
-export type Callback<E extends ServerEvent | ClientEvent> =
-    E extends ServerEvent
-        ? ServerToClientEvents[E] extends (...args: infer Args) => any
-            ? Args extends [...any[], infer C]
-                ? C extends (...args: any[]) => any
-                    ? C
-                    : never
+export type Callback<E extends ServerEvent | ClientEvent> = E extends ServerEvent
+    ? ServerToClientEvents[E] extends (...args: infer Args) => any
+        ? Args extends [...any[], infer C]
+            ? C extends (...args: any[]) => any
+                ? C
                 : never
             : never
-        : E extends ClientEvent
-          ? ClientToServerEvents[E] extends (...args: infer Args) => any
-              ? Args extends [...any[], infer C]
-                  ? C extends (...args: any[]) => any
-                      ? C
-                      : never
+        : never
+    : E extends ClientEvent
+      ? ClientToServerEvents[E] extends (...args: infer Args) => any
+          ? Args extends [...any[], infer C]
+              ? C extends (...args: any[]) => any
+                  ? C
                   : never
               : never
           : never
+      : never

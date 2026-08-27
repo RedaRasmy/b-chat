@@ -1,36 +1,17 @@
 import { ActionButton } from "@/components/action-button"
 import { Button } from "@/components/ui/button"
-import {
-    Card,
-    CardContent,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Field, FieldError } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import {
-    Sheet,
-    SheetContent,
-    SheetHeader,
-    SheetTitle,
-    SheetTrigger,
-} from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { AddMembersForm } from "@/features/chats/groups/components/add-members-form"
 import { DeleteChat } from "@/features/chats/components/delete-chat"
 import { useGroup } from "@/features/chats/groups/use-group"
 import { exitGroup, updateGroup } from "@/features/chats/requests"
-import {
-    UpdateGroupSchema,
-    type UpdateGroupData,
-} from "@bchat/shared/validation"
+import { UpdateGroupSchema, type UpdateGroupData } from "@bchat/shared/validation"
 import { zodResolver } from "@hookform/resolvers/zod"
-import {
-    Delete02Icon,
-    Logout02Icon,
-    MoreHorizontalIcon,
-} from "@hugeicons/core-free-icons"
+import { Delete02Icon, Logout02Icon, MoreHorizontalIcon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useForm, Controller } from "react-hook-form"
@@ -98,18 +79,12 @@ export function GroupSettings() {
                     className="w-full h-full p-2 grid grid-rows-[auto_1fr] "
                 >
                     <TabsList className={"w-full"}>
-                        <TabsTrigger value="members">
-                            {t("members")}
-                        </TabsTrigger>
-                        <TabsTrigger value="settings">
-                            {t("settings")}
-                        </TabsTrigger>
+                        <TabsTrigger value="members">{t("members")}</TabsTrigger>
+                        <TabsTrigger value="settings">{t("settings")}</TabsTrigger>
                     </TabsList>
                     <TabsContent
                         value="members"
-                        className={
-                            "space-y-1.5 overflow-auto h-full px-1 pt-1 pb-13"
-                        }
+                        className={"space-y-1.5 overflow-auto h-full px-1 pt-1 pb-13"}
                     >
                         {chat.members
                             .filter((mem) => mem.status === "active")
@@ -120,47 +95,30 @@ export function GroupSettings() {
                     </TabsContent>
                     <TabsContent
                         value="settings"
-                        className={
-                            "space-y-2 overflow-auto h-full px-1 pt-1 pb-13"
-                        }
+                        className={"space-y-2 overflow-auto h-full px-1 pt-1 pb-13"}
                     >
                         {isOwner && (
                             <Card className="">
                                 <CardHeader>
-                                    <CardTitle>
-                                        {t("groupForm.update.groupName")}
-                                    </CardTitle>
+                                    <CardTitle>{t("groupForm.update.groupName")}</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <form
-                                        id="update-group"
-                                        onSubmit={form.handleSubmit(onSubmit)}
-                                    >
+                                    <form id="update-group" onSubmit={form.handleSubmit(onSubmit)}>
                                         <Controller
                                             name="name"
                                             control={form.control}
                                             render={({ field, fieldState }) => (
-                                                <Field
-                                                    data-invalid={
-                                                        fieldState.invalid
-                                                    }
-                                                >
+                                                <Field data-invalid={fieldState.invalid}>
                                                     <Input
                                                         {...field}
                                                         id="name"
-                                                        aria-invalid={
-                                                            fieldState.invalid
-                                                        }
+                                                        aria-invalid={fieldState.invalid}
                                                         autoComplete="off"
                                                         type="text"
                                                         className="max-w-100"
                                                     />
                                                     {fieldState.invalid && (
-                                                        <FieldError
-                                                            errors={[
-                                                                fieldState.error,
-                                                            ]}
-                                                        />
+                                                        <FieldError errors={[fieldState.error]} />
                                                     )}
                                                 </Field>
                                             )}
@@ -206,11 +164,7 @@ export function GroupSettings() {
                         )}
                         {isOwner && (
                             <DeleteChat chatId={chat.id}>
-                                <Button
-                                    variant={"destructive"}
-                                    className={"w-full"}
-                                    size={"lg"}
-                                >
+                                <Button variant={"destructive"} className={"w-full"} size={"lg"}>
                                     <HugeiconsIcon icon={Delete02Icon} />
                                     {t("buttons.deleteChat")}
                                 </Button>

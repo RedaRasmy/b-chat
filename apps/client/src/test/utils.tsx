@@ -29,10 +29,7 @@ function MainProviders({ children }: { children: ReactNode }) {
         <QueryClientProvider client={createTestQueryClient()}>
             <AuthProvider>
                 <TooltipProvider>
-                    <ThemeProvider
-                        defaultTheme="light"
-                        storageKey="vite-ui-theme"
-                    >
+                    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
                         <BrowserRouter>{children}</BrowserRouter>
                     </ThemeProvider>
                 </TooltipProvider>
@@ -53,24 +50,16 @@ export function AppProviders({ children }: { children: ReactNode }) {
     )
 }
 
-export const renderWithMain = (
-    ui: React.ReactElement,
-    options?: RenderOptions,
-) => render(ui, { wrapper: MainProviders, ...options })
+export const renderWithMain = (ui: React.ReactElement, options?: RenderOptions) =>
+    render(ui, { wrapper: MainProviders, ...options })
 
-export const renderWithApp = (
-    ui: React.ReactElement,
-    options?: RenderOptions,
-) => render(ui, { wrapper: AppProviders, ...options })
+export const renderWithApp = (ui: React.ReactElement, options?: RenderOptions) =>
+    render(ui, { wrapper: AppProviders, ...options })
 
-export const renderHookWithMain = <T,>(
-    hook: () => T,
-    options?: RenderHookOptions<unknown>,
-) => renderHook(hook, { wrapper: MainProviders, ...options })
+export const renderHookWithMain = <T,>(hook: () => T, options?: RenderHookOptions<unknown>) =>
+    renderHook(hook, { wrapper: MainProviders, ...options })
 
-export const renderHookWithApp = <T,>(
-    hook: () => T,
-    options?: RenderHookOptions<unknown>,
-) => renderHook(hook, { wrapper: AppProviders, ...options })
+export const renderHookWithApp = <T,>(hook: () => T, options?: RenderHookOptions<unknown>) =>
+    renderHook(hook, { wrapper: AppProviders, ...options })
 
 export * from "@testing-library/react"

@@ -17,11 +17,7 @@ export const userService = {
     async getUsers({ userId, search }: { userId: string; search?: string }) {
         return await db.query.users.findMany({
             where: (users, { ilike, and, ne }) => {
-                if (search)
-                    return and(
-                        ne(users.id, userId),
-                        ilike(users.name, `%${search}%`),
-                    )
+                if (search) return and(ne(users.id, userId), ilike(users.name, `%${search}%`))
 
                 return ne(users.id, userId)
             },

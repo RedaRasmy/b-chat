@@ -6,15 +6,7 @@ import { hasPermission } from "@bchat/shared/permissions"
 import { and, desc, eq } from "drizzle-orm"
 
 export const postService = {
-    async getPosts({
-        search,
-        offset,
-        limit,
-    }: {
-        search?: string
-        offset: number
-        limit: number
-    }) {
+    async getPosts({ search, offset, limit }: { search?: string; offset: number; limit: number }) {
         return await db.query.posts.findMany({
             where: (posts, { ilike }) => {
                 if (search) return ilike(posts.content, `%${search}%`)
@@ -80,13 +72,7 @@ export const postService = {
         return newPost
     },
 
-    async deletePost({
-        user,
-        postId,
-    }: {
-        user: AccessTokenPayload
-        postId: string
-    }) {
+    async deletePost({ user, postId }: { user: AccessTokenPayload; postId: string }) {
         const condition = hasPermission(user.role, "post:delete:any")
             ? eq(posts.id, postId)
             : and(eq(posts.id, postId), eq(posts.authorId, user.id))

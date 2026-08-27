@@ -9,15 +9,10 @@ export const register = makeEndpoint(
     },
     async (req, res, next) => {
         try {
-            const { user, accessToken, refreshToken } =
-                await authService.register(req.body)
+            const { user, accessToken, refreshToken } = await authService.register(req.body)
 
             res.cookie("accessToken", accessToken, getAccessTokenOptions(req))
-            res.cookie(
-                "refreshToken",
-                refreshToken,
-                getRefreshTokenOptions(req),
-            )
+            res.cookie("refreshToken", refreshToken, getRefreshTokenOptions(req))
 
             res.status(201).json({
                 id: user.id,
@@ -38,16 +33,10 @@ export const login = makeEndpoint(
     },
     async (req, res, next) => {
         try {
-            const { user, accessToken, refreshToken } = await authService.login(
-                req.body,
-            )
+            const { user, accessToken, refreshToken } = await authService.login(req.body)
 
             res.cookie("accessToken", accessToken, getAccessTokenOptions(req))
-            res.cookie(
-                "refreshToken",
-                refreshToken,
-                getRefreshTokenOptions(req),
-            )
+            res.cookie("refreshToken", refreshToken, getRefreshTokenOptions(req))
 
             res.json({
                 id: user.id,

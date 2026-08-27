@@ -3,13 +3,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import type { Friend } from "@bchat/types"
 import type { ReactNode } from "react"
 
-export default function FriendCard({
-    friend,
-    children,
-}: {
-    friend: Friend
-    children: ReactNode
-}) {
+export default function FriendCard({ friend, children }: { friend: Friend; children: ReactNode }) {
     return (
         <Card>
             <CardContent className="flex justify-between items-center gap-1">

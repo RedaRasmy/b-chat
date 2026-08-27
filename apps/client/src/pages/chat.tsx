@@ -15,9 +15,7 @@ export default function ChatPage() {
     const { t } = useTranslation("chats")
 
     if (!channelId) {
-        throw new Error(
-            "ChatProvider must be used within ChatPage in chats/:id route",
-        )
+        throw new Error("ChatProvider must be used within ChatPage in chats/:id route")
     }
     const { data: chats, isLoading } = useChats()
 

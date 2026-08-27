@@ -20,13 +20,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState, type SyntheticEvent } from "react"
 import { useTranslation } from "react-i18next"
 
-export function AddMembersForm({
-    channelId,
-    members,
-}: {
-    channelId: string
-    members: string[]
-}) {
+export function AddMembersForm({ channelId, members }: { channelId: string; members: string[] }) {
     const [open, setOpen] = useState(false)
     const [ids, setIds] = useState<InsertMembersData>([])
 
@@ -81,9 +75,7 @@ export function AddMembersForm({
                                         className={cn(
                                             "flex items-center p-2 border rounded-md gap-2",
                                             {
-                                                "opacity-50": members.includes(
-                                                    friend.id,
-                                                ),
+                                                "opacity-50": members.includes(friend.id),
                                             },
                                         )}
                                     >
@@ -92,43 +84,26 @@ export function AddMembersForm({
                                             className={"cursor-pointer"}
                                             onCheckedChange={(checked) => {
                                                 if (checked) {
-                                                    setIds((prev) => [
-                                                        ...prev,
-                                                        friend.id,
-                                                    ])
+                                                    setIds((prev) => [...prev, friend.id])
                                                 } else {
                                                     setIds((prev) =>
-                                                        prev.filter(
-                                                            (id) =>
-                                                                id !==
-                                                                friend.id,
-                                                        ),
+                                                        prev.filter((id) => id !== friend.id),
                                                     )
                                                 }
                                             }}
-                                            disabled={members.includes(
-                                                friend.id,
-                                            )}
+                                            disabled={members.includes(friend.id)}
                                         />
-                                        <div className="flex">
-                                            {friend.name}
-                                        </div>
+                                        <div className="flex">{friend.name}</div>
                                     </div>
                                 ))}
                             </div>
                         ) : (
-                            <div className="text-center my-2">
-                                {t("membersForm.noFriends")}
-                            </div>
+                            <div className="text-center my-2">{t("membersForm.noFriends")}</div>
                         )}
                     </FieldGroup>
                     <DialogFooter>
                         <DialogClose
-                            render={
-                                <Button variant="outline">
-                                    {t("common:buttons.cancel")}
-                                </Button>
-                            }
+                            render={<Button variant="outline">{t("common:buttons.cancel")}</Button>}
                         />
                         <Button type="submit" disabled={mutation.isPending}>
                             {t("common:buttons.submit")}

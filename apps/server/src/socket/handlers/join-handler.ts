@@ -14,8 +14,7 @@ export function handleJoinChannel(socket: TypedSocket) {
 
             const user = socket.data.user
 
-            const channel =
-                await channelService.getChannelWithMembers(channelId)
+            const channel = await channelService.getChannelWithMembers(channelId)
 
             if (!channel) {
                 throw new Error("Channel not found")

@@ -43,14 +43,8 @@ export default function ProfilePage() {
                     className={"h-full grid grid-rows-[auto_1fr]"}
                 >
                     <TabsList className={"w-full mb-2"}>
-                        <TabsTrigger value="friends">
-                            {" "}
-                            {t("profile:tabs.friends")}
-                        </TabsTrigger>
-                        <TabsTrigger value="posts">
-                            {" "}
-                            {t("profile:tabs.myPosts")}
-                        </TabsTrigger>
+                        <TabsTrigger value="friends"> {t("profile:tabs.friends")}</TabsTrigger>
+                        <TabsTrigger value="posts"> {t("profile:tabs.myPosts")}</TabsTrigger>
                         <TabsTrigger value="requests">
                             {t("profile:tabs.requests")}
                             {requestCount > 0 && (
@@ -59,9 +53,7 @@ export default function ProfilePage() {
                                 </span>
                             )}
                         </TabsTrigger>
-                        <TabsTrigger value="settings">
-                            {t("profile:tabs.settings")}
-                        </TabsTrigger>
+                        <TabsTrigger value="settings">{t("profile:tabs.settings")}</TabsTrigger>
                     </TabsList>
                     <TabsContent value="friends" className={"overflow-y-auto"}>
                         <Friends />

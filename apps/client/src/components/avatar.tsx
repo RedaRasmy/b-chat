@@ -16,12 +16,7 @@ export default function Avatar({
 }) {
     if (data.avatar)
         return (
-            <div
-                className={cn(
-                    "size-8 relative border-black/90 borde shrink-0",
-                    className,
-                )}
-            >
+            <div className={cn("size-8 relative border-black/90 borde shrink-0", className)}>
                 <img src={data.avatar} className="rounded-full" />
                 {"status" in data && (
                     <div
@@ -68,12 +63,9 @@ export default function Avatar({
             {character}
             {"status" in data && data.status && (
                 <div
-                    className={cn(
-                        "size-[30%] bg-red-500 absolute bottom-0 right-0 rounded-full",
-                        {
-                            "bg-green-500": data.status === "online",
-                        },
-                    )}
+                    className={cn("size-[30%] bg-red-500 absolute bottom-0 right-0 rounded-full", {
+                        "bg-green-500": data.status === "online",
+                    })}
                 />
             )}
         </div>

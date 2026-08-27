@@ -23,9 +23,7 @@ export default function usePresenceListener() {
         queryClient.setQueryData(["chats"], (old: Channels = []) =>
             old.map((chat) => {
                 if (chat.type === "group") return chat
-                const friend = chat.members.find(
-                    (mem) => mem.id === data.userId,
-                )
+                const friend = chat.members.find((mem) => mem.id === data.userId)
                 if (!friend) return chat
                 return {
                     ...chat,

@@ -25,21 +25,18 @@ export const githubCallback = makeEndpoint(async (req, res) => {
     const base = process.env.FRONTEND_URL ?? ""
 
     try {
-        const tokenResponse = await fetch(
-            "https://github.com/login/oauth/access_token",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                },
-                body: JSON.stringify({
-                    client_id: process.env.GITHUB_CLIENT_ID,
-                    client_secret: process.env.GITHUB_CLIENT_SECRET,
-                    code,
-                }),
+        const tokenResponse = await fetch("https://github.com/login/oauth/access_token", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
             },
-        )
+            body: JSON.stringify({
+                client_id: process.env.GITHUB_CLIENT_ID,
+                client_secret: process.env.GITHUB_CLIENT_SECRET,
+                code,
+            }),
+        })
 
         const { access_token } = await tokenResponse.json()
 
@@ -51,14 +48,11 @@ export const githubCallback = makeEndpoint(async (req, res) => {
 
         const githubUser = await userResponse.json()
 
-        const emailResponse = await fetch(
-            "https://api.github.com/user/emails",
-            {
-                headers: {
-                    Authorization: `Bearer ${access_token}`,
-                },
+        const emailResponse = await fetch("https://api.github.com/user/emails", {
+            headers: {
+                Authorization: `Bearer ${access_token}`,
             },
-        )
+        })
         const emails = await emailResponse.json()
 
         type Email = {

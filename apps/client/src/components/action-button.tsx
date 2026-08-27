@@ -44,36 +44,25 @@ export function ActionButton({
 
     const { t } = useTranslation()
 
-    const description =
-        areYouSureDescription ?? t("confirmation.defaultDescription")
+    const description = areYouSureDescription ?? t("confirmation.defaultDescription")
 
     if (requireAreYouSure) {
         return (
             <AlertDialog open={open || isLoading} onOpenChange={setOpen}>
-                <AlertDialogTrigger
-                    render={triggerElement}
-                ></AlertDialogTrigger>
+                <AlertDialogTrigger render={triggerElement}></AlertDialogTrigger>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>
-                            {t("confirmation.title")}
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                            {description}
-                        </AlertDialogDescription>
+                        <AlertDialogTitle>{t("confirmation.title")}</AlertDialogTitle>
+                        <AlertDialogDescription>{description}</AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel>
-                            {t("buttons.cancel")}
-                        </AlertDialogCancel>
+                        <AlertDialogCancel>{t("buttons.cancel")}</AlertDialogCancel>
                         <AlertDialogAction
                             disabled={isLoading}
                             onClick={performAction}
                             variant={"destructive"}
                         >
-                            <LoadingSwap isLoading={isLoading}>
-                                {t("buttons.yes")}
-                            </LoadingSwap>
+                            <LoadingSwap isLoading={isLoading}>{t("buttons.yes")}</LoadingSwap>
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
@@ -90,10 +79,7 @@ export function ActionButton({
                 props.onClick?.(e)
             }}
         >
-            <LoadingSwap
-                isLoading={isLoading}
-                className="inline-flex items-center gap-2"
-            >
+            <LoadingSwap isLoading={isLoading} className="inline-flex items-center gap-2">
                 {props.children}
             </LoadingSwap>
         </Button>

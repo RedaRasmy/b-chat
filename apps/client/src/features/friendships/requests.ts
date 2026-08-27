@@ -1,11 +1,5 @@
 import { api } from "@/lib/api"
-import type {
-    Friend,
-    Friendship,
-    FriendshipRequest,
-    OtherUser,
-    User,
-} from "@bchat/types"
+import type { Friend, Friendship, FriendshipRequest, OtherUser, User } from "@bchat/types"
 
 // Queries
 
@@ -69,5 +63,4 @@ export async function unblock(id: Friendship["id"]) {
 
 export async function cancelRequest(id: Friendship["id"]) {
     return await api.delete("/friendships/" + id)
-
 }

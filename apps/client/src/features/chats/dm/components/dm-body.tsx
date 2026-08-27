@@ -11,10 +11,7 @@ export default function DMBody() {
     const { retry, remove } = useMessage()
 
     return (
-        <main
-            aria-label="Chat body"
-            className="p-3 space-y-2 overflow-y-auto relative"
-        >
+        <main aria-label="Chat body" className="p-3 space-y-2 overflow-y-auto relative">
             {messages.map((msg) => (
                 <DMMessage
                     onDelete={remove}

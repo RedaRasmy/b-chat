@@ -15,9 +15,7 @@ export default function GroupCard({ chat }: { chat: GroupChat }) {
     const isNew =
         lastMessage &&
         lastMessage.receipts.length > 0 &&
-        lastMessage.receipts.find(
-            (rec) => rec.userId === user.id && rec.seenAt === null,
-        )
+        lastMessage.receipts.find((rec) => rec.userId === user.id && rec.seenAt === null)
 
     const { t } = useTranslation("chats")
 
@@ -36,18 +34,12 @@ export default function GroupCard({ chat }: { chat: GroupChat }) {
                 }}
             />
             <section className="grid grid-cols-[1fr_auto] gap-2 ">
-                <h1 className="text-sm  text-nowrap overflow-hidden text-ellipsis ">
-                    {chat.name}
-                </h1>
-                <span className="text-[0.65rem] h-full text-muted-foreground ">
-                    {time}
-                </span>
+                <h1 className="text-sm  text-nowrap overflow-hidden text-ellipsis ">{chat.name}</h1>
+                <span className="text-[0.65rem] h-full text-muted-foreground ">{time}</span>
             </section>
             <span className="text-xs text-muted-foreground text-nowrap overflow-hidden text-ellipsis">
                 {typingUser ? (
-                    <span className="text-primary">
-                        {t("userIsTyping", { name: typingUser })}
-                    </span>
+                    <span className="text-primary">{t("userIsTyping", { name: typingUser })}</span>
                 ) : (
                     lastMessage?.content
                 )}

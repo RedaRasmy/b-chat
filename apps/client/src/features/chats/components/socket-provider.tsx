@@ -12,10 +12,8 @@ export default function SocketProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         const onConnect = () => console.log("Connected")
-        const onDisconnect = (reason: string) =>
-            console.warn("Disconnected:", reason)
-        const onConnectError = (error: Error) =>
-            console.error("Connection Error:", error)
+        const onDisconnect = (reason: string) => console.warn("Disconnected:", reason)
+        const onConnectError = (error: Error) => console.error("Connection Error:", error)
 
         socket.on("connect", onConnect)
         socket.on("disconnect", onDisconnect)

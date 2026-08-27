@@ -75,10 +75,10 @@ export default function useMessageListener() {
 
         if (message.senderId !== user.id) {
             // Push
-            queryClient.setQueryData(
-                ["messages", message.channelId],
-                (old: ChatMessage[] = []) => [...old, message],
-            )
+            queryClient.setQueryData(["messages", message.channelId], (old: ChatMessage[] = []) => [
+                ...old,
+                message,
+            ])
             // Delivery
             socket.emit("get_message", {
                 messageId: message.id,
@@ -135,10 +135,10 @@ export default function useMessageListener() {
             if (!chat) return
 
             // Push new messages
-            queryClient.setQueryData(
-                ["messages", channelId],
-                (old: ChatMessage[] = []) => [...old, ...newMessages],
-            )
+            queryClient.setQueryData(["messages", channelId], (old: ChatMessage[] = []) => [
+                ...old,
+                ...newMessages,
+            ])
 
             // Delivery
             // TODO: update this to support many messages at once (Array)
@@ -152,57 +152,47 @@ export default function useMessageListener() {
         })
     })
 
-    useSocketListener(
-        "message_delivered",
-        ({ channelId, messageId, deliveredAt, receiverId }) => {
-            console.log("message is delivered")
-            queryClient.setQueryData(
-                ["messages", channelId],
-                (old: ChatMessage[] = []) =>
-                    old.map((msg) => {
-                        if (msg.id !== messageId) return msg
-                        return {
-                            ...msg,
-                            receipts: msg.receipts.map((rec) =>
-                                rec.userId === receiverId
-                                    ? {
-                                          ...rec,
-                                          deliveredAt,
-                                      }
-                                    : rec,
-                            ),
-                        }
-                    }),
-            )
-        },
-    )
+    useSocketListener("message_delivered", ({ channelId, messageId, deliveredAt, receiverId }) => {
+        console.log("message is delivered")
+        queryClient.setQueryData(["messages", channelId], (old: ChatMessage[] = []) =>
+            old.map((msg) => {
+                if (msg.id !== messageId) return msg
+                return {
+                    ...msg,
+                    receipts: msg.receipts.map((rec) =>
+                        rec.userId === receiverId
+                            ? {
+                                  ...rec,
+                                  deliveredAt,
+                              }
+                            : rec,
+                    ),
+                }
+            }),
+        )
+    })
 
-    useSocketListener(
-        "chat_seen",
-        ({ channelId, messageId, seenAt, userId }) => {
-            console.log("chat is seen")
-            queryClient.setQueryData(
-                ["messages", channelId],
-                (old: ChatMessage[] = []) =>
-                    old.map((msg) => {
-                        if (msg.id !== messageId) return msg
-                        return {
-                            ...msg,
-                            receipts: msg.receipts
-                                ? msg.receipts.map((rec) =>
-                                      rec.userId === userId
-                                          ? {
-                                                ...rec,
-                                                seenAt,
-                                            }
-                                          : rec,
-                                  )
-                                : msg.receipts,
-                        }
-                    }),
-            )
-        },
-    )
+    useSocketListener("chat_seen", ({ channelId, messageId, seenAt, userId }) => {
+        console.log("chat is seen")
+        queryClient.setQueryData(["messages", channelId], (old: ChatMessage[] = []) =>
+            old.map((msg) => {
+                if (msg.id !== messageId) return msg
+                return {
+                    ...msg,
+                    receipts: msg.receipts
+                        ? msg.receipts.map((rec) =>
+                              rec.userId === userId
+                                  ? {
+                                        ...rec,
+                                        seenAt,
+                                    }
+                                  : rec,
+                          )
+                        : msg.receipts,
+                }
+            }),
+        )
+    })
 
     useSocketListener("message_deleted", ({ channelId, messageId }) => {
         queryClient.setQueryData(["chats"], (old: Channels = []) =>
@@ -219,10 +209,8 @@ export default function useMessageListener() {
                     : chat,
             ),
         )
-        queryClient.setQueryData(
-            ["messages", channelId],
-            (old: ChatMessage[] = []) =>
-                old.filter((msg) => msg.id !== messageId),
+        queryClient.setQueryData(["messages", channelId], (old: ChatMessage[] = []) =>
+            old.filter((msg) => msg.id !== messageId),
         )
     })
 }

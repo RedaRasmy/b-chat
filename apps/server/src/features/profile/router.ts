@@ -1,10 +1,5 @@
 import { Router } from "express"
-import {
-    deleteProfile,
-    getMyPosts,
-    getProfile,
-    updateProfile,
-} from "./controller.js"
+import { deleteProfile, getMyPosts, getProfile, updateProfile } from "./controller.js"
 
 const router = Router()
 

@@ -49,8 +49,7 @@ export function PostForm({
             form.reset()
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                const message =
-                    error.response?.data.messsage || "Failed to save category"
+                const message = error.response?.data.messsage || "Failed to save category"
                 form.setError("root", {
                     message,
                 })
@@ -74,19 +73,13 @@ export function PostForm({
                     <DialogTitle>{title}</DialogTitle>
                 </DialogHeader>
 
-                <form
-                    onSubmit={form.handleSubmit(handleSubmit)}
-                    className="space-y-1 w-full"
-                >
+                <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-1 w-full">
                     <div className="text-destructive">{error}</div>
                     <Controller
                         name="content"
                         control={form.control}
                         render={({ field, fieldState }) => (
-                            <Field
-                                data-invalid={fieldState.invalid}
-                                className="grid"
-                            >
+                            <Field data-invalid={fieldState.invalid} className="grid">
                                 <Textarea
                                     {...field}
                                     aria-invalid={fieldState.invalid}
@@ -94,9 +87,7 @@ export function PostForm({
                                     autoComplete="off"
                                     className="max-h-100"
                                 />
-                                {fieldState.invalid && (
-                                    <FieldError errors={[fieldState.error]} />
-                                )}
+                                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                             </Field>
                         )}
                     />

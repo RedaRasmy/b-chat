@@ -20,9 +20,7 @@ export const commentService = {
                 content,
                 isEdited: true,
             })
-            .where(
-                and(eq(comments.authorId, userId), eq(comments.id, commentId)),
-            )
+            .where(and(eq(comments.authorId, userId), eq(comments.id, commentId)))
             .returning()
 
         if (!newComment) {

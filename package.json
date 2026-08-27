@@ -10,6 +10,7 @@
         "dev": "pnpm --parallel --filter @bchat/client --filter @bchat/server dev",
         "build": "pnpm --filter @bchat/client build",
         "start": "pnpm --filter @bchat/server start",
+        "format": "prettier --write \"**/*.{ts,tsx,md,json,js,mjs,yaml,yml}\"",
         "db:push": "pnpm --filter=@bchat/database push",
         "db:generate": "pnpm --filter=@bchat/database generate",
         "db:migrate": "pnpm --filter=@bchat/database migrate",
@@ -20,6 +21,7 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
+        "prettier": "^3.9.6",
         "turbo": "^2.10.12"
     },
     "devEngines": {

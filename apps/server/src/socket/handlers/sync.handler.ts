@@ -18,10 +18,7 @@ export function handleSyncMessages(socket: TypedSocket) {
         const user = socket.data.user
 
         try {
-            const missingMessages = await messageService.getMissingMessages(
-                user.id,
-                order,
-            )
+            const missingMessages = await messageService.getMissingMessages(user.id, order)
 
             emitToUsers(user.id, "missing_messages", missingMessages)
         } catch (err) {

@@ -7,8 +7,7 @@ import { and, eq, isNull, or } from "drizzle-orm"
 export const friendService = {
     async getFriendsIds(userId: string) {
         const userFriendships = await db.query.friendships.findMany({
-            where: (fr, { eq, or }) =>
-                or(eq(fr.receiverId, userId), eq(fr.requesterId, userId)),
+            where: (fr, { eq, or }) => or(eq(fr.receiverId, userId), eq(fr.requesterId, userId)),
             columns: {
                 receiverId: true,
                 requesterId: true,
@@ -33,8 +32,7 @@ export const friendService = {
 
     async accept(userId: string, friendshipId: string) {
         const friendship = await db.query.friendships.findFirst({
-            where: (fr, { eq, and }) =>
-                and(eq(fr.id, friendshipId), eq(fr.receiverId, userId)),
+            where: (fr, { eq, and }) => and(eq(fr.id, friendshipId), eq(fr.receiverId, userId)),
             with: {
                 receiver: {
                     columns: {
@@ -48,9 +46,7 @@ export const friendService = {
             throw new NotFoundError("Friendship not fount")
         }
         if (friendship.status !== "pending") {
-            throw new BadRequestError(
-                "You can't accept while the friendship is not pending",
-            )
+            throw new BadRequestError("You can't accept while the friendship is not pending")
         }
         const [newFriendship] = await db
             .update(friendships)
@@ -58,12 +54,7 @@ export const friendService = {
                 status: "friend",
                 acceptedAt: new Date(Date.now()),
             })
-            .where(
-                and(
-                    eq(friendships.id, friendshipId),
-                    eq(friendships.receiverId, userId),
-                ),
-            )
+            .where(and(eq(friendships.id, friendshipId), eq(friendships.receiverId, userId)))
             .returning()
 
         if (!newFriendship) throw new Error("Failed to update friendship")
@@ -116,8 +107,7 @@ export const friendService = {
             },
         })
         const friends: Friend[] = data.map((rec) => {
-            const friend =
-                userId === rec.requesterId ? rec.receiver : rec.requester
+            const friend = userId === rec.requesterId ? rec.receiver : rec.requester
             return {
                 ...friend,
                 acceptedAt: rec.acceptedAt,
@@ -154,10 +144,7 @@ export const friendService = {
             .where(
                 and(
                     eq(friendships.id, friendshipId),
-                    or(
-                        eq(friendships.receiverId, userId),
-                        eq(friendships.requesterId, userId),
-                    ),
+                    or(eq(friendships.receiverId, userId), eq(friendships.requesterId, userId)),
                 ),
             )
             .returning()
@@ -188,8 +175,7 @@ export const friendService = {
 
     async getSentRequests(userId: string) {
         return await db.query.friendships.findMany({
-            where: (fr, { eq, and }) =>
-                and(eq(fr.status, "pending"), eq(fr.requesterId, userId)),
+            where: (fr, { eq, and }) => and(eq(fr.status, "pending"), eq(fr.requesterId, userId)),
             with: {
                 requester: {
                     columns: {
@@ -205,8 +191,7 @@ export const friendService = {
 
     async getReceivedRequests(userId: string) {
         return await db.query.friendships.findMany({
-            where: (fr, { eq, and }) =>
-                and(eq(fr.status, "pending"), eq(fr.receiverId, userId)),
+            where: (fr, { eq, and }) => and(eq(fr.status, "pending"), eq(fr.receiverId, userId)),
             with: {
                 requester: {
                     columns: {

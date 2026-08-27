@@ -1,9 +1,5 @@
 import { comments } from "@bchat/database/tables"
-import {
-    createInsertSchema,
-    createSelectSchema,
-    createUpdateSchema,
-} from "drizzle-zod"
+import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod"
 
 export const InsertCommentSchema = createInsertSchema(comments).pick({
     content: true,

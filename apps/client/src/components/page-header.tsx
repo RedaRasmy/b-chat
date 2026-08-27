@@ -6,9 +6,7 @@ export default function PageHeader({ children }: { children: ReactNode }) {
     return (
         <header className="bg-sidebar h-12 flex items-center px-1 pr-3 gap-2 border-b">
             <SidebarTrigger size={"lg"} />
-            <div className="flex justify-between items-center w-full">
-                {children}
-            </div>
+            <div className="flex justify-between items-center w-full">{children}</div>
             <ConnectionButton />
         </header>
     )

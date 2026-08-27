@@ -26,33 +26,27 @@ export const googleCallback = makeEndpoint(async (req, res) => {
     const base = process.env.FRONTEND_URL ?? ""
 
     try {
-        const tokenResponse = await fetch(
-            "https://oauth2.googleapis.com/token",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    client_id: process.env.GOOGLE_CLIENT_ID,
-                    client_secret: process.env.GOOGLE_CLIENT_SECRET,
-                    redirect_uri: process.env.GOOGLE_CALLBACK_URL,
-                    code,
-                    grant_type: "authorization_code",
-                }),
+        const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
             },
-        )
+            body: JSON.stringify({
+                client_id: process.env.GOOGLE_CLIENT_ID,
+                client_secret: process.env.GOOGLE_CLIENT_SECRET,
+                redirect_uri: process.env.GOOGLE_CALLBACK_URL,
+                code,
+                grant_type: "authorization_code",
+            }),
+        })
 
         const { access_token } = await tokenResponse.json()
 
-        const userResponse = await fetch(
-            "https://www.googleapis.com/oauth2/v2/userinfo",
-            {
-                headers: {
-                    Authorization: `Bearer ${access_token}`,
-                },
+        const userResponse = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+            headers: {
+                Authorization: `Bearer ${access_token}`,
             },
-        )
+        })
 
         const googleUser = await userResponse.json()
 

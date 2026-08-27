@@ -13,9 +13,7 @@ export class BasePage {
     }
 
     async gotoPosts() {
-        await this.page
-            .getByRole("button", { name: /posts/i, exact: true })
-            .click()
+        await this.page.getByRole("button", { name: /posts/i, exact: true }).click()
         await expect(this.page).toHaveURL("/posts")
     }
 

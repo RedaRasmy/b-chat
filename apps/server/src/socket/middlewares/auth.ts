@@ -3,10 +3,7 @@ import { parseCookie } from "cookie"
 import { verifyAccessToken } from "@/lib/jwt.js"
 import db from "@bchat/database"
 
-export async function socketAuthMiddleware(
-    socket: Socket,
-    next: (err?: Error) => void,
-) {
+export async function socketAuthMiddleware(socket: Socket, next: (err?: Error) => void) {
     const cookieHeader = socket.handshake.headers.cookie
 
     if (!cookieHeader) {

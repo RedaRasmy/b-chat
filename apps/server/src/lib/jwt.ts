@@ -8,8 +8,5 @@ export const generateAccessToken = (data: AccessTokenPayload): string => {
 }
 
 export const verifyAccessToken = (token: string) => {
-    return jwt.verify(
-        token,
-        process.env.JWT_ACCESS_SECRET!,
-    ) as AccessTokenPayload
+    return jwt.verify(token, process.env.JWT_ACCESS_SECRET!) as AccessTokenPayload
 }

@@ -46,11 +46,7 @@ export default function DMMessage({
             })}
         >
             {isRetry && (
-                <Button
-                    variant={"outline"}
-                    size={"icon-sm"}
-                    onClick={() => onRetry(message)}
-                >
+                <Button variant={"outline"} size={"icon-sm"} onClick={() => onRetry(message)}>
                     <HugeiconsIcon icon={Refresh01Icon} />
                 </Button>
             )}
@@ -59,8 +55,7 @@ export default function DMMessage({
                     render={
                         <button
                             className={cn({
-                                "opacity-60":
-                                    isRetry || message.status === "sending",
+                                "opacity-60": isRetry || message.status === "sending",
                             })}
                         >
                             <div
@@ -80,15 +75,9 @@ export default function DMMessage({
                                 {isUser && (
                                     <span className="absolute bottom-0 right-1 text-[0.6rem] text-muted/80 font-extralight">
                                         {isSeen ? (
-                                            <HugeiconsIcon
-                                                icon={TickDouble02Icon}
-                                                size={"15"}
-                                            />
+                                            <HugeiconsIcon icon={TickDouble02Icon} size={"15"} />
                                         ) : isDelivered ? (
-                                            <HugeiconsIcon
-                                                icon={Tick02Icon}
-                                                size={"15"}
-                                            />
+                                            <HugeiconsIcon icon={Tick02Icon} size={"15"} />
                                         ) : null}
                                     </span>
                                 )}
@@ -112,9 +101,7 @@ export default function DMMessage({
                         <DropdownMenuGroup>
                             <DropdownMenuSeparator />
                             <DropdownMenuLabel className={"text-end"}>
-                                {isSeen
-                                    ? t("message.seen")
-                                    : t("message.delivered")}{" "}
+                                {isSeen ? t("message.seen") : t("message.delivered")}{" "}
                             </DropdownMenuLabel>
                         </DropdownMenuGroup>
                     )}

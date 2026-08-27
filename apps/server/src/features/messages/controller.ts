@@ -13,8 +13,7 @@ export const deleteMessage = makeEndpoint(
         const user = req.user
 
         try {
-            const { channelId, messageId } =
-                await messageService.deleteMessageWithAuth(id, user.id)
+            const { channelId, messageId } = await messageService.deleteMessageWithAuth(id, user.id)
 
             emitToChannel(channelId, "message_deleted", {
                 messageId,

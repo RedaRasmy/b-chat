@@ -35,7 +35,4 @@ export const usersRelations = relations(users, ({ many }) => ({
     receipts: many(messageReceipts),
 }))
 
-export type User = Omit<
-    InferSelectModel<typeof users>,
-    "hashedPassword" | "githubId" | "googleId"
->
+export type User = Omit<InferSelectModel<typeof users>, "hashedPassword" | "githubId" | "googleId">

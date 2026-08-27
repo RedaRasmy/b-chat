@@ -50,9 +50,7 @@ export default function UsersPage() {
         <div className="w-full h-screen grid grid-rows-[auto_1fr]">
             <PageHeader>
                 <h1>{t("usersPage.title")}</h1>
-                <p className="text-muted-foreground text-sm">
-                    {t("usersPage.description")}
-                </p>
+                <p className="text-muted-foreground text-sm">{t("usersPage.description")}</p>
             </PageHeader>
             <main
                 className={cn(
@@ -74,27 +72,19 @@ export default function UsersPage() {
                     {data ? (
                         data.map((user) => {
                             const friend = friends.find((f) => f.id === user.id)
-                            const sentReq = sentRequests.find(
-                                (req) => req.receiverId === user.id,
-                            )
-                            const req = receivedRequests.find(
-                                (req) => req.requesterId === user.id,
-                            )
+                            const sentReq = sentRequests.find((req) => req.receiverId === user.id)
+                            const req = receivedRequests.find((req) => req.requesterId === user.id)
                             if (friend)
                                 return (
                                     <UserCard key={user.id} user={user}>
-                                        <UnfriendButton
-                                            friendshipId={friend.friendshipId}
-                                        />
+                                        <UnfriendButton friendshipId={friend.friendshipId} />
                                         <ChatButton friendId={user.id} />
                                     </UserCard>
                                 )
                             if (sentReq) {
                                 return (
                                     <UserCard key={user.id} user={user}>
-                                        <CancelButton
-                                            friendshipId={sentReq.id}
-                                        />
+                                        <CancelButton friendshipId={sentReq.id} />
                                     </UserCard>
                                 )
                             }

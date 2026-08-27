@@ -14,11 +14,7 @@ import GroupCard from "@/features/chats/groups/components/group-card"
 import { GroupFormDialog } from "@/features/chats/groups/components/group-form"
 import { useChats } from "@/features/chats/queries"
 import { fetchReceivedRequests } from "@/features/friendships/requests"
-import {
-    Files01Icon,
-    User02Icon,
-    UserMultiple03Icon,
-} from "@hugeicons/core-free-icons"
+import { Files01Icon, User02Icon, UserMultiple03Icon } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { useQuery } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
@@ -89,10 +85,7 @@ export function AppSidebar() {
                     </SidebarGroupLabel>
                     <SidebarGroupContent className="grid gap-1 overflow-auto p-2 -mt-2">
                         {sortedChats.map((chat) => (
-                            <div
-                                key={chat.id}
-                                onClick={() => setOpenMobile(false)}
-                            >
+                            <div key={chat.id} onClick={() => setOpenMobile(false)}>
                                 {chat.type === "dm" ? (
                                     <DMCard chat={chat} />
                                 ) : (

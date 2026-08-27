@@ -19,31 +19,27 @@ export function useMessage() {
     const handleAck = useCallback(
         (tempMessage: ClientMessage, res: MessageAck) => {
             if (res.success) {
-                queryClient.setQueryData(
-                    ["messages", channelId],
-                    (old: ClientMessage[] = []) =>
-                        old.map((msg) =>
-                            msg.id === res.tempId
-                                ? {
-                                      ...tempMessage,
-                                      id: res.messageId,
-                                      status: "sent",
-                                  }
-                                : msg,
-                        ),
+                queryClient.setQueryData(["messages", channelId], (old: ClientMessage[] = []) =>
+                    old.map((msg) =>
+                        msg.id === res.tempId
+                            ? {
+                                  ...tempMessage,
+                                  id: res.messageId,
+                                  status: "sent",
+                              }
+                            : msg,
+                    ),
                 )
             } else {
-                queryClient.setQueryData(
-                    ["messages", channelId],
-                    (old: ClientMessage[] = []) =>
-                        old.map((msg) =>
-                            msg.id === res.tempId
-                                ? {
-                                      ...msg,
-                                      status: "failed",
-                                  }
-                                : msg,
-                        ),
+                queryClient.setQueryData(["messages", channelId], (old: ClientMessage[] = []) =>
+                    old.map((msg) =>
+                        msg.id === res.tempId
+                            ? {
+                                  ...msg,
+                                  status: "failed",
+                              }
+                            : msg,
+                    ),
                 )
                 queryClient.setQueryData(["chats"], (old: Channels = []) =>
                     old.map((chat) =>
@@ -86,10 +82,10 @@ export function useMessage() {
                         deliveredAt: null,
                     })),
             }
-            queryClient.setQueryData(
-                ["messages", channelId],
-                (old: ClientMessage[] = []) => [...old, tempMessage],
-            )
+            queryClient.setQueryData(["messages", channelId], (old: ClientMessage[] = []) => [
+                ...old,
+                tempMessage,
+            ])
 
             socket.emit(
                 "send_message",
@@ -119,14 +115,8 @@ export function useMessage() {
 
     const retry = useCallback(
         (message: ClientMessage) => {
-            queryClient.setQueryData(
-                ["messages", channelId],
-                (old: ClientMessage[] = []) =>
-                    old.map((msg) =>
-                        msg.id === message.id
-                            ? { ...msg, status: "sending" }
-                            : msg,
-                    ),
+            queryClient.setQueryData(["messages", channelId], (old: ClientMessage[] = []) =>
+                old.map((msg) => (msg.id === message.id ? { ...msg, status: "sending" } : msg)),
             )
             queryClient.setQueryData(["chats"], (old: Channels = []) =>
                 old.map((chat) =>
@@ -161,22 +151,16 @@ export function useMessage() {
         mutationFn: deleteMessage,
         onError: (error) => {
             console.error(error)
-            queryClient.setQueryData(
-                ["messages", channelId],
-                (old: ClientMessage[] = []) =>
-                    old.map((msg) => ({ ...msg, status: undefined })),
+            queryClient.setQueryData(["messages", channelId], (old: ClientMessage[] = []) =>
+                old.map((msg) => ({ ...msg, status: undefined })),
             )
         },
     })
 
     const remove = useCallback(
         (id: string) => {
-            queryClient.setQueryData(
-                ["messages", channelId],
-                (old: ClientMessage[] = []) =>
-                    old.map((msg) =>
-                        msg.id === id ? { ...msg, status: "sending" } : msg,
-                    ),
+            queryClient.setQueryData(["messages", channelId], (old: ClientMessage[] = []) =>
+                old.map((msg) => (msg.id === id ? { ...msg, status: "sending" } : msg)),
             )
             deleteMutation.mutate(id)
         },

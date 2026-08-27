@@ -39,10 +39,7 @@ export default function ConnectionButton() {
     }
 
     return (
-        <Button
-            onClick={handleToggle}
-            variant={socket.connected ? "destructive" : "default"}
-        >
+        <Button onClick={handleToggle} variant={socket.connected ? "destructive" : "default"}>
             {socket.connected ? "Disconnect" : "Connect"}
         </Button>
     )

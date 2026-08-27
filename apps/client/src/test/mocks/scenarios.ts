@@ -5,11 +5,7 @@ import type { User } from "@bchat/types"
 
 export const scenarios = {
     authSuccess: (userOverrides: Partial<User> = {}) => {
-        server.use(
-            http.get("/api/auth/me", () =>
-                HttpResponse.json(createUser(userOverrides)),
-            ),
-        )
+        server.use(http.get("/api/auth/me", () => HttpResponse.json(createUser(userOverrides))))
     },
 
     unauthorized: () => {

@@ -4,8 +4,7 @@ export function getSortSchema(sortableFields: string[]) {
     return z
         .string()
         .regex(/^[^:]+:(asc|desc)$/, {
-            message:
-                "Sort parameter must be in 'field:direction' format (e.g., 'name:asc')",
+            message: "Sort parameter must be in 'field:direction' format (e.g., 'name:asc')",
         })
         .refine(
             (val) => {
