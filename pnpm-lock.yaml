@@ -114,6 +114,9 @@ importers:
         specifier: ^4.3.6
         version: 4.4.3
     devDependencies:
+      '@bchat/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
       '@bchat/ts-config':
         specifier: workspace:*
         version: link:../../packages/ts-config
@@ -226,6 +229,9 @@ importers:
         specifier: ^4.3.6
         version: 4.4.3
     devDependencies:
+      '@bchat/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
       '@bchat/types':
         specifier: workspace:*
         version: link:../../packages/types

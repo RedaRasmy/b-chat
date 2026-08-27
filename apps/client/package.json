@@ -49,6 +49,7 @@
         "zod": "^4.3.6"
     },
     "devDependencies": {
+        "@bchat/eslint-config": "workspace:*",
         "@bchat/ts-config": "workspace:*",
         "@bchat/types": "workspace:*",
         "@eslint/js": "^9.39.1",
