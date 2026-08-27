@@ -9,7 +9,7 @@
         "dev": "tsx watch src/server.ts | pino-pretty",
         "dev:test": "NODE_ENV=test tsx watch src/server.ts | pino-pretty",
         "build": "tsc",
-        "start": "tsx src/server.ts | pino-pretty",
+        "start": "node dist/server.js | pino-pretty",
         "start:test": "NODE_ENV=test tsx src/server.ts | pino-pretty",
         "lint": "pnpm exec eslint ./src",
         "check-types": "tsc --noEmit"
