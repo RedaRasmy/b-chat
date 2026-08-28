@@ -1,6 +1,6 @@
 import { useUser } from "@/features/auth/use-user"
 import { GroupContext } from "@/features/chats/groups/group-context"
-import type { ChatMember, GroupChat } from "@bchat/types"
+import type { ChatMember, GroupChat } from "@bchat/shared/types"
 import { type ReactNode } from "react"
 
 export function GroupProvider({

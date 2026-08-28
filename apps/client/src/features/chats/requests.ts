@@ -5,7 +5,7 @@ import type {
     InsertMembersData,
     UpdateGroupData,
 } from "@bchat/shared/validation"
-import type { Channel, Channels, ChatMessage, DM, Group } from "@bchat/types"
+import type { Channel, Channels, ChatMessage, DM, Group } from "@bchat/shared/types"
 
 export async function createDM(data: DMFormData) {
     const res = await api.post("/channels/dms", data)

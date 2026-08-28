@@ -1,5 +1,5 @@
 import { useState, useEffect, type ReactNode, useCallback } from "react"
-import type { Profile } from "@bchat/types"
+import type { Profile } from "@bchat/shared/types"
 import { fetchMe, logoutRequest } from "./requests"
 import { AuthContext } from "./context"
 import { useQueryClient } from "@tanstack/react-query"

@@ -1,4 +1,4 @@
-import type { Chat, ChatMember } from "@bchat/types"
+import type { Chat, ChatMember } from "@bchat/shared/types"
 import { createContext } from "react"
 
 type ChatContext = {

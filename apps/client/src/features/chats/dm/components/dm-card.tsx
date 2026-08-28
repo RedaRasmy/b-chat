@@ -2,7 +2,7 @@ import Avatar from "@/components/avatar"
 import { useUser } from "@/features/auth/use-user"
 import { getChatAvatar, getChatName } from "@/features/chats/utils/chats"
 import { getTime } from "@/features/chats/utils/get-time"
-import type { DMChat } from "@bchat/types"
+import type { DMChat } from "@bchat/shared/types"
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 

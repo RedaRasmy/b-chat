@@ -1,7 +1,7 @@
 import { http, HttpResponse } from "msw"
 import { createUser } from "./factories"
 import { server } from "./server"
-import type { User } from "@bchat/types"
+import type { User } from "@bchat/shared/types"
 
 export const scenarios = {
     authSuccess: (userOverrides: Partial<User> = {}) => {

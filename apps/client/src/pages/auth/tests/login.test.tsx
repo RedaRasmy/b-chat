@@ -1,7 +1,7 @@
 import LoginPage from "@/pages/auth/login"
 import { server } from "@/test/mocks/server"
 import { renderWithMain, screen, waitFor } from "@/test/utils"
-import type { LoginCredentials } from "@bchat/types"
+import type { LoginCredentials } from "@bchat/shared/types"
 import userEvent from "@testing-library/user-event"
 import { http, HttpResponse } from "msw"
 

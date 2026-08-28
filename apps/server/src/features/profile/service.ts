@@ -1,7 +1,7 @@
 import { NotFoundError } from "@/errors.js"
 import db from "@bchat/database"
 import { users } from "@bchat/database/tables"
-import { Profile } from "@bchat/types"
+import { Profile } from "@bchat/shared/types"
 import { eq } from "drizzle-orm"
 
 export const profileService = {

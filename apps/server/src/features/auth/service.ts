@@ -5,7 +5,7 @@ import { generateToken } from "@/utils/generate-token.js"
 import { MONTH } from "@/utils/periods.js"
 import db from "@bchat/database"
 import { refreshTokens, users } from "@bchat/database/tables"
-import { LoginCredentials, Profile, RegisterCredentials } from "@bchat/types"
+import { LoginCredentials, Profile, RegisterCredentials } from "@bchat/shared/types"
 import { compare, hash } from "bcryptjs"
 import { count, eq } from "drizzle-orm"
 

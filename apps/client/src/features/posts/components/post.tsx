@@ -1,7 +1,7 @@
 import Avatar from "@/components/avatar"
 import { Card, CardHeader, CardTitle, CardContent, CardAction } from "@/components/ui/card"
 import { getTime } from "@/features/chats/utils/get-time"
-import type { PostWithAuthor } from "@bchat/types"
+import type { PostWithAuthor } from "@bchat/shared/types"
 import type { ReactNode } from "react"
 import { useTranslation } from "react-i18next"
 

@@ -1,6 +1,6 @@
 import { api } from "@/lib/api"
 import type { UpdateProfileData } from "@bchat/shared/validation"
-import type { Post, Profile } from "@bchat/types"
+import type { Post, Profile } from "@bchat/shared/types"
 
 export async function fetchProfile() {
     const res = await api.get("/profile")

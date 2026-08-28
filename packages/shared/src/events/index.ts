@@ -9,7 +9,7 @@ import type {
     NewTypingData,
     RequestAcceptedData,
     StatusChangedData,
-} from "@bchat/types"
+} from "../types/index.js"
 import { CLIENT_EVENTS, type ClientEvent, SERVER_EVENTS, type ServerEvent } from "./events.js"
 import type {
     GetMessageData,

@@ -1,4 +1,4 @@
-import type { Channels } from "@bchat/types"
+import type { Channels } from "@bchat/shared/types"
 import { useEffect, useRef } from "react"
 import { useQueryClient } from "@tanstack/react-query"
 import { useUser } from "@/features/auth/use-user"

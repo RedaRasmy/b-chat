@@ -1,6 +1,6 @@
 import Avatar from "@/components/avatar"
 import { Card, CardContent } from "@/components/ui/card"
-import type { Friend } from "@bchat/types"
+import type { Friend } from "@bchat/shared/types"
 import type { ReactNode } from "react"
 
 export default function FriendCard({ friend, children }: { friend: Friend; children: ReactNode }) {

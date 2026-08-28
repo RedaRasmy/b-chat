@@ -1,4 +1,4 @@
-import type { DMChat, OtherUser } from "@bchat/types"
+import type { DMChat, OtherUser } from "@bchat/shared/types"
 import { createContext } from "react"
 
 type DMContextValue = {

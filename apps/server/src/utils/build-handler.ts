@@ -1,5 +1,5 @@
 import { TypedSocket } from "@/socket/index.js"
-import { Profile } from "@bchat/types"
+import { Profile } from "@bchat/shared/types"
 
 type Channels =
     | string[]

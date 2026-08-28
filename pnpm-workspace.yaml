@@ -9,5 +9,5 @@ allowBuilds:
 onlyBuiltDependencies:
     - esbuild
     - msw
-    
+
 minimumReleaseAge: 0

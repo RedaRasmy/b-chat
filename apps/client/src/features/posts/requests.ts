@@ -6,7 +6,7 @@ import type {
     PostFormData,
     PostsQuery,
 } from "@bchat/shared/validation"
-import type { CommentWithAuthor, Post, Comment, PostWithAuthor } from "@bchat/types"
+import type { CommentWithAuthor, Post, Comment, PostWithAuthor } from "@bchat/shared/types"
 
 export async function fetchPosts(query: PostsQuery) {
     const res = await api.get("/posts", {

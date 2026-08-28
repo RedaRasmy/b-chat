@@ -1,4 +1,4 @@
-import type { Message, User } from "@bchat/types"
+import type { Message, User } from "@bchat/shared/types"
 import { createUser } from "./factories"
 
 export const db = {

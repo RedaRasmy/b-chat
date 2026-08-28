@@ -1,5 +1,5 @@
 import { useSocket } from "@/features/chats/hooks/use-socket"
-import type { Channels } from "@bchat/types"
+import type { Channels } from "@bchat/shared/types"
 import { useQueryClient } from "@tanstack/react-query"
 import { useEffect } from "react"
 

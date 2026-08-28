@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import type { ClientMessage, OtherUser } from "@bchat/types"
+import type { ClientMessage, OtherUser } from "@bchat/shared/types"
 import {
     Delete02Icon,
     Refresh01Icon,

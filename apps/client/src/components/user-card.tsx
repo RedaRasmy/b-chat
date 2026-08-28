@@ -1,7 +1,7 @@
 import Avatar from "@/components/avatar"
 import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
-import type { OtherUser } from "@bchat/types"
+import type { OtherUser } from "@bchat/shared/types"
 import type { ReactNode } from "react"
 
 export default function UserCard({

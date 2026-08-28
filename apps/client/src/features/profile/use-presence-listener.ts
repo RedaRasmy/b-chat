@@ -1,5 +1,5 @@
 import { useSocketListener } from "@/features/chats/hooks/use-socket-listener"
-import type { Channels, Friend } from "@bchat/types"
+import type { Channels, Friend } from "@bchat/shared/types"
 import { useQueryClient } from "@tanstack/react-query"
 
 export default function usePresenceListener() {

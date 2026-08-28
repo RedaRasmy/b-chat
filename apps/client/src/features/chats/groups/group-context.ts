@@ -1,4 +1,4 @@
-import type { GroupChat, ChatMember } from "@bchat/types"
+import type { GroupChat, ChatMember } from "@bchat/shared/types"
 import { createContext } from "react"
 
 type GroupContextValue = {

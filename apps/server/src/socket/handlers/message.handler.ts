@@ -1,4 +1,4 @@
-import { MessageAck } from "@bchat/types"
+import { MessageAck } from "@bchat/shared/types"
 import { SendMessageData, SendMessageSchema } from "@bchat/shared/validation"
 import { messageService } from "@/features/messages/service.js"
 import { channelService } from "@/features/channels/service.js"

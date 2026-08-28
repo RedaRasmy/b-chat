@@ -1,6 +1,6 @@
 import { useUser } from "@/features/auth/use-user"
 import { DMContext } from "@/features/chats/dm/dm-context"
-import type { DMChat, OtherUser } from "@bchat/types"
+import type { DMChat, OtherUser } from "@bchat/shared/types"
 import type { ReactNode } from "react"
 
 export function DMProvider({ chat, children }: { chat: DMChat; children: ReactNode }) {

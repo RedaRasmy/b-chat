@@ -1,6 +1,6 @@
 import { db } from "@/test/mocks/db"
 import { createUser } from "@/test/mocks/factories"
-import type { LoginCredentials, RegisterCredentials } from "@bchat/types"
+import type { LoginCredentials, RegisterCredentials } from "@bchat/shared/types"
 import { http, HttpResponse } from "msw"
 
 export const authHandlers = [

@@ -1,4 +1,4 @@
-import type { User } from "@bchat/types"
+import type { User } from "../types/index.js"
 
 export const PERMISSIONS = ["post:delete:any", "comment:delete:any", "message:delete:any"] as const
 

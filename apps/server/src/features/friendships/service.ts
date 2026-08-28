@@ -1,7 +1,7 @@
 import { BadRequestError, ForbiddenError, NotFoundError } from "@/errors.js"
 import db from "@bchat/database"
 import { friendships } from "@bchat/database/tables"
-import { Friend } from "@bchat/types"
+import { Friend } from "@bchat/shared/types"
 import { and, eq, isNull, or } from "drizzle-orm"
 
 export const friendService = {

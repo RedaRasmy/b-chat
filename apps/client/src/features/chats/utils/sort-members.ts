@@ -1,4 +1,4 @@
-import type { ChatMember } from "@bchat/types"
+import type { ChatMember } from "@bchat/shared/types"
 
 export function sortMembers(userId: string) {
     return function (a: ChatMember, b: ChatMember) {

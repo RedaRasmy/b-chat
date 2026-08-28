@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import type { User } from "@bchat/types"
+import type { User } from "@bchat/shared/types"
 
 export type AccessTokenPayload = Pick<User, "id" | "email" | "role">
 

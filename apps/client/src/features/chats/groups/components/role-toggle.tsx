@@ -1,7 +1,7 @@
 import { ActionButton } from "@/components/action-button"
 import { Button } from "@/components/ui/button"
 import { updateMember } from "@/features/chats/requests"
-import type { ChatMember } from "@bchat/types"
+import type { ChatMember } from "@bchat/shared/types"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 

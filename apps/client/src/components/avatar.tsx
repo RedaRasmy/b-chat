@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils"
-import type { OtherUser, Prettify, UserStatus } from "@bchat/types"
+import type { OtherUser, Prettify, UserStatus } from "@bchat/shared/types"
 
 export default function Avatar({
     data,

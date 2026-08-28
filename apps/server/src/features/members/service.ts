@@ -2,7 +2,7 @@ import { BadRequestError, ForbiddenError, NotFoundError } from "@/errors.js"
 import { channelService } from "@/features/channels/service.js"
 import db from "@bchat/database"
 import { Member, members } from "@bchat/database/tables"
-import { IMember } from "@bchat/types"
+import { IMember } from "@bchat/shared/types"
 import { and, eq, inArray } from "drizzle-orm"
 
 export const memberService = {

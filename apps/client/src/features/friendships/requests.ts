@@ -1,5 +1,5 @@
 import { api } from "@/lib/api"
-import type { Friend, Friendship, FriendshipRequest, OtherUser, User } from "@bchat/types"
+import type { Friend, Friendship, FriendshipRequest, OtherUser, User } from "@bchat/shared/types"
 
 // Queries
 

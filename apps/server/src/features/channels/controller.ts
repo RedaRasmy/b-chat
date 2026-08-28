@@ -7,7 +7,7 @@ import {
     InsertGroupSchema,
     UpdateGroupSchema,
 } from "@bchat/shared/validation"
-import { Channels, ChatMember } from "@bchat/types"
+import { Channels, ChatMember } from "@bchat/shared/types"
 
 export const createDM = makeEndpoint(
     {

@@ -2,7 +2,7 @@ import { ForbiddenError, NotFoundError } from "@/errors.js"
 import db from "@bchat/database"
 import { messages, messageReceipts, members } from "@bchat/database/tables"
 import { canDeleteMessage } from "@bchat/shared/permissions"
-import { ChatMessage } from "@bchat/types"
+import { ChatMessage } from "@bchat/shared/types"
 import { and, eq, exists, gt, inArray, isNull } from "drizzle-orm"
 
 export const messageService = {

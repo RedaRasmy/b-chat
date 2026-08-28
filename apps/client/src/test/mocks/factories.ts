@@ -1,4 +1,4 @@
-import type { User, Message } from "@bchat/types"
+import type { User, Message } from "@bchat/shared/types"
 
 export function createUser(overrides?: Partial<User>): User {
     return {

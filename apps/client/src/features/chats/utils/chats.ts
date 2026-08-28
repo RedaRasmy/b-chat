@@ -1,4 +1,4 @@
-import type { Chat, DMChat, OtherUser } from "@bchat/types"
+import type { Chat, DMChat, OtherUser } from "@bchat/shared/types"
 
 export function getChatName(chat: Chat, currentUserId: string): string {
     if (chat.type === "group") {
