@@ -12,7 +12,7 @@ import { defineConfig, devices } from "@playwright/test"
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-    testDir: "./e2e",
+    testDir: "./tests",
     /* Run tests in files in parallel */
     fullyParallel: false,
     /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -74,12 +74,12 @@ export default defineConfig({
     webServer: process.env.CI
         ? [
               {
-                  command: "pnpm dev",
+                  command: "pnpm --filter @bchat/client dev",
                   url: "http://localhost:5173",
                   reuseExistingServer: false,
               },
               {
-                  command: "cd ../server && pnpm start:test",
+                  command: "pnpm --filter @bchat/server start:test",
                   url: "http://localhost:3000/health",
                   reuseExistingServer: false,
                   stdout: "pipe",

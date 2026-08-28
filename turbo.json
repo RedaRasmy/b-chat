@@ -13,6 +13,9 @@
         },
         "lint": {
             "dependsOn": ["^lint"]
+        },
+        "ete": {
+            "dependsOn": ["^build"]
         }
     }
 }

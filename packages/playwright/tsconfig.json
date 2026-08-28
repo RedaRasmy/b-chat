@@ -1,0 +1,10 @@
+{
+    "extends": "@bchat/ts-config/base.json",
+    "compilerOptions": {
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "noEmit": true,
+        "types": ["node"]
+    },
+    "include": ["tests/**/*", "playwright.config.ts"]
+}
