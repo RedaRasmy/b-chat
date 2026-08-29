@@ -1,15 +1,8 @@
-import { comments } from "./comments"
-import { users } from "./users"
-import { createdAt, updatedAt } from "../timestamps"
+import { comments } from "./comments.js"
+import { users } from "./users.js"
+import { createdAt, updatedAt } from "../timestamps.js"
 import { type InferSelectModel, relations } from "drizzle-orm"
-import {
-    boolean,
-    index,
-    integer,
-    pgTable,
-    text,
-    uuid,
-} from "drizzle-orm/pg-core"
+import { boolean, index, integer, pgTable, text, uuid } from "drizzle-orm/pg-core"
 
 export const posts = pgTable(
     "posts",

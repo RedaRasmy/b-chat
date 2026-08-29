@@ -1,5 +1,5 @@
 import z from "zod"
-import { NameSchema } from "./auth"
+import { NameSchema } from "./auth.js"
 import { users } from "@bchat/database/tables"
 import { createSelectSchema } from "drizzle-zod"
 

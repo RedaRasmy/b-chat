@@ -5,15 +5,24 @@
     "description": "",
     "type": "module",
     "exports": {
-        ".": "./src/index.ts",
-        "./tables": "./src/schemas/index.ts"
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        },
+        "./tables": {
+            "types": "./dist/schemas/index.d.ts",
+            "default": "./dist/schemas/index.js"
+        }
     },
     "scripts": {
         "push": "npx drizzle-kit push",
         "generate": "npx drizzle-kit generate",
         "migrate": "npx drizzle-kit migrate",
         "studio": "npx drizzle-kit studio",
-        "seed": "tsx src/seed.ts"
+        "seed": "tsx src/seed.ts",
+        "lint": "tsc --noEmit",
+        "check-types": "tsc --noEmit",
+        "build": "tsc"
     },
     "keywords": [],
     "author": "",
@@ -25,6 +34,7 @@
         "pg": "^8.18.0"
     },
     "devDependencies": {
+        "@bchat/ts-config": "workspace:*",
         "@types/node": "^25.2.0",
         "@types/pg": "^8.16.0",
         "bcryptjs": "^3.0.3",

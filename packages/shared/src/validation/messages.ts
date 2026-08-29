@@ -29,5 +29,3 @@ export type GetMessageData = z.infer<typeof GetMessageSchema>
 export type SeeChatData = z.infer<typeof SeeChatSchema>
 
 export type SendMessageData = z.infer<typeof SendMessageSchema>
-
-

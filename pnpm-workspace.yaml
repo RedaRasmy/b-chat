@@ -1,12 +1,13 @@
 packages:
-  - client
-  - server
-  - packages/*
+    - apps/*
+    - packages/*
 
 allowBuilds:
-  esbuild: true
-  msw: true
+    esbuild: true
+    msw: true
 
 onlyBuiltDependencies:
-  - esbuild
-  - msw
+    - esbuild
+    - msw
+
+minimumReleaseAge: 0

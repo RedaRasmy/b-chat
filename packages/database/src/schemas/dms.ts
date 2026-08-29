@@ -1,6 +1,6 @@
 import { pgTable, unique, uuid } from "drizzle-orm/pg-core"
-import { channels } from "./channels"
-import { users } from "./users"
+import { channels } from "./channels.js"
+import { users } from "./users.js"
 import { type InferSelectModel, relations } from "drizzle-orm"
 
 export const dms = pgTable(

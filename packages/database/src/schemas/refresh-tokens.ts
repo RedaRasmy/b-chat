@@ -1,13 +1,6 @@
-import {
-    pgTable,
-    serial,
-    varchar,
-    timestamp,
-    index,
-    uuid,
-} from "drizzle-orm/pg-core"
-import { users } from "./users"
-import { createdAt } from "../timestamps"
+import { pgTable, serial, varchar, timestamp, index, uuid } from "drizzle-orm/pg-core"
+import { users } from "./users.js"
+import { createdAt } from "../timestamps.js"
 import { relations } from "drizzle-orm"
 
 export const refreshTokens = pgTable(

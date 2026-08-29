@@ -1,6 +1,6 @@
 import { posts } from "@bchat/database/tables"
 import { createSelectSchema } from "drizzle-zod"
-import { PaginationSchema, SearchSchema } from "./query"
+import { PaginationSchema, SearchSchema } from "./query.js"
 import z from "zod"
 
 export const InsertPostSchema = z.object({

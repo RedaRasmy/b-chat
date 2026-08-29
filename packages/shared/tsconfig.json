@@ -1,13 +1,9 @@
 {
+    "extends": "@bchat/ts-config/base.json",
     "compilerOptions": {
-        "module": "ESNext",
-        "moduleResolution": "bundler",
-        "target": "ES2022",
-        "strict": true,
-        "noUncheckedIndexedAccess": true,
-        "esModuleInterop": true,
-        "skipLibCheck": true
+        "rootDir": "./src",
+        "outDir": "./dist",
+        "types": ["vitest/globals"]
     },
-    "include": ["src"],
-    "references": [{ "path": "../database" }]
+    "include": ["src/**/*"]
 }

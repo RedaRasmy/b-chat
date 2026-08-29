@@ -6,13 +6,13 @@ A full-stack real-time chat application built with the PERN stack and Socket.io.
 
 ## Features
 
-- 🔐 **Authentication** — Register/login with credentials or OAuth (Github & Google).
-- 👥 **Friends** — Send, accept, and manage friend requests.
-- 💬 **Direct Messages** — Real-time 1-on-1 conversations.
-- 🏠 **Groups** — Create and manage group chats with multiple members.
-- 📝 **Posts** — Share posts.
-- ⚡ **Real-time** — Instant messaging, typing indicators, and online presence.
-- 🌐 **i18n** — Supporting English/Arabic/French
+- **Authentication** — Register/login with credentials or OAuth (Github & Google).
+- **Friends** — Send, accept, and manage friend requests.
+- **Direct Messages** — Real-time 1-on-1 conversations.
+- **Groups** — Create and manage group chats with multiple members.
+- **Posts** — Share posts.
+- **Real-time** — Instant messaging, typing indicators, and online presence.
+- **i18n** — Supporting English/Arabic/French
 
 ## Tech Stack
 
@@ -34,15 +34,13 @@ A full-stack real-time chat application built with the PERN stack and Socket.io.
 - JWT + bcryptjs
 - Zod + drizzle-zod
 
-## Getting Started
+## Installation
 
 ### Prerequisites
 
-- Node.js 22+
+- Node
 - Docker
 - pnpm
-
-### Installation
 
 1. **Clone the repository**
 
@@ -73,14 +71,19 @@ You can generate a jwt secret with the command below:
 openssl rand --base64 64
 ```
 
-4. **Set up the database**
+4. **Set up the database with docker**
 
 ```bash
 docker compose up -d
+```
+
+5. **Push DB Schemas** or (generate -> migrate)
+
+```bash
 pnpm db:push
 ```
 
-5. **Run the app**
+6. **Run the app**
 
 ```bash
 pnpm dev
