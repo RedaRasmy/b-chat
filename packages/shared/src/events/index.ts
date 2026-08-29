@@ -10,7 +10,7 @@ import type {
     RequestAcceptedData,
     StatusChangedData,
 } from "../types/index.js"
-import { CLIENT_EVENTS, type ClientEvent, SERVER_EVENTS, type ServerEvent } from "./events.js"
+import { CLIENT_EVENTS, SERVER_EVENTS } from "./events.js"
 import type {
     GetMessageData,
     MemberDeletedData,
@@ -22,6 +22,7 @@ import type {
 } from "../validation/index.js"
 
 export * from "./events.js"
+export * from "./utility-types.js"
 
 export type ServerToClientEvents = {
     [SERVER_EVENTS.NEW_MESSAGE]: (payload: ChatMessage) => void
@@ -56,39 +57,3 @@ export type ClientToServerEvents = {
 
     [CLIENT_EVENTS.JOIN_CHANNEL]: (payload: { channelId: string }) => void
 }
-
-// Utility Types
-
-export type Args<E extends ServerEvent | ClientEvent> = E extends ServerEvent
-    ? Parameters<ServerToClientEvents[E]>
-    : E extends ClientEvent
-      ? Parameters<ClientToServerEvents[E]>
-      : never
-
-export type Payload<E extends ServerEvent | ClientEvent> = E extends ServerEvent
-    ? ServerToClientEvents[E] extends (arg: infer P, ...args: any[]) => any
-        ? P
-        : never
-    : E extends ClientEvent
-      ? ClientToServerEvents[E] extends (arg: infer P, ...args: any[]) => any
-          ? P
-          : never
-      : never
-
-export type Callback<E extends ServerEvent | ClientEvent> = E extends ServerEvent
-    ? ServerToClientEvents[E] extends (...args: infer Args) => any
-        ? Args extends [...any[], infer C]
-            ? C extends (...args: any[]) => any
-                ? C
-                : never
-            : never
-        : never
-    : E extends ClientEvent
-      ? ClientToServerEvents[E] extends (...args: infer Args) => any
-          ? Args extends [...any[], infer C]
-              ? C extends (...args: any[]) => any
-                  ? C
-                  : never
-              : never
-          : never
-      : never

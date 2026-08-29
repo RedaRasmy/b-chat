@@ -20,6 +20,7 @@
         "migrate": "npx drizzle-kit migrate",
         "studio": "npx drizzle-kit studio",
         "seed": "tsx src/seed.ts",
+        "lint": "tsc --noEmit",
         "check-types": "tsc --noEmit",
         "build": "tsc"
     },

@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             queryClient.clear()
             localStorage.removeItem("REACT_QUERY_OFFLINE_CACHE")
         }
-    }, [])
+    }, [queryClient])
 
     const fetchUser = useCallback(async () => {
         try {

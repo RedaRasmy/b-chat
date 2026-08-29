@@ -110,7 +110,7 @@ export function useMessage() {
                 ),
             )
         },
-        [channelId, handleAck, socket, user, queryClient, members],
+        [channelId, handleAck, socket, user, queryClient, members, nextOrder],
     )
 
     const retry = useCallback(

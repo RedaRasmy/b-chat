@@ -71,17 +71,6 @@ export default function LoginPage() {
     return (
         <div className="w-full h-screen bg-linear-to-br from-primary/10 via-background to-secondary/10 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
-                {/* Back to Home */}
-                {/* <Link to="/">
-                    <Button variant="ghost" className="mb-6">
-                        <HugeiconsIcon
-                            className="h-4 w-4 mr-2"
-                            icon={ArrowLeft01Icon}
-                        />
-                        Back to Home
-                    </Button>
-                </Link> */}
-
                 <Card className="shadow-xl">
                     <CardHeader className="text-center">
                         <CardTitle className="text-2xl font-bold">{t("loginForm.title")}</CardTitle>

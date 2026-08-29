@@ -11,6 +11,7 @@
         "ete:install-deps": "pnpm --filter @bchat/playwright install-deps",
         "ete": "pnpm --filter @bchat/playwright test",
         "lint": "turbo lint",
+        "check-types": "turbo check-types",
         "db:push": "pnpm --filter=@bchat/database push",
         "db:generate": "pnpm --filter=@bchat/database generate",
         "db:migrate": "pnpm --filter=@bchat/database migrate",

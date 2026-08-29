@@ -3,7 +3,22 @@
     "tasks": {
         "build": {
             "dependsOn": ["^build"],
-            "outputs": ["dist/**"]
+            "outputs": ["dist/**"],
+            "env": [
+                "FRONTEND_URL",
+                "GITHUB_CLIENT_ID",
+                "GITHUB_CLIENT_SECRET",
+                "GITHUB_CALLBACK_URL",
+                "GOOGLE_CLIENT_ID",
+                "GOOGLE_CLIENT_SECRET",
+                "GOOGLE_CALLBACK_URL",
+                "NODE_ENV",
+                "JWT_ACCESS_SECRET",
+                "LOG_LEVEL",
+                "PORT",
+                "PROD",
+                "DEV"
+            ]
         },
         "check-types": {
             "dependsOn": ["^check-types"]

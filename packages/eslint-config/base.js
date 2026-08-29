@@ -29,4 +29,16 @@ export const config = [
     {
         ignores: ["dist/**"],
     },
+    {
+        rules: {
+            "@typescript-eslint/no-unused-vars": [
+                "warn",
+                {
+                    ignoreRestSiblings: true,
+                    argsIgnorePattern: "^_",
+                    varsIgnorePattern: "^_",
+                },
+            ],
+        },
+    },
 ]

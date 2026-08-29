@@ -11,7 +11,7 @@
         "build": "tsc",
         "start": "node dist/server.js | pino-pretty",
         "start:test": "NODE_ENV=test node dist/server.js | pino-pretty",
-        "lint": "pnpm exec eslint ./src",
+        "lint": "tsc --noEmit && pnpm exec eslint ./src",
         "check-types": "tsc --noEmit",
         "test": "vitest run",
         "test:watch": "vitest"

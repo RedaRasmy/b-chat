@@ -3,7 +3,7 @@ import { channelService } from "@/features/channels/service.js"
 import { userService } from "@/features/users/service.js"
 import { friendService } from "@/features/friendships/service.js"
 import { emitToUsers, TypedSocket } from "@/socket/index.js"
-import { buildHandler } from "@/utils/build-handler.js"
+// import { buildHandler } from "@/utils/build-handler.js"
 
 export async function handleConnection(socket: TypedSocket) {
     const user = socket.data.user
