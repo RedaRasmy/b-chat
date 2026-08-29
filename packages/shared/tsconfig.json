@@ -2,7 +2,8 @@
     "extends": "@bchat/ts-config/base.json",
     "compilerOptions": {
         "rootDir": "./src",
-        "outDir": "./dist"
+        "outDir": "./dist",
+        "types": ["vitest/globals"]
     },
     "include": ["src/**/*"]
 }

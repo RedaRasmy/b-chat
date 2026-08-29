@@ -17,6 +17,10 @@
         },
         "ete": {
             "dependsOn": ["^build"]
+        },
+        "test": {
+            "dependsOn": ["^build"],
+            "outputs": []
         }
     }
 }

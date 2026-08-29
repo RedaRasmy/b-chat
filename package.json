@@ -7,6 +7,7 @@
         "build": "turbo build",
         "start": "pnpm --filter @bchat/server start",
         "format": "prettier --write \"**/*.{ts,tsx,md,json,js,mjs,yaml,yml}\"",
+        "test": "turbo test --filter=!@bchat/playwright",
         "ete:install-deps": "pnpm --filter @bchat/playwright install-deps",
         "ete": "pnpm --filter @bchat/playwright test",
         "lint": "turbo lint",
@@ -16,7 +17,8 @@
         "db:studio": "pnpm --filter=@bchat/database studio",
         "db:seed": "pnpm --filter=@bchat/database seed",
         "act:playwright": "act -W .github/workflows/playwright.yml push",
-        "act:lint": "act -W .github/workflows/lint.yml push"
+        "act:lint": "act -W .github/workflows/lint.yml push",
+        "act:test": "act -W .github/workflows/test.yml push"
     },
     "devDependencies": {
         "prettier": "^3.9.6",

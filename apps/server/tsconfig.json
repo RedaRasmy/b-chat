@@ -2,7 +2,7 @@
     "extends": "@bchat/ts-config/base.json",
     "compilerOptions": {
         "resolveJsonModule": true,
-        "types": ["node"],
+        "types": ["node", "vitest/globals"],
         "paths": {
             "@/*": ["./src/*"]
         },
